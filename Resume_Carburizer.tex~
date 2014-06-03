@@ -1,0 +1,106 @@
+%% start of file `template.tex'.
+%% Copyright 2006-2013 Xavier Danaux (xdanaux@gmail.com).
+%
+% This work may be distributed and/or modified under the
+% conditions of the LaTeX Project Public License version 1.3c,
+% available at http://www.latex-project.org/lppl/.
+
+
+\documentclass[11pt,a4paper,sans]{moderncv}        % possible options include font size ('10pt', '11pt' and '12pt'), paper size ('a4paper', 'letterpaper', 'a5paper', 'legalpaper', 'executivepaper' and 'landscape') and font family ('sans' and 'roman')
+
+% moderncv themes
+\moderncvstyle{classic}                             % style options are 'casual' (default), 'classic', 'oldstyle' and 'banking'
+\moderncvcolor{blue}                               % color options 'blue' (default), 'orange', 'green', 'red', 'purple', 'grey' and 'black'
+%\renewcommand{\familydefault}{\sfdefault}         % to set the default font; use '\sfdefault' for the default sans serif font, '\rmdefault' for the default roman one, or any tex font name
+%\nopagenumbers{}                                  % uncomment to suppress automatic page numbering for CVs longer than one page
+
+%\usepackage[scale=0.8,vscale=0.88]{geometry}
+% character encoding
+\usepackage[utf8]{inputenc}    % if you are not using xelatex ou lualatex, replace by the encoding you are using
+\usepackage[francais]{babel}
+\usepackage[T1]{fontenc}                   
+%\usepackage{CJKutf8}                              % if you need to use CJK to typeset your resume in Chinese, Japanese or Kor%\usepackage[utf8]{inputeean
+
+% adjust the page margins
+\usepackage[scale=0.75, vscale=0.8]{geometry}
+%\setlength{\hintscolumnwidth}{3cm}                % if you want to change the width of the column with the dates
+%\setlength{\makecvtitlenamewidth}{10cm}           % for the 'classic' style, if you want to force the width allocated to your name and avoid line breaks. be careful though, the length is normally calculated to avoid any overlap with your personal info; use this at your own typographical risks...
+
+% personal data
+\name{Louisa}{Bessad}
+\title{Étudiante Système}                               % optional, remove / comment the line if not wanted
+\address{22 Rue Clisson}{75013 Paris}{}% optional, remove / comment the line if not wanted; the "postcode city" and "country" arguments can be omitted or provided empty
+\phone[mobile]{+33 (0) 6 17 11 94 01}                   % optional, remove / comment the line if not wanted; the optional "type" of the phone can be "mobile" (default), "fixed" or "fax"
+%\phone[fixed]{+2~(345)~678~901}
+%\phone[fax]{+3~(456)~789~012}
+\email{louisa.bessad@gmail.com}                               % optional, remove / comment the line if not wanted
+%\homepage{www.johndoe.com}                         % optional, remove / comment the line if not wanted
+%\social[linkedin]{john.doe}                        % optional, remove / comment the line if not wanted
+%\social[twitter]{jdoe}                             % optional, remove / comment the line if not wanted
+%\social[github]{jdoe}                              % optional, remove / comment the line if not wanted
+\extrainfo{23 ans, Permis B}                 % optional, remove / comment the line if not wanted
+%\photo[64pt][0.4pt]{picture}                       % optional, remove / comment the line if not wanted; '64pt' is the height the picture must be resized to, 0.4pt is the thickness of the frame around it (put it to 0pt for no frame) and 'picture' is the name of the picture file
+%\quote{Some quote}                                 % optional, remove / comment the line if not wanted
+
+% to show numerical labels in the bibliography (default is to show no labels); only useful if you make citations in your resume
+%\makeatletter
+%\renewcommand*{\bibliographyitemlabel}{\@biblabel{\arabic{enumiv}}}
+%\makeatother
+%\renewcommand{•}{•}*{\bibliographyitemlabel}{[\arabic{enumiv}]}% CONSIDER REPLACING THE ABOVE BY THIS
+
+% bibliography with mutiple entries
+%\usepackage{multibib}
+%\newcites{book,misc}{{Books},{Others}}
+%----------------------------------------------------------------------------------
+%            content
+%----------------------------------------------------------------------------------
+\begin{document}
+%\begin{CJK*}{UTF8}{gbsn}                          % to typeset your resume in Chinese using CJK
+%-----       resume       ---------------------------------------------------------
+\makecvtitle
+
+\vspace{-2em}
+\section{Cursus}
+\cventry{2013--2014}{Master}{Université Pierre et Marie Curie}{Paris}{}{Master SAR, Système et Applications Réparties mention magistère}  % arguments 3 to 6 can be left empty
+\cventry{Juin 2013}{Licence Informatique}{Université Pierre et Marie Curie}{Paris}{\textit{mention Bien}}{}
+\cventry{2011--2012}{Licence 2}{Université Pierre et Marie Curie}{Paris}{}{1\ier{} semestre de Géologie, 2\textsuperscript{nd} semestre d'Informatique}
+\cventry{2010--2011}{Classe préparatoire BCPST}{Lycée agricole d'Auzeville}{Toulouse}{}{Biologie, Chimie, Physique et Sciences de la Terre}
+\cventry{2009--2010}{Classe préparatoire MPSI}{Lycée Joffre}{Montpellier}{}{Mathématiques, Physiques, Sciences de l'Ingénieur}
+\cventry{Juin 2009}{Baccalauréat Scientifique}{Lycée Philippe Lamour}{Nîmes}{\textit{mention Bien}}{Baccalauréat Scientifique SVT option Mathématiques}
+
+
+\section{Projets Informatique}
+\cvitem{2014}{Temps Réel en multi-coeurs: problème de contention mémoire (4mois)}
+\cvitem{2014}{P2P implémentation de l'algorithme de CAN en MPI (1semaine)}
+\cvitem{2013}{Compression/Décompression de texte avec Huffman Dynamique (2mois)}
+\cvitem{2013}{Gestion d'une bibliothèque de fichier avec la norme POSIX (1 mois)}
+
+\section{Compétences}
+\cvitem{Systèmes d'exploitation}{Ubuntu, Debian, Windows XP $\rightarrow$ 7}
+\cvitem{Langages}{C, Assembleur, Java, \LaTeX, Scilab, Matlab, Mapple, MPI, HTML, MPI}
+\cvitem{Connaissances}{Réseaux (WIFI, Ethernet, mobile), Algorithmique Répartie, Base de Données Réparties, Administration Système et Réseau, Cryptologie}
+
+\section{Expériences}
+\cvitem{2014}{Présidente de l'Association des Étudiants en Informatique de Paris 6 (AEIP6)}
+\cvitem{2013--2014}{Vendeuse en magasins et salons}
+\cvitem{2008--2013}{Soutien Scolaire}
+\cvitem{2007--2014}{Organisation d'événements dans des associations}
+
+\vfill
+\parbox{0.48\textwidth}{
+\section{Langues}
+\cvitem{Anglais}{Intermédiaire}
+\cvitem{Espagnol}{Intermédiaire}
+\cvitem{Allemand}{Bases}
+}
+\parbox{0.48\textwidth}{
+\section{Centre d'Intérêt}
+\cvitem{Sport}{Natation, Roller, VTT}
+\cvitem{Lecture}{Thriller/Policier, Fantasy, Manga}
+\cvitem{Autres}{Cruciverbiste, Cinéma}
+}
+
+\end{document}
+
+
+%% end of file `template.tex'.
