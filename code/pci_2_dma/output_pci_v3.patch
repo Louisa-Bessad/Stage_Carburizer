@@ -1,0 +1,1962 @@
+diff -u -p a/sis/sis900.c b/sis/sis900.c
+--- a/sis/sis900.c
++++ b/sis/sis900.c
+@@ -1176,8 +1176,8 @@ sis900_init_rx_ring(struct net_device *n
+ 		}
+ 		sis_priv->rx_skbuff[i] = skb;
+ 		sis_priv->rx_ring[i].cmdsts = RX_BUF_SIZE;
+-                sis_priv->rx_ring[i].bufptr = pci_map_single(sis_priv->pci_dev,
+-                        skb->data, RX_BUF_SIZE, PCI_DMA_FROMDEVICE);
++                sis_priv->rx_ring[i].bufptr = dma_map_single(&sis_priv->pci_dev->dev,
++                        skb->data, RX_BUF_SIZE, DMA_FROM_DEVICE);
+ 	}
+ 	sis_priv->dirty_rx = (unsigned int) (i - NUM_RX_DESC);
+ 
+@@ -1606,8 +1606,8 @@ sis900_start_xmit(struct sk_buff *skb, s
+ 	sis_priv->tx_skbuff[entry] = skb;
+ 
+ 	/* set the transmit buffer descriptor and enable Transmit State Machine */
+-	sis_priv->tx_ring[entry].bufptr = pci_map_single(sis_priv->pci_dev,
+-		skb->data, skb->len, PCI_DMA_TODEVICE);
++	sis_priv->tx_ring[entry].bufptr = dma_map_single(&sis_priv->pci_dev->dev,
++		skb->data, skb->len, DMA_FROM_TOVICE);
+ 	sis_priv->tx_ring[entry].cmdsts = (OWN | skb->len);
+ 	outl(TxENA | inl(ioaddr + cr), ioaddr + cr);
+ 
+@@ -1812,8 +1812,8 @@ refill_rx_ring:
+ 			sis_priv->rx_skbuff[entry] = skb;
+ 			sis_priv->rx_ring[entry].cmdsts = RX_BUF_SIZE;
+                 	sis_priv->rx_ring[entry].bufptr =
+-				pci_map_single(sis_priv->pci_dev, skb->data,
+-					RX_BUF_SIZE, PCI_DMA_FROMDEVICE);
++				dma_map_single(&sis_priv->pci_dev->dev, skb->data,
++					RX_BUF_SIZE, DMA_FROM_DEVICE);
+ 		}
+ 		sis_priv->cur_rx++;
+ 		entry = sis_priv->cur_rx % NUM_RX_DESC;
+@@ -1843,8 +1843,8 @@ refill_rx_ring:
+ 			sis_priv->rx_skbuff[entry] = skb;
+ 			sis_priv->rx_ring[entry].cmdsts = RX_BUF_SIZE;
+                 	sis_priv->rx_ring[entry].bufptr =
+-				pci_map_single(sis_priv->pci_dev, skb->data,
+-					RX_BUF_SIZE, PCI_DMA_FROMDEVICE);
++				dma_map_single(&sis_priv->pci_dev->dev, skb->data,
++					RX_BUF_SIZE, DMA_FROM_DEVICE);
+ 		}
+ 	}
+ 	/* re-enable the potentially idle receive state matchine */
+diff -u -p a/sis/sis190.c b/sis/sis190.c
+--- a/sis/sis190.c
++++ b/sis/sis190.c
+@@ -496,8 +496,8 @@ static struct sk_buff *sis190_alloc_rx_s
+ 	skb = netdev_alloc_skb(tp->dev, rx_buf_sz);
+ 	if (unlikely(!skb))
+ 		goto skb_alloc_failed;
+-	mapping = pci_map_single(tp->pci_dev, skb->data, tp->rx_buf_sz,
+-			PCI_DMA_FROMDEVICE);
++	mapping = dma_map_single(&tp->pci_dev->dev, skb->data, tp->rx_buf_sz,
++			DMA_FROM_DEVICE);
+ 	if (pci_dma_mapping_error(tp->pci_dev, mapping))
+ 		goto out;
+ 	sis190_map_to_asic(desc, mapping, rx_buf_sz);
+@@ -1203,7 +1203,7 @@ static netdev_tx_t sis190_start_xmit(str
+ 		return NETDEV_TX_BUSY;
+ 	}
+ 
+-	mapping = pci_map_single(tp->pci_dev, skb->data, len, PCI_DMA_TODEVICE);
++	mapping = dma_map_single(&tp->pci_dev->dev, skb->data, len, DMA_FROM_TOVICE);
+ 	if (pci_dma_mapping_error(tp->pci_dev, mapping)) {
+ 		netif_err(tp, tx_err, dev,
+ 				"PCI mapping failed, dropping packet");
+diff -u -p a/adaptec/starfire.c b/adaptec/starfire.c
+--- a/adaptec/starfire.c
++++ b/adaptec/starfire.c
+@@ -1180,7 +1180,7 @@ static void init_ring(struct net_device
+ 		np->rx_info[i].skb = skb;
+ 		if (skb == NULL)
+ 			break;
+-		np->rx_info[i].mapping = pci_map_single(np->pci_dev, skb->data, np->rx_buf_sz, PCI_DMA_FROMDEVICE);
++		np->rx_info[i].mapping = dma_map_single(&np->pci_dev->dev, skb->data, np->rx_buf_sz, DMA_FROM_DEVICE);
+ 		skb->dev = dev;			/* Mark as being used by this device. */
+ 		/* Grrr, we cannot offset to correctly align the IP header. */
+ 		np->rx_ring[i].rxaddr = cpu_to_dma(np->rx_info[i].mapping | RxDescValid);
+@@ -1254,15 +1254,15 @@ static netdev_tx_t start_tx(struct sk_bu
+ 			status |= skb_first_frag_len(skb) | (skb_num_frags(skb) << 16);
+ 
+ 			np->tx_info[entry].mapping =
+-				pci_map_single(np->pci_dev, skb->data, skb_first_frag_len(skb), PCI_DMA_TODEVICE);
++				dma_map_single(&np->pci_dev->dev, skb->data, skb_first_frag_len(skb), DMA_FROM_TOVICE);
+ 		} else {
+ 			const skb_frag_t *this_frag = &skb_shinfo(skb)->frags[i - 1];
+ 			status |= skb_frag_size(this_frag);
+ 			np->tx_info[entry].mapping =
+-				pci_map_single(np->pci_dev,
++				dma_map_single(&np->pci_dev->dev,
+ 					       skb_frag_address(this_frag),
+ 					       skb_frag_size(this_frag),
+-					       PCI_DMA_TODEVICE);
++					       DMA_FROM_TOVICE);
+ 		}
+ 
+ 		np->tx_ring[entry].addr = cpu_to_dma(np->tx_info[entry].mapping);
+@@ -1598,7 +1598,7 @@ static void refill_rx_ring(struct net_de
+ 			if (skb == NULL)
+ 				break;	/* Better luck next round. */
+ 			np->rx_info[entry].mapping =
+-				pci_map_single(np->pci_dev, skb->data, np->rx_buf_sz, PCI_DMA_FROMDEVICE);
++				dma_map_single(&np->pci_dev->dev, skb->data, np->rx_buf_sz, DMA_FROM_DEVICE);
+ 			skb->dev = dev;	/* Mark as being used by this device. */
+ 			np->rx_ring[entry].rxaddr =
+ 				cpu_to_dma(np->rx_info[entry].mapping | RxDescValid);
+diff -u -p a/atheros/atl1c/atl1c_main.c b/atheros/atl1c/atl1c_main.c
+--- a/atheros/atl1c/atl1c_main.c
++++ b/atheros/atl1c/atl1c_main.c
+@@ -1777,9 +1777,9 @@ static int atl1c_alloc_rx_buffer(struct
+ 		ATL1C_SET_BUFFER_STATE(buffer_info, ATL1C_BUFFER_BUSY);
+ 		buffer_info->skb = skb;
+ 		buffer_info->length = adapter->rx_buffer_len;
+-		buffer_info->dma = pci_map_single(pdev, vir_addr,
++		buffer_info->dma = dma_map_single(&pdev->dev, vir_addr,
+ 						buffer_info->length,
+-						PCI_DMA_FROMDEVICE);
++						DMA_FROM_DEVICE);
+ 		ATL1C_SET_PCIMAP_TYPE(buffer_info, ATL1C_PCIMAP_SINGLE,
+ 			ATL1C_PCIMAP_FROMDEVICE);
+ 		rfd_desc->buffer_addr = cpu_to_le64(buffer_info->dma);
+@@ -2138,8 +2138,8 @@ static void atl1c_tx_map(struct atl1c_ad
+ 
+ 		buffer_info = atl1c_get_tx_buffer(adapter, use_tpd);
+ 		buffer_info->length = map_len;
+-		buffer_info->dma = pci_map_single(adapter->pdev,
+-					skb->data, hdr_len, PCI_DMA_TODEVICE);
++		buffer_info->dma = dma_map_single(&adapter->pdev->dev,
++					skb->data, hdr_len, DMA_FROM_TOVICE);
+ 		ATL1C_SET_BUFFER_STATE(buffer_info, ATL1C_BUFFER_BUSY);
+ 		ATL1C_SET_PCIMAP_TYPE(buffer_info, ATL1C_PCIMAP_SINGLE,
+ 			ATL1C_PCIMAP_TODEVICE);
+@@ -2160,8 +2160,8 @@ static void atl1c_tx_map(struct atl1c_ad
+ 		buffer_info = atl1c_get_tx_buffer(adapter, use_tpd);
+ 		buffer_info->length = buf_len - mapped_len;
+ 		buffer_info->dma =
+-			pci_map_single(adapter->pdev, skb->data + mapped_len,
+-					buffer_info->length, PCI_DMA_TODEVICE);
++			dma_map_single(&adapter->pdev->dev, skb->data + mapped_len,
++					buffer_info->length, DMA_FROM_TOVICE);
+ 		ATL1C_SET_BUFFER_STATE(buffer_info, ATL1C_BUFFER_BUSY);
+ 		ATL1C_SET_PCIMAP_TYPE(buffer_info, ATL1C_PCIMAP_SINGLE,
+ 			ATL1C_PCIMAP_TODEVICE);
+diff -u -p a/atheros/atl1e/atl1e_main.c b/atheros/atl1e/atl1e_main.c
+--- a/atheros/atl1e/atl1e_main.c
++++ b/atheros/atl1e/atl1e_main.c
+@@ -1709,8 +1709,8 @@ static int atl1e_tx_map(struct atl1e_ada
+ 
+ 		tx_buffer = atl1e_get_tx_buffer(adapter, use_tpd);
+ 		tx_buffer->length = map_len;
+-		tx_buffer->dma = pci_map_single(adapter->pdev,
+-					skb->data, hdr_len, PCI_DMA_TODEVICE);
++		tx_buffer->dma = dma_map_single(&adapter->pdev->dev,
++					skb->data, hdr_len, DMA_FROM_TOVICE);
+ 		if (dma_mapping_error(&adapter->pdev->dev, tx_buffer->dma))
+ 			return -ENOSPC;
+ 
+@@ -1738,8 +1738,8 @@ static int atl1e_tx_map(struct atl1e_ada
+ 			((buf_len - mapped_len) >= MAX_TX_BUF_LEN) ?
+ 			MAX_TX_BUF_LEN : (buf_len - mapped_len);
+ 		tx_buffer->dma =
+-			pci_map_single(adapter->pdev, skb->data + mapped_len,
+-					map_len, PCI_DMA_TODEVICE);
++			dma_map_single(&adapter->pdev->dev, skb->data + mapped_len,
++					map_len, DMA_FROM_TOVICE);
+ 
+ 		if (dma_mapping_error(&adapter->pdev->dev, tx_buffer->dma)) {
+ 			/* We need to unwind the mappings we've done */
+diff -u -p a/myricom/myri10ge/myri10ge.c b/myricom/myri10ge/myri10ge.c
+--- a/myricom/myri10ge/myri10ge.c
++++ b/myricom/myri10ge/myri10ge.c
+@@ -2825,7 +2825,7 @@ again:
+ 	len = skb_headlen(skb);
+ 	idx = tx->req & tx->mask;
+ 	tx->info[idx].skb = skb;
+-	bus = pci_map_single(mgp->pdev, skb->data, len, PCI_DMA_TODEVICE);
++	bus = dma_map_single(&mgp->pdev->dev, skb->data, len, DMA_FROM_TOVICE);
+ 	dma_unmap_addr_set(&tx->info[idx], bus, bus);
+ 	dma_unmap_len_set(&tx->info[idx], len, len);
+ 
+diff -u -p a/intel/e100.c b/intel/e100.c
+--- a/intel/e100.c
++++ b/intel/e100.c
+@@ -1727,8 +1727,8 @@ static void e100_xmit_prepare(struct nic
+ 	cb->u.tcb.tcb_byte_count = 0;
+ 	cb->u.tcb.threshold = nic->tx_threshold;
+ 	cb->u.tcb.tbd_count = 1;
+-	cb->u.tcb.tbd.buf_addr = cpu_to_le32(pci_map_single(nic->pdev,
+-		skb->data, skb->len, PCI_DMA_TODEVICE));
++	cb->u.tcb.tbd.buf_addr = cpu_to_le32(dma_map_single(&nic->pdev->dev,
++		skb->data, skb->len, DMA_FROM_TOVICE));
+ 	/* check for mapping failure? */
+ 	cb->u.tcb.tbd.size = cpu_to_le16(skb->len);
+ }
+@@ -1889,8 +1889,8 @@ static int e100_rx_alloc_skb(struct nic
+ 
+ 	/* Init, and map the RFD. */
+ 	skb_copy_to_linear_data(rx->skb, &nic->blank_rfd, sizeof(struct rfd));
+-	rx->dma_addr = pci_map_single(nic->pdev, rx->skb->data,
+-		RFD_BUF_LEN, PCI_DMA_BIDIRECTIONAL);
++	rx->dma_addr = dma_map_single(&nic->pdev->dev, rx->skb->data,
++		RFD_BUF_LEN, DMA_BIDIRECTIONAL);
+ 
+ 	if (pci_dma_mapping_error(nic->pdev, rx->dma_addr)) {
+ 		dev_kfree_skb_any(rx->skb);
+diff -u -p a/packetengines/yellowfin.c b/packetengines/yellowfin.c
+--- a/packetengines/yellowfin.c
++++ b/packetengines/yellowfin.c
+@@ -750,8 +750,8 @@ static int yellowfin_init_ring(struct ne
+ 			break;
+ 		skb->dev = dev;		/* Mark as being used by this device. */
+ 		skb_reserve(skb, 2);	/* 16 byte align the IP header. */
+-		yp->rx_ring[i].addr = cpu_to_le32(pci_map_single(yp->pci_dev,
+-			skb->data, yp->rx_buf_sz, PCI_DMA_FROMDEVICE));
++		yp->rx_ring[i].addr = cpu_to_le32(dma_map_single(&yp->pci_dev->dev,
++			skb->data, yp->rx_buf_sz, DMA_FROM_DEVICE));
+ 	}
+ 	if (i != RX_RING_SIZE) {
+ 		for (j = 0; j < i; j++)
+@@ -841,8 +841,8 @@ static netdev_tx_t yellowfin_start_xmit(
+ 	yp->tx_skbuff[entry] = skb;
+ 
+ #ifdef NO_TXSTATS
+-	yp->tx_ring[entry].addr = cpu_to_le32(pci_map_single(yp->pci_dev,
+-		skb->data, len, PCI_DMA_TODEVICE));
++	yp->tx_ring[entry].addr = cpu_to_le32(dma_map_single(&yp->pci_dev->dev,
++		skb->data, len, DMA_FROM_TOVICE));
+ 	yp->tx_ring[entry].result_status = 0;
+ 	if (entry >= TX_RING_SIZE-1) {
+ 		/* New stop command. */
+@@ -857,8 +857,8 @@ static netdev_tx_t yellowfin_start_xmit(
+ 	yp->cur_tx++;
+ #else
+ 	yp->tx_ring[entry<<1].request_cnt = len;
+-	yp->tx_ring[entry<<1].addr = cpu_to_le32(pci_map_single(yp->pci_dev,
+-		skb->data, len, PCI_DMA_TODEVICE));
++	yp->tx_ring[entry<<1].addr = cpu_to_le32(dma_map_single(&yp->pci_dev->dev,
++		skb->data, len, DMA_FROM_TOVICE));
+ 	/* The input_last (status-write) command is constant, but we must
+ 	   rewrite the subsequent 'stop' command. */
+ 
+@@ -1163,8 +1163,8 @@ static int yellowfin_rx(struct net_devic
+ 			yp->rx_skbuff[entry] = skb;
+ 			skb->dev = dev;	/* Mark as being used by this device. */
+ 			skb_reserve(skb, 2);	/* Align IP on 16 byte boundaries */
+-			yp->rx_ring[entry].addr = cpu_to_le32(pci_map_single(yp->pci_dev,
+-				skb->data, yp->rx_buf_sz, PCI_DMA_FROMDEVICE));
++			yp->rx_ring[entry].addr = cpu_to_le32(dma_map_single(&yp->pci_dev->dev,
++				skb->data, yp->rx_buf_sz, DMA_FROM_DEVICE));
+ 		}
+ 		yp->rx_ring[entry].dbdma_cmd = cpu_to_le32(CMD_STOP);
+ 		yp->rx_ring[entry].result_status = 0;	/* Clear complete bit. */
+diff -u -p a/packetengines/hamachi.c b/packetengines/hamachi.c
+--- a/packetengines/hamachi.c
++++ b/packetengines/hamachi.c
+@@ -1141,8 +1141,8 @@ static void hamachi_tx_timeout(struct ne
+ 		if (skb == NULL)
+ 			break;
+ 
+-                hmp->rx_ring[i].addr = cpu_to_leXX(pci_map_single(hmp->pci_dev,
+-			skb->data, hmp->rx_buf_sz, PCI_DMA_FROMDEVICE));
++                hmp->rx_ring[i].addr = cpu_to_leXX(dma_map_single(&hmp->pci_dev->dev,
++			skb->data, hmp->rx_buf_sz, DMA_FROM_DEVICE));
+ 		hmp->rx_ring[i].status_n_length = cpu_to_le32(DescOwn |
+ 			DescEndPacket | DescIntr | (hmp->rx_buf_sz - 2));
+ 	}
+@@ -1194,8 +1194,8 @@ static void hamachi_init_ring(struct net
+ 			break;
+ 		skb->dev = dev;         /* Mark as being used by this device. */
+ 		skb_reserve(skb, 2); /* 16 byte align the IP header. */
+-                hmp->rx_ring[i].addr = cpu_to_leXX(pci_map_single(hmp->pci_dev,
+-			skb->data, hmp->rx_buf_sz, PCI_DMA_FROMDEVICE));
++                hmp->rx_ring[i].addr = cpu_to_leXX(dma_map_single(&hmp->pci_dev->dev,
++			skb->data, hmp->rx_buf_sz, DMA_FROM_DEVICE));
+ 		/* -2 because it doesn't REALLY have that first 2 bytes -KDU */
+ 		hmp->rx_ring[i].status_n_length = cpu_to_le32(DescOwn |
+ 			DescEndPacket | DescIntr | (hmp->rx_buf_sz -2));
+@@ -1244,8 +1244,8 @@ static netdev_tx_t hamachi_start_xmit(st
+ 
+ 	hmp->tx_skbuff[entry] = skb;
+ 
+-        hmp->tx_ring[entry].addr = cpu_to_leXX(pci_map_single(hmp->pci_dev,
+-		skb->data, skb->len, PCI_DMA_TODEVICE));
++        hmp->tx_ring[entry].addr = cpu_to_leXX(dma_map_single(&hmp->pci_dev->dev,
++		skb->data, skb->len, DMA_FROM_TOVICE));
+ 
+ 	/* Hmmmm, could probably put a DescIntr on these, but the way
+ 		the driver is currently coded makes Tx interrupts unnecessary
+diff -u -p a/via/via-velocity.c b/via/via-velocity.c
+--- a/via/via-velocity.c
++++ b/via/via-velocity.c
+@@ -1517,8 +1517,8 @@ static int velocity_alloc_rx_buf(struct
+ 	 */
+ 	skb_reserve(rd_info->skb,
+ 			64 - ((unsigned long) rd_info->skb->data & 63));
+-	rd_info->skb_dma = pci_map_single(vptr->pdev, rd_info->skb->data,
+-					vptr->rx.buf_sz, PCI_DMA_FROMDEVICE);
++	rd_info->skb_dma = dma_map_single(&vptr->pdev->dev, rd_info->skb->data,
++					vptr->rx.buf_sz, DMA_FROM_DEVICE);
+ 
+ 	/*
+ 	 *	Fill in the descriptor to match
+@@ -2543,7 +2543,7 @@ static netdev_tx_t velocity_xmit(struct
+ 	 *	add it to the transmit ring.
+ 	 */
+ 	tdinfo->skb = skb;
+-	tdinfo->skb_dma[0] = pci_map_single(vptr->pdev, skb->data, pktlen, PCI_DMA_TODEVICE);
++	tdinfo->skb_dma[0] = dma_map_single(&vptr->pdev->dev, skb->data, pktlen, DMA_FROM_TOVICE);
+ 	td_ptr->tdesc0.len = cpu_to_le16(pktlen);
+ 	td_ptr->td_buf[0].pa_low = cpu_to_le32(tdinfo->skb_dma[0]);
+ 	td_ptr->td_buf[0].pa_high = 0;
+diff -u -p a/via/via-rhine.c b/via/via-rhine.c
+--- a/via/via-rhine.c
++++ b/via/via-rhine.c
+@@ -1015,8 +1015,8 @@ static void alloc_rbufs(struct net_devic
+ 		skb->dev = dev;                 /* Mark as being used by this device. */
+ 
+ 		rp->rx_skbuff_dma[i] =
+-			pci_map_single(rp->pdev, skb->data, rp->rx_buf_sz,
+-				       PCI_DMA_FROMDEVICE);
++			dma_map_single(&rp->pdev->dev, skb->data, rp->rx_buf_sz,
++				       DMA_FROM_DEVICE);
+ 
+ 		rp->rx_ring[i].addr = cpu_to_le32(rp->rx_skbuff_dma[i]);
+ 		rp->rx_ring[i].rx_status = cpu_to_le32(DescOwn);
+@@ -1509,8 +1509,8 @@ static netdev_tx_t rhine_start_tx(struct
+ 						       rp->tx_bufs));
+ 	} else {
+ 		rp->tx_skbuff_dma[entry] =
+-			pci_map_single(rp->pdev, skb->data, skb->len,
+-				       PCI_DMA_TODEVICE);
++			dma_map_single(&rp->pdev->dev, skb->data, skb->len,
++				       DMA_FROM_TOVICE);
+ 		rp->tx_ring[entry].addr = cpu_to_le32(rp->tx_skbuff_dma[entry]);
+ 	}
+ 
+@@ -1830,9 +1830,9 @@ static int rhine_rx(struct net_device *d
+ 				break;	/* Better luck next round. */
+ 			skb->dev = dev;	/* Mark as being used by this device. */
+ 			rp->rx_skbuff_dma[entry] =
+-				pci_map_single(rp->pdev, skb->data,
++				dma_map_single(&rp->pdev->dev, skb->data,
+ 					       rp->rx_buf_sz,
+-					       PCI_DMA_FROMDEVICE);
++					       DMA_FROM_DEVICE);
+ 			rp->rx_ring[entry].addr = cpu_to_le32(rp->rx_skbuff_dma[entry]);
+ 		}
+ 		rp->rx_ring[entry].rx_status = cpu_to_le32(DescOwn);
+diff -u -p a/ti/tlan.c b/ti/tlan.c
+--- a/ti/tlan.c
++++ b/ti/tlan.c
+@@ -1048,9 +1048,9 @@ static netdev_tx_t tlan_start_tx(struct
+ 
+ 	tail_list->forward = 0;
+ 
+-	tail_list->buffer[0].address = pci_map_single(priv->pci_dev,
++	tail_list->buffer[0].address = dma_map_single(&priv->pci_dev->dev,
+ 						      skb->data, txlen,
+-						      PCI_DMA_TODEVICE);
++						      DMA_FROM_TOVICE);
+ 	tlan_store_skb(tail_list, skb);
+ 
+ 	tail_list->frame_size = (u16) txlen;
+@@ -1504,8 +1504,8 @@ static u32 tlan_handle_rx_eof(struct net
+ 		netif_rx(skb);
+ 
+ 		head_list->buffer[0].address =
+-			pci_map_single(priv->pci_dev, new_skb->data,
+-				       TLAN_MAX_FRAME_SIZE, PCI_DMA_FROMDEVICE);
++			dma_map_single(&priv->pci_dev->dev, new_skb->data,
++				       TLAN_MAX_FRAME_SIZE, DMA_FROM_DEVICE);
+ 
+ 		tlan_store_skb(head_list, new_skb);
+ drop_and_reuse:
+@@ -1918,10 +1918,10 @@ static void tlan_reset_lists(struct net_
+ 			break;
+ 		}
+ 
+-		list->buffer[0].address = pci_map_single(priv->pci_dev,
++		list->buffer[0].address = dma_map_single(&priv->pci_dev->dev,
+ 							 skb->data,
+ 							 TLAN_MAX_FRAME_SIZE,
+-							 PCI_DMA_FROMDEVICE);
++							 DMA_FROM_DEVICE);
+ 		tlan_store_skb(list, skb);
+ 		list->buffer[1].count = 0;
+ 		list->buffer[1].address = 0;
+diff -u -p a/marvell/skge.c b/marvell/skge.c
+--- a/marvell/skge.c
++++ b/marvell/skge.c
+@@ -937,8 +937,8 @@ static void skge_rx_setup(struct skge_po
+ 	struct skge_rx_desc *rd = e->desc;
+ 	u64 map;
+ 
+-	map = pci_map_single(skge->hw->pdev, skb->data, bufsize,
+-			     PCI_DMA_FROMDEVICE);
++	map = dma_map_single(&skge->hw->pdev->dev, skb->data, bufsize,
++			     DMA_FROM_DEVICE);
+ 
+ 	rd->dma_lo = map;
+ 	rd->dma_hi = map >> 32;
+@@ -2741,7 +2741,7 @@ static netdev_tx_t skge_xmit_frame(struc
+ 	BUG_ON(td->control & BMU_OWN);
+ 	e->skb = skb;
+ 	len = skb_headlen(skb);
+-	map = pci_map_single(hw->pdev, skb->data, len, PCI_DMA_TODEVICE);
++	map = dma_map_single(&hw->pdev->dev, skb->data, len, DMA_FROM_TOVICE);
+ 	dma_unmap_addr_set(e, mapaddr, map);
+ 	dma_unmap_len_set(e, maplen, len);
+ 
+diff -u -p a/marvell/sky2.c b/marvell/sky2.c
+--- a/marvell/sky2.c
++++ b/marvell/sky2.c
+@@ -1219,7 +1219,7 @@ static int sky2_rx_map_skb(struct pci_de
+ 	struct sk_buff *skb = re->skb;
+ 	int i;
+ 
+-	re->data_addr = pci_map_single(pdev, skb->data, size, PCI_DMA_FROMDEVICE);
++	re->data_addr = dma_map_single(&pdev->dev, skb->data, size, DMA_FROM_DEVICE);
+ 	if (pci_dma_mapping_error(pdev, re->data_addr))
+ 		goto mapping_error;
+ 
+@@ -1855,7 +1855,7 @@ static netdev_tx_t sky2_xmit_frame(struc
+   		return NETDEV_TX_BUSY;
+ 
+ 	len = skb_headlen(skb);
+-	mapping = pci_map_single(hw->pdev, skb->data, len, PCI_DMA_TODEVICE);
++	mapping = dma_map_single(&hw->pdev->dev, skb->data, len, DMA_FROM_TOVICE);
+ 
+ 	if (pci_dma_mapping_error(hw->pdev, mapping))
+ 		goto mapping_error;
+diff -u -p a/toshiba/spider_net.c b/toshiba/spider_net.c
+--- a/toshiba/spider_net.c
++++ b/toshiba/spider_net.c
+@@ -452,8 +452,8 @@ spider_net_prepare_rx_descr(struct spide
+ 	if (offset)
+ 		skb_reserve(descr->skb, SPIDER_NET_RXBUF_ALIGN - offset);
+ 	/* iommu-map the skb */
+-	buf = pci_map_single(card->pdev, descr->skb->data,
+-			SPIDER_NET_MAX_FRAME, PCI_DMA_FROMDEVICE);
++	buf = dma_map_single(&card->pdev->dev, descr->skb->data,
++			SPIDER_NET_MAX_FRAME, DMA_FROM_DEVICE);
+ 	if (pci_dma_mapping_error(card->pdev, buf)) {
+ 		dev_kfree_skb_any(descr->skb);
+ 		descr->skb = NULL;
+@@ -691,7 +691,7 @@ spider_net_prepare_tx_descr(struct spide
+ 	dma_addr_t buf;
+ 	unsigned long flags;
+ 
+-	buf = pci_map_single(card->pdev, skb->data, skb->len, PCI_DMA_TODEVICE);
++	buf = dma_map_single(&card->pdev->dev, skb->data, skb->len, DMA_FROM_TOVICE);
+ 	if (pci_dma_mapping_error(card->pdev, buf)) {
+ 		if (netif_msg_tx_err(card) && net_ratelimit())
+ 			dev_err(&card->netdev->dev, "could not iommu-map packet (%p, %i). "
+diff -u -p a/toshiba/tc35815.c b/toshiba/tc35815.c
+--- a/toshiba/tc35815.c
++++ b/toshiba/tc35815.c
+@@ -456,8 +456,8 @@ static struct sk_buff *alloc_rxbuf_skb(s
+ 	skb = dev_alloc_skb(RX_BUF_SIZE);
+ 	if (!skb)
+ 		return NULL;
+-	*dma_handle = pci_map_single(hwdev, skb->data, RX_BUF_SIZE,
+-				     PCI_DMA_FROMDEVICE);
++	*dma_handle = dma_map_single(&hwdev->dev, skb->data, RX_BUF_SIZE,
++				     DMA_FROM_DEVICE);
+ 	if (pci_dma_mapping_error(hwdev, *dma_handle)) {
+ 		dev_kfree_skb_any(skb);
+ 		return NULL;
+@@ -1329,7 +1329,7 @@ static int tc35815_send_packet(struct sk
+ 	BUG_ON(lp->tx_skbs[lp->tfd_start].skb);
+ #endif
+ 	lp->tx_skbs[lp->tfd_start].skb = skb;
+-	lp->tx_skbs[lp->tfd_start].skb_dma = pci_map_single(lp->pci_dev, skb->data, skb->len, PCI_DMA_TODEVICE);
++	lp->tx_skbs[lp->tfd_start].skb_dma = dma_map_single(&lp->pci_dev->dev, skb->data, skb->len, DMA_FROM_TOVICE);
+ 
+ 	/*add to ring */
+ 	txfd = &lp->tfd_base[lp->tfd_start];
+diff -u -p a/sfc/rx.c b/sfc/rx.c
+--- a/sfc/rx.c
++++ b/sfc/rx.c
+@@ -157,9 +157,9 @@ static int efx_init_rx_buffers_skb(struc
+ 		rx_buf->len = skb_len - NET_IP_ALIGN;
+ 		rx_buf->is_page = false;
+ 
+-		rx_buf->dma_addr = pci_map_single(efx->pci_dev,
++		rx_buf->dma_addr = dma_map_single(&efx->pci_dev->dev,
+ 						  skb->data, rx_buf->len,
+-						  PCI_DMA_FROMDEVICE);
++						  DMA_FROM_DEVICE);
+ 		if (unlikely(pci_dma_mapping_error(efx->pci_dev,
+ 						   rx_buf->dma_addr))) {
+ 			dev_kfree_skb_any(skb);
+diff -u -p a/sfc/tx.c b/sfc/tx.c
+--- a/sfc/tx.c
++++ b/sfc/tx.c
+@@ -187,7 +187,7 @@ netdev_tx_t efx_enqueue_skb(struct efx_t
+ 	 * memory.
+ 	 */
+ 	unmap_single = true;
+-	dma_addr = pci_map_single(pci_dev, skb->data, len, PCI_DMA_TODEVICE);
++	dma_addr = dma_map_single(&pci_dev->dev, skb->data, len, DMA_FROM_TOVICE);
+ 
+ 	/* Process all fragments */
+ 	while (1) {
+@@ -751,9 +751,9 @@ efx_tsoh_heap_alloc(struct efx_tx_queue
+ 	if (unlikely(!tsoh))
+ 		return NULL;
+ 
+-	tsoh->dma_addr = pci_map_single(tx_queue->efx->pci_dev,
++	tsoh->dma_addr = dma_map_single(&tx_queue->efx->pci_dev->dev,
+ 					TSOH_BUFFER(tsoh), header_len,
+-					PCI_DMA_TODEVICE);
++					DMA_FROM_TOVICE);
+ 	if (unlikely(pci_dma_mapping_error(tx_queue->efx->pci_dev,
+ 					   tsoh->dma_addr))) {
+ 		kfree(tsoh);
+@@ -962,8 +962,8 @@ static int tso_get_head_fragment(struct
+ 	int hl = st->header_len;
+ 	int len = skb_headlen(skb) - hl;
+ 
+-	st->unmap_addr = pci_map_single(efx->pci_dev, skb->data + hl,
+-					len, PCI_DMA_TODEVICE);
++	st->unmap_addr = dma_map_single(&efx->pci_dev->dev, skb->data + hl,
++					len, DMA_FROM_TOVICE);
+ 	if (likely(!pci_dma_mapping_error(efx->pci_dev, st->unmap_addr))) {
+ 		st->unmap_single = true;
+ 		st->unmap_len = len;
+diff -u -p a/neterion/s2io.c b/neterion/s2io.c
+--- a/neterion/s2io.c
++++ b/neterion/s2io.c
+@@ -2544,9 +2544,9 @@ static int fill_rx_buffers(struct s2io_n
+ 			memset(rxdp, 0, sizeof(struct RxD1));
+ 			skb_reserve(skb, NET_IP_ALIGN);
+ 			rxdp1->Buffer0_ptr =
+-				pci_map_single(ring->pdev, skb->data,
++				dma_map_single(&ring->pdev->dev, skb->data,
+ 					       size - NET_IP_ALIGN,
+-					       PCI_DMA_FROMDEVICE);
++					       DMA_FROM_DEVICE);
+ 			if (pci_dma_mapping_error(nic->pdev,
+ 						  rxdp1->Buffer0_ptr))
+ 				goto pci_map_failed;
+@@ -2580,9 +2580,9 @@ static int fill_rx_buffers(struct s2io_n
+ 
+ 			if (from_card_up) {
+ 				rxdp3->Buffer0_ptr =
+-					pci_map_single(ring->pdev, ba->ba_0,
++					dma_map_single(&ring->pdev->dev, ba->ba_0,
+ 						       BUF0_LEN,
+-						       PCI_DMA_FROMDEVICE);
++						       DMA_FROM_DEVICE);
+ 				if (pci_dma_mapping_error(nic->pdev,
+ 							  rxdp3->Buffer0_ptr))
+ 					goto pci_map_failed;
+@@ -2600,10 +2600,10 @@ static int fill_rx_buffers(struct s2io_n
+ 				 * Buffer2 will have L3/L4 header plus
+ 				 * L4 payload
+ 				 */
+-				rxdp3->Buffer2_ptr = pci_map_single(ring->pdev,
++				rxdp3->Buffer2_ptr = dma_map_single(&ring->pdev->dev,
+ 								    skb->data,
+ 								    ring->mtu + 4,
+-								    PCI_DMA_FROMDEVICE);
++								    DMA_FROM_DEVICE);
+ 
+ 				if (pci_dma_mapping_error(nic->pdev,
+ 							  rxdp3->Buffer2_ptr))
+@@ -2611,10 +2611,10 @@ static int fill_rx_buffers(struct s2io_n
+ 
+ 				if (from_card_up) {
+ 					rxdp3->Buffer1_ptr =
+-						pci_map_single(ring->pdev,
++						dma_map_single(&ring->pdev->dev,
+ 							       ba->ba_1,
+ 							       BUF1_LEN,
+-							       PCI_DMA_FROMDEVICE);
++							       DMA_FROM_DEVICE);
+ 
+ 					if (pci_dma_mapping_error(nic->pdev,
+ 								  rxdp3->Buffer1_ptr)) {
+@@ -4163,17 +4163,17 @@ static netdev_tx_t s2io_xmit(struct sk_b
+ 			(__force u64)skb_shinfo(skb)->ip6_frag_id << 32;
+ #endif
+ 		txdp->Host_Control = (unsigned long)fifo->ufo_in_band_v;
+-		txdp->Buffer_Pointer = pci_map_single(sp->pdev,
++		txdp->Buffer_Pointer = dma_map_single(&sp->pdev->dev,
+ 						      fifo->ufo_in_band_v,
+ 						      sizeof(u64),
+-						      PCI_DMA_TODEVICE);
++						      DMA_FROM_TOVICE);
+ 		if (pci_dma_mapping_error(sp->pdev, txdp->Buffer_Pointer))
+ 			goto pci_map_failed;
+ 		txdp++;
+ 	}
+ 
+-	txdp->Buffer_Pointer = pci_map_single(sp->pdev, skb->data,
+-					      frg_len, PCI_DMA_TODEVICE);
++	txdp->Buffer_Pointer = dma_map_single(&sp->pdev->dev, skb->data,
++					      frg_len, DMA_FROM_TOVICE);
+ 	if (pci_dma_mapping_error(sp->pdev, txdp->Buffer_Pointer))
+ 		goto pci_map_failed;
+ 
+@@ -6835,9 +6835,9 @@ static int set_rxd_buffer_pointer(struct
+ 			 * Host Control is NULL
+ 			 */
+ 			rxdp1->Buffer0_ptr = *temp0 =
+-				pci_map_single(sp->pdev, (*skb)->data,
++				dma_map_single(&sp->pdev->dev, (*skb)->data,
+ 					       size - NET_IP_ALIGN,
+-					       PCI_DMA_FROMDEVICE);
++					       DMA_FROM_DEVICE);
+ 			if (pci_dma_mapping_error(sp->pdev, rxdp1->Buffer0_ptr))
+ 				goto memalloc_failed;
+ 			rxdp->Host_Control = (unsigned long) (*skb);
+@@ -6861,14 +6861,14 @@ static int set_rxd_buffer_pointer(struct
+ 			}
+ 			stats->mem_allocated += (*skb)->truesize;
+ 			rxdp3->Buffer2_ptr = *temp2 =
+-				pci_map_single(sp->pdev, (*skb)->data,
++				dma_map_single(&sp->pdev->dev, (*skb)->data,
+ 					       dev->mtu + 4,
+-					       PCI_DMA_FROMDEVICE);
++					       DMA_FROM_DEVICE);
+ 			if (pci_dma_mapping_error(sp->pdev, rxdp3->Buffer2_ptr))
+ 				goto memalloc_failed;
+ 			rxdp3->Buffer0_ptr = *temp0 =
+-				pci_map_single(sp->pdev, ba->ba_0, BUF0_LEN,
+-					       PCI_DMA_FROMDEVICE);
++				dma_map_single(&sp->pdev->dev, ba->ba_0, BUF0_LEN,
++					       DMA_FROM_DEVICE);
+ 			if (pci_dma_mapping_error(sp->pdev,
+ 						  rxdp3->Buffer0_ptr)) {
+ 				pci_unmap_single(sp->pdev,
+@@ -6881,8 +6881,8 @@ static int set_rxd_buffer_pointer(struct
+ 
+ 			/* Buffer-1 will be dummy buffer not used */
+ 			rxdp3->Buffer1_ptr = *temp1 =
+-				pci_map_single(sp->pdev, ba->ba_1, BUF1_LEN,
+-					       PCI_DMA_FROMDEVICE);
++				dma_map_single(&sp->pdev->dev, ba->ba_1, BUF1_LEN,
++					       DMA_FROM_DEVICE);
+ 			if (pci_dma_mapping_error(sp->pdev,
+ 						  rxdp3->Buffer1_ptr)) {
+ 				pci_unmap_single(sp->pdev,
+diff -u -p a/neterion/vxge/vxge-config.c b/neterion/vxge/vxge-config.c
+--- a/neterion/vxge/vxge-config.c
++++ b/neterion/vxge/vxge-config.c
+@@ -1183,8 +1183,8 @@ __vxge_hw_blockpool_create(struct __vxge
+ 			goto blockpool_create_exit;
+ 		}
+ 
+-		dma_addr = pci_map_single(hldev->pdev, memblock,
+-				VXGE_HW_BLOCK_SIZE, PCI_DMA_BIDIRECTIONAL);
++		dma_addr = dma_map_single(&hldev->pdev->dev, memblock,
++				VXGE_HW_BLOCK_SIZE, DMA_BIDIRECTIONAL);
+ 		if (unlikely(pci_dma_mapping_error(hldev->pdev,
+ 				dma_addr))) {
+ 			vxge_os_dma_free(hldev->pdev, memblock, &acc_handle);
+@@ -2274,8 +2274,8 @@ static void vxge_hw_blockpool_block_add(
+ 		goto exit;
+ 	}
+ 
+-	dma_addr = pci_map_single(devh->pdev, block_addr, length,
+-				PCI_DMA_BIDIRECTIONAL);
++	dma_addr = dma_map_single(&devh->pdev->dev, block_addr, length,
++				DMA_BIDIRECTIONAL);
+ 
+ 	if (unlikely(pci_dma_mapping_error(devh->pdev, dma_addr))) {
+ 		vxge_os_dma_free(devh->pdev, block_addr, &acc_handle);
+@@ -2376,8 +2376,8 @@ static void *__vxge_hw_blockpool_malloc(
+ 			goto exit;
+ 		}
+ 
+-		dma_object->addr = pci_map_single(devh->pdev, memblock, size,
+-					PCI_DMA_BIDIRECTIONAL);
++		dma_object->addr = dma_map_single(&devh->pdev->dev, memblock, size,
++					DMA_BIDIRECTIONAL);
+ 
+ 		if (unlikely(pci_dma_mapping_error(devh->pdev,
+ 				dma_object->addr))) {
+diff -u -p a/neterion/vxge/vxge-main.c b/neterion/vxge/vxge-main.c
+--- a/neterion/vxge/vxge-main.c
++++ b/neterion/vxge/vxge-main.c
+@@ -240,8 +240,8 @@ static int vxge_rx_map(void *dtrh, struc
+ 	rx_priv = vxge_hw_ring_rxd_private_get(dtrh);
+ 
+ 	rx_priv->skb_data = rx_priv->skb->data;
+-	dma_addr = pci_map_single(ring->pdev, rx_priv->skb_data,
+-				rx_priv->data_size, PCI_DMA_FROMDEVICE);
++	dma_addr = dma_map_single(&ring->pdev->dev, rx_priv->skb_data,
++				rx_priv->data_size, DMA_FROM_DEVICE);
+ 
+ 	if (unlikely(pci_dma_mapping_error(ring->pdev, dma_addr))) {
+ 		ring->stats.pci_map_fail++;
+@@ -895,8 +895,8 @@ vxge_xmit(struct sk_buff *skb, struct ne
+ 
+ 	first_frg_len = skb_headlen(skb);
+ 
+-	dma_pointer = pci_map_single(fifo->pdev, skb->data, first_frg_len,
+-				PCI_DMA_TODEVICE);
++	dma_pointer = dma_map_single(&fifo->pdev->dev, skb->data, first_frg_len,
++				DMA_FROM_TOVICE);
+ 
+ 	if (unlikely(pci_dma_mapping_error(fifo->pdev, dma_pointer))) {
+ 		vxge_hw_fifo_txdl_free(fifo_hw, dtr);
+diff -u -p a/amd/amd8111e.c b/amd/amd8111e.c
+--- a/amd/amd8111e.c
++++ b/amd/amd8111e.c
+@@ -346,8 +346,8 @@ static int amd8111e_init_ring(struct net
+ 	}
+         /* Initilaizing receive descriptors */
+ 	for (i = 0; i < NUM_RX_BUFFERS; i++) {
+-		lp->rx_dma_addr[i] = pci_map_single(lp->pci_dev,
+-			lp->rx_skbuff[i]->data,lp->rx_buff_len-2, PCI_DMA_FROMDEVICE);
++		lp->rx_dma_addr[i] = dma_map_single(&lp->pci_dev->dev,
++			lp->rx_skbuff[i]->data,lp->rx_buff_len-2, DMA_FROM_DEVICE);
+ 
+ 		lp->rx_ring[i].buff_phy_addr = cpu_to_le32(lp->rx_dma_addr[i]);
+ 		lp->rx_ring[i].buff_count = cpu_to_le16(lp->rx_buff_len-2);
+@@ -782,10 +782,10 @@ static int amd8111e_rx_poll(struct napi_
+ 					 lp->rx_buff_len-2, PCI_DMA_FROMDEVICE);
+ 			skb_put(skb, pkt_len);
+ 			lp->rx_skbuff[rx_index] = new_skb;
+-			lp->rx_dma_addr[rx_index] = pci_map_single(lp->pci_dev,
++			lp->rx_dma_addr[rx_index] = dma_map_single(&lp->pci_dev->dev,
+ 								   new_skb->data,
+ 								   lp->rx_buff_len-2,
+-								   PCI_DMA_FROMDEVICE);
++								   DMA_FROM_DEVICE);
+ 
+ 			skb->protocol = eth_type_trans(skb, dev);
+ 
+@@ -1316,7 +1316,7 @@ static netdev_tx_t amd8111e_start_xmit(s
+ 	}
+ #endif
+ 	lp->tx_dma_addr[tx_index] =
+-	    pci_map_single(lp->pci_dev, skb->data, skb->len, PCI_DMA_TODEVICE);
++	    dma_map_single(&lp->pci_dev->dev, skb->data, skb->len, DMA_FROM_TOVICE);
+ 	lp->tx_ring[tx_index].buff_phy_addr =
+ 	    cpu_to_le32(lp->tx_dma_addr[tx_index]);
+ 
+diff -u -p a/amd/pcnet32.c b/amd/pcnet32.c
+--- a/amd/pcnet32.c
++++ b/amd/pcnet32.c
+@@ -599,8 +599,8 @@ static void pcnet32_realloc_rx_ring(stru
+ 		skb_reserve(rx_skbuff, NET_IP_ALIGN);
+ 
+ 		new_dma_addr_list[new] =
+-			    pci_map_single(lp->pci_dev, rx_skbuff->data,
+-					   PKT_BUF_SIZE, PCI_DMA_FROMDEVICE);
++			    dma_map_single(&lp->pci_dev->dev, rx_skbuff->data,
++					   PKT_BUF_SIZE, DMA_FROM_DEVICE);
+ 		new_rx_ring[new].base = cpu_to_le32(new_dma_addr_list[new]);
+ 		new_rx_ring[new].buf_length = cpu_to_le16(NEG_BUF_SIZE);
+ 		new_rx_ring[new].status = cpu_to_le16(0x8000);
+@@ -935,8 +935,8 @@ static int pcnet32_loopback_test(struct
+ 			*packet++ = i;
+ 
+ 		lp->tx_dma_addr[x] =
+-			pci_map_single(lp->pci_dev, skb->data, skb->len,
+-				       PCI_DMA_TODEVICE);
++			dma_map_single(&lp->pci_dev->dev, skb->data, skb->len,
++				       DMA_FROM_TOVICE);
+ 		lp->tx_ring[x].base = cpu_to_le32(lp->tx_dma_addr[x]);
+ 		wmb();	/* Make sure owner changes after all others are visible */
+ 		lp->tx_ring[x].status = cpu_to_le16(status);
+@@ -1161,10 +1161,10 @@ static void pcnet32_rx_entry(struct net_
+ 			skb_put(skb, pkt_len);
+ 			lp->rx_skbuff[entry] = newskb;
+ 			lp->rx_dma_addr[entry] =
+-					    pci_map_single(lp->pci_dev,
++					    dma_map_single(&lp->pci_dev->dev,
+ 							   newskb->data,
+ 							   PKT_BUF_SIZE,
+-							   PCI_DMA_FROMDEVICE);
++							   DMA_FROM_DEVICE);
+ 			rxp->base = cpu_to_le32(lp->rx_dma_addr[entry]);
+ 			rx_in_place = 1;
+ 		} else
+@@ -2285,8 +2285,8 @@ static int pcnet32_init_ring(struct net_
+ 		rmb();
+ 		if (lp->rx_dma_addr[i] == 0)
+ 			lp->rx_dma_addr[i] =
+-			    pci_map_single(lp->pci_dev, rx_skbuff->data,
+-					   PKT_BUF_SIZE, PCI_DMA_FROMDEVICE);
++			    dma_map_single(&lp->pci_dev->dev, rx_skbuff->data,
++					   PKT_BUF_SIZE, DMA_FROM_DEVICE);
+ 		lp->rx_ring[i].base = cpu_to_le32(lp->rx_dma_addr[i]);
+ 		lp->rx_ring[i].buf_length = cpu_to_le16(NEG_BUF_SIZE);
+ 		wmb();		/* Make sure owner changes after all others are visible */
+@@ -2418,7 +2418,7 @@ static netdev_tx_t pcnet32_start_xmit(st
+ 
+ 	lp->tx_skbuff[entry] = skb;
+ 	lp->tx_dma_addr[entry] =
+-	    pci_map_single(lp->pci_dev, skb->data, skb->len, PCI_DMA_TODEVICE);
++	    dma_map_single(&lp->pci_dev->dev, skb->data, skb->len, DMA_FROM_TOVICE);
+ 	lp->tx_ring[entry].base = cpu_to_le32(lp->tx_dma_addr[entry]);
+ 	wmb();			/* Make sure owner changes after all others are visible */
+ 	lp->tx_ring[entry].status = cpu_to_le16(status);
+diff -u -p a/nvidia/forcedeth.c b/nvidia/forcedeth.c
+--- a/nvidia/forcedeth.c
++++ b/nvidia/forcedeth.c
+@@ -1747,10 +1747,10 @@ static int nv_alloc_rx(struct net_device
+ 		struct sk_buff *skb = dev_alloc_skb(np->rx_buf_sz + NV_RX_ALLOC_PAD);
+ 		if (skb) {
+ 			np->put_rx_ctx->skb = skb;
+-			np->put_rx_ctx->dma = pci_map_single(np->pci_dev,
++			np->put_rx_ctx->dma = dma_map_single(&np->pci_dev->dev,
+ 							     skb->data,
+ 							     skb_tailroom(skb),
+-							     PCI_DMA_FROMDEVICE);
++							     DMA_FROM_DEVICE);
+ 			np->put_rx_ctx->dma_len = skb_tailroom(skb);
+ 			np->put_rx.orig->buf = cpu_to_le32(np->put_rx_ctx->dma);
+ 			wmb();
+@@ -1778,10 +1778,10 @@ static int nv_alloc_rx_optimized(struct
+ 		struct sk_buff *skb = dev_alloc_skb(np->rx_buf_sz + NV_RX_ALLOC_PAD);
+ 		if (skb) {
+ 			np->put_rx_ctx->skb = skb;
+-			np->put_rx_ctx->dma = pci_map_single(np->pci_dev,
++			np->put_rx_ctx->dma = dma_map_single(&np->pci_dev->dev,
+ 							     skb->data,
+ 							     skb_tailroom(skb),
+-							     PCI_DMA_FROMDEVICE);
++							     DMA_FROM_DEVICE);
+ 			np->put_rx_ctx->dma_len = skb_tailroom(skb);
+ 			np->put_rx.ex->bufhigh = cpu_to_le32(dma_high(np->put_rx_ctx->dma));
+ 			np->put_rx.ex->buflow = cpu_to_le32(dma_low(np->put_rx_ctx->dma));
+@@ -2133,8 +2133,8 @@ static netdev_tx_t nv_start_xmit(struct
+ 		prev_tx = put_tx;
+ 		prev_tx_ctx = np->put_tx_ctx;
+ 		bcnt = (size > NV_TX2_TSO_MAX_SIZE) ? NV_TX2_TSO_MAX_SIZE : size;
+-		np->put_tx_ctx->dma = pci_map_single(np->pci_dev, skb->data + offset, bcnt,
+-						PCI_DMA_TODEVICE);
++		np->put_tx_ctx->dma = dma_map_single(&np->pci_dev->dev, skb->data + offset, bcnt,
++						DMA_FROM_TOVICE);
+ 		np->put_tx_ctx->dma_len = bcnt;
+ 		np->put_tx_ctx->dma_single = 1;
+ 		put_tx->buf = cpu_to_le32(np->put_tx_ctx->dma);
+@@ -2248,8 +2248,8 @@ static netdev_tx_t nv_start_xmit_optimiz
+ 		prev_tx = put_tx;
+ 		prev_tx_ctx = np->put_tx_ctx;
+ 		bcnt = (size > NV_TX2_TSO_MAX_SIZE) ? NV_TX2_TSO_MAX_SIZE : size;
+-		np->put_tx_ctx->dma = pci_map_single(np->pci_dev, skb->data + offset, bcnt,
+-						PCI_DMA_TODEVICE);
++		np->put_tx_ctx->dma = dma_map_single(&np->pci_dev->dev, skb->data + offset, bcnt,
++						DMA_FROM_TOVICE);
+ 		np->put_tx_ctx->dma_len = bcnt;
+ 		np->put_tx_ctx->dma_single = 1;
+ 		put_tx->bufhigh = cpu_to_le32(dma_high(np->put_tx_ctx->dma));
+@@ -4717,9 +4717,9 @@ static int nv_loopback_test(struct net_d
+ 		ret = 0;
+ 		goto out;
+ 	}
+-	test_dma_addr = pci_map_single(np->pci_dev, tx_skb->data,
++	test_dma_addr = dma_map_single(&np->pci_dev->dev, tx_skb->data,
+ 				       skb_tailroom(tx_skb),
+-				       PCI_DMA_FROMDEVICE);
++				       DMA_FROM_DEVICE);
+ 	pkt_data = skb_put(tx_skb, pkt_len);
+ 	for (i = 0; i < pkt_len; i++)
+ 		pkt_data[i] = (u8)(i & 0xff);
+diff -u -p a/broadcom/tg3.c b/broadcom/tg3.c
+--- a/broadcom/tg3.c
++++ b/broadcom/tg3.c
+@@ -5501,8 +5501,8 @@ static int tg3_alloc_rx_skb(struct tg3 *
+ 
+ 	skb_reserve(skb, TG3_RX_OFFSET(tp));
+ 
+-	mapping = pci_map_single(tp->pdev, skb->data, skb_size,
+-				 PCI_DMA_FROMDEVICE);
++	mapping = dma_map_single(&tp->pdev->dev, skb->data, skb_size,
++				 DMA_FROM_DEVICE);
+ 	if (pci_dma_mapping_error(tp->pdev, mapping)) {
+ 		dev_kfree_skb(skb);
+ 		return -EIO;
+@@ -6605,8 +6605,8 @@ static int tigon3_dma_hwbug_workaround(s
+ 		ret = -1;
+ 	} else {
+ 		/* New SKB is guaranteed to be linear. */
+-		new_addr = pci_map_single(tp->pdev, new_skb->data, new_skb->len,
+-					  PCI_DMA_TODEVICE);
++		new_addr = dma_map_single(&tp->pdev->dev, new_skb->data, new_skb->len,
++					  DMA_FROM_TOVICE);
+ 		/* Make sure the mapping succeeded */
+ 		if (pci_dma_mapping_error(tp->pdev, new_addr)) {
+ 			dev_kfree_skb(new_skb);
+@@ -6798,7 +6798,7 @@ static netdev_tx_t tg3_start_xmit(struct
+ 
+ 	len = skb_headlen(skb);
+ 
+-	mapping = pci_map_single(tp->pdev, skb->data, len, PCI_DMA_TODEVICE);
++	mapping = dma_map_single(&tp->pdev->dev, skb->data, len, DMA_FROM_TOVICE);
+ 	if (pci_dma_mapping_error(tp->pdev, mapping))
+ 		goto drop;
+ 
+@@ -11575,7 +11575,7 @@ static int tg3_run_loopback(struct tg3 *
+ 	for (i = data_off; i < tx_len; i++)
+ 		tx_data[i] = (u8) (i & 0xff);
+ 
+-	map = pci_map_single(tp->pdev, skb->data, tx_len, PCI_DMA_TODEVICE);
++	map = dma_map_single(&tp->pdev->dev, skb->data, tx_len, DMA_FROM_TOVICE);
+ 	if (pci_dma_mapping_error(tp->pdev, map)) {
+ 		dev_kfree_skb(skb);
+ 		return -EIO;
+diff -u -p a/cisco/enic/enic_main.c b/cisco/enic/enic_main.c
+--- a/cisco/enic/enic_main.c
++++ b/cisco/enic/enic_main.c
+@@ -628,8 +628,8 @@ static inline void enic_queue_wq_skb_vla
+ 	 * per fragment is queued.
+ 	 */
+ 	enic_queue_wq_desc(wq, skb,
+-		pci_map_single(enic->pdev, skb->data,
+-			head_len, PCI_DMA_TODEVICE),
++		dma_map_single(&enic->pdev->dev, skb->data,
++			head_len, DMA_FROM_TOVICE),
+ 		head_len,
+ 		vlan_tag_insert, vlan_tag,
+ 		eop, loopback);
+@@ -654,8 +654,8 @@ static inline void enic_queue_wq_skb_csu
+ 	 * per fragment is queued.
+ 	 */
+ 	enic_queue_wq_desc_csum_l4(wq, skb,
+-		pci_map_single(enic->pdev, skb->data,
+-			head_len, PCI_DMA_TODEVICE),
++		dma_map_single(&enic->pdev->dev, skb->data,
++			head_len, DMA_FROM_TOVICE),
+ 		head_len,
+ 		csum_offset,
+ 		hdr_len,
+@@ -698,8 +698,8 @@ static inline void enic_queue_wq_skb_tso
+ 	 */
+ 	while (frag_len_left) {
+ 		len = min(frag_len_left, (unsigned int)WQ_ENET_MAX_DESC_LEN);
+-		dma_addr = pci_map_single(enic->pdev, skb->data + offset,
+-				len, PCI_DMA_TODEVICE);
++		dma_addr = dma_map_single(&enic->pdev->dev, skb->data + offset,
++				len, DMA_FROM_TOVICE);
+ 		enic_queue_wq_desc_tso(wq, skb,
+ 			dma_addr,
+ 			len,
+@@ -1207,8 +1207,8 @@ static int enic_rq_alloc_buf(struct vnic
+ 	if (!skb)
+ 		return -ENOMEM;
+ 
+-	dma_addr = pci_map_single(enic->pdev, skb->data,
+-		len, PCI_DMA_FROMDEVICE);
++	dma_addr = dma_map_single(&enic->pdev->dev, skb->data,
++		len, DMA_FROM_DEVICE);
+ 
+ 	enic_queue_rq_desc(rq, skb, os_buf_index,
+ 		dma_addr, len);
+diff -u -p a/smsc/epic100.c b/smsc/epic100.c
+--- a/smsc/epic100.c
++++ b/smsc/epic100.c
+@@ -940,8 +940,8 @@ static void epic_init_ring(struct net_de
+ 		if (skb == NULL)
+ 			break;
+ 		skb_reserve(skb, 2);	/* 16 byte align the IP header. */
+-		ep->rx_ring[i].bufaddr = pci_map_single(ep->pci_dev,
+-			skb->data, ep->rx_buf_sz, PCI_DMA_FROMDEVICE);
++		ep->rx_ring[i].bufaddr = dma_map_single(&ep->pci_dev->dev,
++			skb->data, ep->rx_buf_sz, DMA_FROM_DEVICE);
+ 		ep->rx_ring[i].rxstatus = DescOwn;
+ 	}
+ 	ep->dirty_rx = (unsigned int)(i - RX_RING_SIZE);
+@@ -976,8 +976,8 @@ static netdev_tx_t epic_start_xmit(struc
+ 	entry = ep->cur_tx % TX_RING_SIZE;
+ 
+ 	ep->tx_skbuff[entry] = skb;
+-	ep->tx_ring[entry].bufaddr = pci_map_single(ep->pci_dev, skb->data,
+-		 			            skb->len, PCI_DMA_TODEVICE);
++	ep->tx_ring[entry].bufaddr = dma_map_single(&ep->pci_dev->dev, skb->data,
++		 			            skb->len, DMA_FROM_TOVICE);
+ 	if (free_count < TX_QUEUE_LEN/2) {/* Typical path */
+ 		ctrl_word = 0x100000; /* No interrupt */
+ 	} else if (free_count == TX_QUEUE_LEN/2) {
+@@ -1237,8 +1237,8 @@ static int epic_rx(struct net_device *de
+ 			if (skb == NULL)
+ 				break;
+ 			skb_reserve(skb, 2);	/* Align IP on 16 byte boundaries */
+-			ep->rx_ring[entry].bufaddr = pci_map_single(ep->pci_dev,
+-				skb->data, ep->rx_buf_sz, PCI_DMA_FROMDEVICE);
++			ep->rx_ring[entry].bufaddr = dma_map_single(&ep->pci_dev->dev,
++				skb->data, ep->rx_buf_sz, DMA_FROM_DEVICE);
+ 			work_done++;
+ 		}
+ 		/* AV: shouldn't we add a barrier here? */
+diff -u -p a/smsc/smsc9420.c b/smsc/smsc9420.c
+--- a/smsc/smsc9420.c
++++ b/smsc/smsc9420.c
+@@ -851,8 +851,8 @@ static int smsc9420_alloc_rx_buffer(stru
+ 
+ 	skb->dev = pd->dev;
+ 
+-	mapping = pci_map_single(pd->pdev, skb_tail_pointer(skb),
+-				 PKT_BUF_SZ, PCI_DMA_FROMDEVICE);
++	mapping = dma_map_single(&pd->pdev->dev, skb_tail_pointer(skb),
++				 PKT_BUF_SZ, DMA_FROM_DEVICE);
+ 	if (pci_dma_mapping_error(pd->pdev, mapping)) {
+ 		dev_kfree_skb_any(skb);
+ 		smsc_warn(RX_ERR, "pci_map_single failed!");
+@@ -1001,8 +1001,8 @@ static netdev_tx_t smsc9420_hard_start_x
+ 	BUG_ON(pd->tx_buffers[index].skb);
+ 	BUG_ON(pd->tx_buffers[index].mapping);
+ 
+-	mapping = pci_map_single(pd->pdev, skb->data,
+-				 skb->len, PCI_DMA_TODEVICE);
++	mapping = dma_map_single(&pd->pdev->dev, skb->data,
++				 skb->len, DMA_FROM_TOVICE);
+ 	if (pci_dma_mapping_error(pd->pdev, mapping)) {
+ 		smsc_warn(TX_ERR, "pci_map_single failed, dropping packet");
+ 		return NETDEV_TX_BUSY;
+diff -u -p a/hp/hp100.c b/hp/hp100.c
+--- a/hp/hp100.c
++++ b/hp/hp100.c
+@@ -288,8 +288,8 @@ static inline dma_addr_t virt_to_whateve
+ 
+ static inline u_int pdl_map_data(struct hp100_private *lp, void *data)
+ {
+-	return pci_map_single(lp->pci_dev, data,
+-			      MAX_ETHER_SIZE, PCI_DMA_FROMDEVICE);
++	return dma_map_single(&lp->pci_dev->dev, data,
++			      MAX_ETHER_SIZE, DMA_FROM_DEVICE);
+ }
+ 
+ /* TODO: This function should not really be needed in a good design... */
+@@ -1574,7 +1574,8 @@ static netdev_tx_t hp100_start_xmit_bm(s
+ 	}
+ 	/* Conversion to new PCI API : map skbuf data to PCI bus.
+ 	 * Doc says it's OK for EISA as well - Jean II */
+-	ringptr->pdl[1] = ((u32) pci_map_single(lp->pci_dev, skb->data, ringptr->pdl[2], PCI_DMA_TODEVICE));	/* 1st Frag: Adr. of data */
++	ringptr->pdl[1] = ((u32) dma_map_single(&lp->pci_dev->dev, skb->data,
++			   ringptr->pdl[2], DMA_FROM_TOVICE));	/* 1st Frag: Adr. of data */
+ 
+ 	/* Hand this PDL to the card. */
+ 	hp100_outl(ringptr->pdl_paddr, TX_PDA_L);	/* Low Prio. Queue */
+diff -u -p a/chelsio/cxgb3/sge.c b/chelsio/cxgb3/sge.c
+--- a/chelsio/cxgb3/sge.c
++++ b/chelsio/cxgb3/sge.c
+@@ -414,7 +414,7 @@ static inline int add_one_rx_buf(void *v
+ {
+ 	dma_addr_t mapping;
+ 
+-	mapping = pci_map_single(pdev, va, len, PCI_DMA_FROMDEVICE);
++	mapping = dma_map_single(&pdev->dev, va, len, DMA_FROM_DEVICE);
+ 	if (unlikely(pci_dma_mapping_error(pdev, mapping)))
+ 		return -ENOMEM;
+ 
+@@ -969,7 +969,7 @@ static inline unsigned int make_sgl(cons
+ 	unsigned int i, j = 0, nfrags;
+ 
+ 	if (len) {
+-		mapping = pci_map_single(pdev, start, len, PCI_DMA_TODEVICE);
++		mapping = dma_map_single(&pdev->dev, start, len, DMA_FROM_TOVICE);
+ 		sgp->len[0] = cpu_to_be32(len);
+ 		sgp->addr[0] = cpu_to_be64(mapping);
+ 		j = 1;
+diff -u -p a/chelsio/cxgb/sge.c b/chelsio/cxgb/sge.c
+--- a/chelsio/cxgb/sge.c
++++ b/chelsio/cxgb/sge.c
+@@ -852,8 +852,8 @@ static void refill_free_list(struct sge
+ 			break;
+ 
+ 		skb_reserve(skb, q->dma_offset);
+-		mapping = pci_map_single(pdev, skb->data, dma_len,
+-					 PCI_DMA_FROMDEVICE);
++		mapping = dma_map_single(&pdev->dev, skb->data, dma_len,
++					 DMA_FROM_DEVICE);
+ 		skb_reserve(skb, sge->rx_pkt_pad);
+ 
+ 		ce->skb = skb;
+@@ -1224,8 +1224,8 @@ static inline void write_tx_descs(struct
+ 	e = e1 = &q->entries[pidx];
+ 	ce = &q->centries[pidx];
+ 
+-	mapping = pci_map_single(adapter->pdev, skb->data,
+-				 skb_headlen(skb), PCI_DMA_TODEVICE);
++	mapping = dma_map_single(&adapter->pdev->dev, skb->data,
++				 skb_headlen(skb), DMA_FROM_TOVICE);
+ 
+ 	desc_mapping = mapping;
+ 	desc_len = skb_headlen(skb);
+diff -u -p a/mellanox/mlx4/en_tx.c b/mellanox/mlx4/en_tx.c
+--- a/mellanox/mlx4/en_tx.c
++++ b/mellanox/mlx4/en_tx.c
+@@ -756,8 +756,8 @@ netdev_tx_t mlx4_en_xmit(struct sk_buff
+ 
+ 		/* Map linear part */
+ 		if (tx_info->linear) {
+-			dma = pci_map_single(mdev->dev->pdev, skb->data + lso_header_size,
+-					     skb_headlen(skb) - lso_header_size, PCI_DMA_TODEVICE);
++			dma = dma_map_single(&mdev->dev->pdev->dev, skb->data + lso_header_size,
++					     skb_headlen(skb) - lso_header_size, DMA_FROM_TOVICE);
+ 			data->addr = cpu_to_be64(dma);
+ 			data->lkey = cpu_to_be32(mdev->mr.key);
+ 			wmb();
+diff -u -p a/mellanox/mlx4/en_rx.c b/mellanox/mlx4/en_rx.c
+--- a/mellanox/mlx4/en_rx.c
++++ b/mellanox/mlx4/en_rx.c
+@@ -72,9 +72,9 @@ static int mlx4_en_alloc_frag(struct mlx
+ 		skb_frags[i].offset = page_alloc->offset;
+ 		page_alloc->offset += frag_info->frag_stride;
+ 	}
+-	dma = pci_map_single(mdev->pdev, page_address(skb_frags[i].page) +
++	dma = dma_map_single(&mdev->pdev->dev, page_address(skb_frags[i].page) +
+ 			     skb_frags[i].offset, frag_info->frag_size,
+-			     PCI_DMA_FROMDEVICE);
++			     DMA_FROM_DEVICE);
+ 	rx_desc->data[i].addr = cpu_to_be64(dma);
+ 	return 0;
+ }
+diff -u -p a/pasemi/pasemi_mac.c b/pasemi/pasemi_mac.c
+--- a/pasemi/pasemi_mac.c
++++ b/pasemi/pasemi_mac.c
+@@ -649,9 +649,9 @@ static void pasemi_mac_replenish_rx_ring
+ 		if (unlikely(!skb))
+ 			break;
+ 
+-		dma = pci_map_single(mac->dma_pdev, skb->data,
++		dma = dma_map_single(&mac->dma_pdev->dev, skb->data,
+ 				     mac->bufsz - LOCAL_SKB_ALIGN,
+-				     PCI_DMA_FROMDEVICE);
++				     DMA_FROM_DEVICE);
+ 
+ 		if (unlikely(pci_dma_mapping_error(mac->dma_pdev, dma))) {
+ 			dev_kfree_skb_irq(info->skb);
+@@ -1496,8 +1496,8 @@ static int pasemi_mac_start_tx(struct sk
+ 
+ 	nfrags = skb_shinfo(skb)->nr_frags;
+ 
+-	map[0] = pci_map_single(mac->dma_pdev, skb->data, skb_headlen(skb),
+-				PCI_DMA_TODEVICE);
++	map[0] = dma_map_single(&mac->dma_pdev->dev, skb->data, skb_headlen(skb),
++				DMA_FROM_TOVICE);
+ 	map_size[0] = skb_headlen(skb);
+ 	if (pci_dma_mapping_error(mac->dma_pdev, map[0]))
+ 		goto out_err_nolock;
+diff -u -p a/qlogic/qlge/qlge_main.c b/qlogic/qlge/qlge_main.c
+--- a/qlogic/qlge/qlge_main.c
++++ b/qlogic/qlge/qlge_main.c
+@@ -1250,10 +1250,10 @@ static void ql_update_sbq(struct ql_adap
+ 					return;
+ 				}
+ 				skb_reserve(sbq_desc->p.skb, QLGE_SB_PAD);
+-				map = pci_map_single(qdev->pdev,
++				map = dma_map_single(&qdev->pdev->dev,
+ 						     sbq_desc->p.skb->data,
+ 						     rx_ring->sbq_buf_size,
+-						     PCI_DMA_FROMDEVICE);
++						     DMA_FROM_DEVICE);
+ 				if (pci_dma_mapping_error(qdev->pdev, map)) {
+ 					netif_err(qdev, ifup, qdev->ndev,
+ 						  "PCI mapping failed.\n");
+@@ -1357,7 +1357,7 @@ static int ql_map_send(struct ql_adapter
+ 	/*
+ 	 * Map the skb buffer first.
+ 	 */
+-	map = pci_map_single(qdev->pdev, skb->data, len, PCI_DMA_TODEVICE);
++	map = dma_map_single(&qdev->pdev->dev, skb->data, len, DMA_FROM_TOVICE);
+ 
+ 	err = pci_dma_mapping_error(qdev->pdev, map);
+ 	if (err) {
+@@ -1403,9 +1403,9 @@ static int ql_map_send(struct ql_adapter
+ 			 *      etc...
+ 			 */
+ 			/* Tack on the OAL in the eighth segment of IOCB. */
+-			map = pci_map_single(qdev->pdev, &tx_ring_desc->oal,
++			map = dma_map_single(&qdev->pdev->dev, &tx_ring_desc->oal,
+ 					     sizeof(struct oal),
+-					     PCI_DMA_TODEVICE);
++					     DMA_FROM_TOVICE);
+ 			err = pci_dma_mapping_error(qdev->pdev, map);
+ 			if (err) {
+ 				netif_err(qdev, tx_queued, qdev->ndev,
+diff -u -p a/qlogic/qla3xxx.c b/qlogic/qla3xxx.c
+--- a/qlogic/qla3xxx.c
++++ b/qlogic/qla3xxx.c
+@@ -320,11 +320,11 @@ static void ql_release_to_lrg_buf_free_l
+ 			 * buffer
+ 			 */
+ 			skb_reserve(lrg_buf_cb->skb, QL_HEADER_SPACE);
+-			map = pci_map_single(qdev->pdev,
++			map = dma_map_single(&qdev->pdev->dev,
+ 					     lrg_buf_cb->skb->data,
+ 					     qdev->lrg_buffer_len -
+ 					     QL_HEADER_SPACE,
+-					     PCI_DMA_FROMDEVICE);
++					     DMA_FROM_DEVICE);
+ 			err = pci_dma_mapping_error(qdev->pdev, map);
+ 			if (err) {
+ 				netdev_err(qdev->ndev,
+@@ -1803,11 +1803,11 @@ static int ql_populate_free_queue(struct
+ 				 * first buffer
+ 				 */
+ 				skb_reserve(lrg_buf_cb->skb, QL_HEADER_SPACE);
+-				map = pci_map_single(qdev->pdev,
++				map = dma_map_single(&qdev->pdev->dev,
+ 						     lrg_buf_cb->skb->data,
+ 						     qdev->lrg_buffer_len -
+ 						     QL_HEADER_SPACE,
+-						     PCI_DMA_FROMDEVICE);
++						     DMA_FROM_DEVICE);
+ 
+ 				err = pci_dma_mapping_error(qdev->pdev, map);
+ 				if (err) {
+@@ -2326,7 +2326,7 @@ static int ql_send_map(struct ql3_adapte
+ 	/*
+ 	 * Map the skb buffer first.
+ 	 */
+-	map = pci_map_single(qdev->pdev, skb->data, len, PCI_DMA_TODEVICE);
++	map = dma_map_single(&qdev->pdev->dev, skb->data, len, DMA_FROM_TOVICE);
+ 
+ 	err = pci_dma_mapping_error(qdev->pdev, map);
+ 	if (err) {
+@@ -2364,9 +2364,9 @@ static int ql_send_map(struct ql3_adapte
+ 		    (seg == 7 && seg_cnt > 8) ||
+ 		    (seg == 12 && seg_cnt > 13) ||
+ 		    (seg == 17 && seg_cnt > 18)) {
+-			map = pci_map_single(qdev->pdev, oal,
++			map = dma_map_single(&qdev->pdev->dev, oal,
+ 					     sizeof(struct oal),
+-					     PCI_DMA_TODEVICE);
++					     DMA_FROM_TOVICE);
+ 
+ 			err = pci_dma_mapping_error(qdev->pdev, map);
+ 			if (err) {
+@@ -2779,11 +2779,11 @@ static int ql_alloc_large_buffers(struct
+ 			 * buffer
+ 			 */
+ 			skb_reserve(skb, QL_HEADER_SPACE);
+-			map = pci_map_single(qdev->pdev,
++			map = dma_map_single(&qdev->pdev->dev,
+ 					     skb->data,
+ 					     qdev->lrg_buffer_len -
+ 					     QL_HEADER_SPACE,
+-					     PCI_DMA_FROMDEVICE);
++					     DMA_FROM_DEVICE);
+ 
+ 			err = pci_dma_mapping_error(qdev->pdev, map);
+ 			if (err) {
+diff -u -p a/qlogic/qlcnic/qlcnic_main.c b/qlogic/qlcnic/qlcnic_main.c
+--- a/qlogic/qlcnic/qlcnic_main.c
++++ b/qlogic/qlcnic/qlcnic_main.c
+@@ -2123,8 +2123,8 @@ qlcnic_map_tx_skb(struct pci_dev *pdev,
+ 	nr_frags = skb_shinfo(skb)->nr_frags;
+ 	nf = &pbuf->frag_array[0];
+ 
+-	map = pci_map_single(pdev, skb->data,
+-			skb_headlen(skb), PCI_DMA_TODEVICE);
++	map = dma_map_single(&pdev->dev, skb->data,
++			skb_headlen(skb), DMA_FROM_TOVICE);
+ 	if (pci_dma_mapping_error(pdev, map))
+ 		goto out_err;
+ 
+diff -u -p a/qlogic/qlcnic/qlcnic_init.c b/qlogic/qlcnic/qlcnic_init.c
+--- a/qlogic/qlcnic/qlcnic_init.c
++++ b/qlogic/qlcnic/qlcnic_init.c
+@@ -1442,8 +1442,8 @@ qlcnic_alloc_rx_skb(struct qlcnic_adapte
+ 
+ 	skb_reserve(skb, NET_IP_ALIGN);
+ 
+-	dma = pci_map_single(pdev, skb->data,
+-			rds_ring->dma_size, PCI_DMA_FROMDEVICE);
++	dma = dma_map_single(&pdev->dev, skb->data,
++			rds_ring->dma_size, DMA_FROM_DEVICE);
+ 
+ 	if (pci_dma_mapping_error(pdev, dma)) {
+ 		adapter->stats.rx_dma_map_error++;
+diff -u -p a/qlogic/netxen/netxen_nic_init.c b/qlogic/netxen/netxen_nic_init.c
+--- a/qlogic/netxen/netxen_nic_init.c
++++ b/qlogic/netxen/netxen_nic_init.c
+@@ -1503,8 +1503,8 @@ netxen_alloc_rx_skb(struct netxen_adapte
+ 	if (!adapter->ahw.cut_through)
+ 		skb_reserve(skb, 2);
+ 
+-	dma = pci_map_single(pdev, skb->data,
+-			rds_ring->dma_size, PCI_DMA_FROMDEVICE);
++	dma = dma_map_single(&pdev->dev, skb->data,
++			rds_ring->dma_size, DMA_FROM_DEVICE);
+ 
+ 	if (pci_dma_mapping_error(pdev, dma)) {
+ 		dev_kfree_skb_any(skb);
+diff -u -p a/qlogic/netxen/netxen_nic_main.c b/qlogic/netxen/netxen_nic_main.c
+--- a/qlogic/netxen/netxen_nic_main.c
++++ b/qlogic/netxen/netxen_nic_main.c
+@@ -1897,8 +1897,8 @@ netxen_map_tx_skb(struct pci_dev *pdev,
+ 	nr_frags = skb_shinfo(skb)->nr_frags;
+ 	nf = &pbuf->frag_array[0];
+ 
+-	map = pci_map_single(pdev, skb->data,
+-			skb_headlen(skb), PCI_DMA_TODEVICE);
++	map = dma_map_single(&pdev->dev, skb->data,
++			skb_headlen(skb), DMA_FROM_TOVICE);
+ 	if (pci_dma_mapping_error(pdev, map))
+ 		goto out_err;
+ 
+diff -u -p a/tehuti/tehuti.c b/tehuti/tehuti.c
+--- a/tehuti/tehuti.c
++++ b/tehuti/tehuti.c
+@@ -1097,9 +1097,9 @@ static void bdx_rx_alloc_skbs(struct bdx
+ 
+ 		idx = bdx_rxdb_alloc_elem(db);
+ 		dm = bdx_rxdb_addr_elem(db, idx);
+-		dm->dma = pci_map_single(priv->pdev,
++		dm->dma = dma_map_single(&priv->pdev->dev,
+ 					 skb->data, f->m.pktsz,
+-					 PCI_DMA_FROMDEVICE);
++					 DMA_FROM_DEVICE);
+ 		dm->skb = skb;
+ 		rxfd = (struct rxf_desc *)(f->m.va + f->m.wptr);
+ 		rxfd->info = CPU_CHIP_SWAP32(0x10003);	/* INFO=1 BC=3 */
+@@ -1482,8 +1482,8 @@ bdx_tx_map_skb(struct bdx_priv *priv, st
+ 	int i;
+ 
+ 	db->wptr->len = skb_headlen(skb);
+-	db->wptr->addr.dma = pci_map_single(priv->pdev, skb->data,
+-					    db->wptr->len, PCI_DMA_TODEVICE);
++	db->wptr->addr.dma = dma_map_single(&priv->pdev->dev, skb->data,
++					    db->wptr->len, DMA_FROM_TOVICE);
+ 	pbl->len = CPU_CHIP_SWAP32(db->wptr->len);
+ 	pbl->pa_lo = CPU_CHIP_SWAP32(L32_64(db->wptr->addr.dma));
+ 	pbl->pa_hi = CPU_CHIP_SWAP32(H32_64(db->wptr->addr.dma));
+diff -u -p a/natsemi/natsemi.c b/natsemi/natsemi.c
+--- a/natsemi/natsemi.c
++++ b/natsemi/natsemi.c
+@@ -1939,8 +1939,8 @@ static void refill_rx(struct net_device
+ 			if (skb == NULL)
+ 				break; /* Better luck next round. */
+ 			skb->dev = dev; /* Mark as being used by this device. */
+-			np->rx_dma[entry] = pci_map_single(np->pci_dev,
+-				skb->data, buflen, PCI_DMA_FROMDEVICE);
++			np->rx_dma[entry] = dma_map_single(&np->pci_dev->dev,
++				skb->data, buflen, DMA_FROM_DEVICE);
+ 			np->rx_ring[entry].addr = cpu_to_le32(np->rx_dma[entry]);
+ 		}
+ 		np->rx_ring[entry].cmd_status = cpu_to_le32(np->rx_buf_sz);
+@@ -2095,8 +2095,8 @@ static netdev_tx_t start_tx(struct sk_bu
+ 	entry = np->cur_tx % TX_RING_SIZE;
+ 
+ 	np->tx_skbuff[entry] = skb;
+-	np->tx_dma[entry] = pci_map_single(np->pci_dev,
+-				skb->data,skb->len, PCI_DMA_TODEVICE);
++	np->tx_dma[entry] = dma_map_single(&np->pci_dev->dev,
++				skb->data,skb->len, DMA_FROM_TOVICE);
+ 
+ 	np->tx_ring[entry].addr = cpu_to_le32(np->tx_dma[entry]);
+ 
+diff -u -p a/natsemi/ns83820.c b/natsemi/ns83820.c
+--- a/natsemi/ns83820.c
++++ b/natsemi/ns83820.c
+@@ -542,8 +542,8 @@ static inline int ns83820_add_rx_skb(str
+ 
+ 	dev->rx_info.next_empty = (next_empty + 1) % NR_RX_DESC;
+ 	cmdsts = REAL_RX_BUF_SIZE | CMDSTS_INTR;
+-	buf = pci_map_single(dev->pci_dev, skb->data,
+-			     REAL_RX_BUF_SIZE, PCI_DMA_FROMDEVICE);
++	buf = dma_map_single(&dev->pci_dev->dev, skb->data,
++			     REAL_RX_BUF_SIZE, DMA_FROM_DEVICE);
+ 	build_rx_desc(dev, sg, 0, buf, cmdsts, 0);
+ 	/* update link of previous rx */
+ 	if (likely(next_empty != dev->rx_info.next_rx))
+@@ -1137,7 +1137,7 @@ again:
+ 	len = skb->len;
+ 	if (nr_frags)
+ 		len -= skb->data_len;
+-	buf = pci_map_single(dev->pci_dev, skb->data, len, PCI_DMA_TODEVICE);
++	buf = dma_map_single(&dev->pci_dev->dev, skb->data, len, DMA_FROM_TOVICE);
+ 
+ 	first_desc = dev->tx_descs + (free_idx * DESC_SIZE);
+ 
+diff -u -p a/icplus/ipg.c b/icplus/ipg.c
+--- a/icplus/ipg.c
++++ b/icplus/ipg.c
+@@ -757,8 +757,9 @@ static int ipg_get_rxbuff(struct net_dev
+ 	/* Save the address of the sk_buff structure. */
+ 	sp->rx_buff[entry] = skb;
+ 
+-	rxfd->frag_info = cpu_to_le64(pci_map_single(sp->pdev, skb->data,
+-		sp->rx_buf_sz, PCI_DMA_FROMDEVICE));
++	rxfd->frag_info = cpu_to_le64(dma_map_single(&sp->pdev->dev,
++				      skb->data,
++		sp->rx_buf_sz, DMA_FROM_DEVICE));
+ 
+ 	/* Set the RFD fragment length. */
+ 	rxfragsize = sp->rxfrag_size;
+@@ -1926,8 +1927,9 @@ static netdev_tx_t ipg_nic_hard_start_xm
+ 	 * of this location within the system's virtual memory space
+ 	 * is determined using the IPG_HOST2BUS_MAP function.
+ 	 */
+-	txfd->frag_info = cpu_to_le64(pci_map_single(sp->pdev, skb->data,
+-		skb->len, PCI_DMA_TODEVICE));
++	txfd->frag_info = cpu_to_le64(dma_map_single(&sp->pdev->dev,
++				      skb->data,
++		skb->len, DMA_FROM_TOVICE));
+ 
+ 	/* The length of the fragment within system memory is defined by
+ 	 * the sk_buff structure's len field.
+diff -u -p a/micrel/ksz884x.c b/micrel/ksz884x.c
+--- a/micrel/ksz884x.c
++++ b/micrel/ksz884x.c
+@@ -4486,11 +4486,10 @@ static void ksz_init_rx_buffers(struct d
+ 			dma_buf->skb = alloc_skb(dma_buf->len, GFP_ATOMIC);
+ 		if (dma_buf->skb && !dma_buf->dma) {
+ 			dma_buf->skb->dev = adapter->dev;
+-			dma_buf->dma = pci_map_single(
+-				adapter->pdev,
++			dma_buf->dma =dma_map_single(&adapter->pdev->dev,
+ 				skb_tail_pointer(dma_buf->skb),
+ 				dma_buf->len,
+-				PCI_DMA_FROMDEVICE);
++				DMA_FROM_DEVICE);
+ 		}
+ 
+ 		/* Set descriptor. */
+@@ -4683,9 +4682,8 @@ static void send_packet(struct sk_buff *
+ 
+ 		dma_buf->len = skb_headlen(skb);
+ 
+-		dma_buf->dma = pci_map_single(
+-			hw_priv->pdev, skb->data, dma_buf->len,
+-			PCI_DMA_TODEVICE);
++		dma_buf->dma =dma_map_single(&hw_priv->pdev->dev, skb->data, dma_buf->len,
++			DMA_FROM_TOVICE);
+ 		set_tx_buf(desc, dma_buf->dma);
+ 		set_tx_len(desc, dma_buf->len);
+ 
+@@ -4702,11 +4700,10 @@ static void send_packet(struct sk_buff *
+ 			dma_buf = DMA_BUFFER(desc);
+ 			dma_buf->len = skb_frag_size(this_frag);
+ 
+-			dma_buf->dma = pci_map_single(
+-				hw_priv->pdev,
++			dma_buf->dma =dma_map_single(&hw_priv->pdev->dev,
+ 				skb_frag_address(this_frag),
+ 				dma_buf->len,
+-				PCI_DMA_TODEVICE);
++				DMA_FROM_TOVICE);
+ 			set_tx_buf(desc, dma_buf->dma);
+ 			set_tx_len(desc, dma_buf->len);
+ 
+@@ -4726,9 +4723,8 @@ static void send_packet(struct sk_buff *
+ 	} else {
+ 		dma_buf->len = len;
+ 
+-		dma_buf->dma = pci_map_single(
+-			hw_priv->pdev, skb->data, dma_buf->len,
+-			PCI_DMA_TODEVICE);
++		dma_buf->dma =dma_map_single(&hw_priv->pdev->dev, skb->data, dma_buf->len,
++			DMA_FROM_TOVICE);
+ 		set_tx_buf(desc, dma_buf->dma);
+ 		set_tx_len(desc, dma_buf->len);
+ 	}
+diff -u -p a/dec/tulip/winbond-840.c b/dec/tulip/winbond-840.c
+--- a/dec/tulip/winbond-840.c
++++ b/dec/tulip/winbond-840.c
+@@ -819,8 +819,8 @@ static void init_rxtx_rings(struct net_d
+ 		np->rx_skbuff[i] = skb;
+ 		if (skb == NULL)
+ 			break;
+-		np->rx_addr[i] = pci_map_single(np->pci_dev,skb->data,
+-					np->rx_buf_sz,PCI_DMA_FROMDEVICE);
++		np->rx_addr[i] = dma_map_single(&np->pci_dev->dev, skb->data,
++					np->rx_buf_sz,DMA_FROM_DEVICE);
+ 
+ 		np->rx_ring[i].buffer1 = np->rx_addr[i];
+ 		np->rx_ring[i].status = DescOwned;
+@@ -1010,8 +1010,8 @@ static netdev_tx_t start_tx(struct sk_bu
+ 	/* Calculate the next Tx descriptor entry. */
+ 	entry = np->cur_tx % TX_RING_SIZE;
+ 
+-	np->tx_addr[entry] = pci_map_single(np->pci_dev,
+-				skb->data,skb->len, PCI_DMA_TODEVICE);
++	np->tx_addr[entry] = dma_map_single(&np->pci_dev->dev,
++				skb->data,skb->len, DMA_FROM_TOVICE);
+ 	np->tx_skbuff[entry] = skb;
+ 
+ 	np->tx_ring[entry].buffer1 = np->tx_addr[entry];
+@@ -1274,9 +1274,9 @@ static int netdev_rx(struct net_device *
+ 			np->rx_skbuff[entry] = skb;
+ 			if (skb == NULL)
+ 				break;			/* Better luck next round. */
+-			np->rx_addr[entry] = pci_map_single(np->pci_dev,
++			np->rx_addr[entry] = dma_map_single(&np->pci_dev->dev,
+ 							skb->data,
+-							np->rx_buf_sz, PCI_DMA_FROMDEVICE);
++							np->rx_buf_sz, DMA_FROM_DEVICE);
+ 			np->rx_ring[entry].buffer1 = np->rx_addr[entry];
+ 		}
+ 		wmb();
+diff -u -p a/dec/tulip/tulip_core.c b/dec/tulip/tulip_core.c
+--- a/dec/tulip/tulip_core.c
++++ b/dec/tulip/tulip_core.c
+@@ -362,9 +362,9 @@ static void tulip_up(struct net_device *
+ 		*setup_frm++ = eaddrs[1]; *setup_frm++ = eaddrs[1];
+ 		*setup_frm++ = eaddrs[2]; *setup_frm++ = eaddrs[2];
+ 
+-		mapping = pci_map_single(tp->pdev, tp->setup_frame,
++		mapping = dma_map_single(&tp->pdev->dev, tp->setup_frame,
+ 					 sizeof(tp->setup_frame),
+-					 PCI_DMA_TODEVICE);
++					 DMA_FROM_TOVICE);
+ 		tp->tx_buffers[tp->cur_tx].skb = NULL;
+ 		tp->tx_buffers[tp->cur_tx].mapping = mapping;
+ 
+@@ -642,8 +642,8 @@ static void tulip_init_ring(struct net_d
+ 		tp->rx_buffers[i].skb = skb;
+ 		if (skb == NULL)
+ 			break;
+-		mapping = pci_map_single(tp->pdev, skb->data,
+-					 PKT_BUF_SZ, PCI_DMA_FROMDEVICE);
++		mapping = dma_map_single(&tp->pdev->dev, skb->data,
++					 PKT_BUF_SZ, DMA_FROM_DEVICE);
+ 		tp->rx_buffers[i].mapping = mapping;
+ 		skb->dev = dev;			/* Mark as being used by this device. */
+ 		tp->rx_ring[i].status = cpu_to_le32(DescOwned);	/* Owned by Tulip chip */
+@@ -677,8 +677,8 @@ tulip_start_xmit(struct sk_buff *skb, st
+ 	entry = tp->cur_tx % TX_RING_SIZE;
+ 
+ 	tp->tx_buffers[entry].skb = skb;
+-	mapping = pci_map_single(tp->pdev, skb->data,
+-				 skb->len, PCI_DMA_TODEVICE);
++	mapping = dma_map_single(&tp->pdev->dev, skb->data,
++				 skb->len, DMA_FROM_TOVICE);
+ 	tp->tx_buffers[entry].mapping = mapping;
+ 	tp->tx_ring[entry].buffer1 = cpu_to_le32(mapping);
+ 
+@@ -1167,9 +1167,9 @@ static void set_rx_mode(struct net_devic
+ 
+ 			tp->tx_buffers[entry].skb = NULL;
+ 			tp->tx_buffers[entry].mapping =
+-				pci_map_single(tp->pdev, tp->setup_frame,
++				dma_map_single(&tp->pdev->dev, tp->setup_frame,
+ 					       sizeof(tp->setup_frame),
+-					       PCI_DMA_TODEVICE);
++					       DMA_FROM_TOVICE);
+ 			/* Put the setup frame on the Tx list. */
+ 			if (entry == TX_RING_SIZE-1)
+ 				tx_flags |= DESC_RING_WRAP;		/* Wrap ring. */
+diff -u -p a/dec/tulip/uli526x.c b/dec/tulip/uli526x.c
+--- a/dec/tulip/uli526x.c
++++ b/dec/tulip/uli526x.c
+@@ -1270,10 +1270,10 @@ static void uli526x_reuse_skb(struct uli
+ 
+ 	if (!(rxptr->rdes0 & cpu_to_le32(0x80000000))) {
+ 		rxptr->rx_skb_ptr = skb;
+-		rxptr->rdes2 = cpu_to_le32(pci_map_single(db->pdev,
++		rxptr->rdes2 = cpu_to_le32(dma_map_single(&db->pdev->dev,
+ 							  skb_tail_pointer(skb),
+ 							  RX_ALLOC_SIZE,
+-							  PCI_DMA_FROMDEVICE));
++							  DMA_FROM_DEVICE));
+ 		wmb();
+ 		rxptr->rdes0 = cpu_to_le32(0x80000000);
+ 		db->rx_avail_cnt++;
+@@ -1443,10 +1443,10 @@ static void allocate_rx_buffer(struct ul
+ 		if ( ( skb = dev_alloc_skb(RX_ALLOC_SIZE) ) == NULL )
+ 			break;
+ 		rxptr->rx_skb_ptr = skb; /* FIXME (?) */
+-		rxptr->rdes2 = cpu_to_le32(pci_map_single(db->pdev,
++		rxptr->rdes2 = cpu_to_le32(dma_map_single(&db->pdev->dev,
+ 							  skb_tail_pointer(skb),
+ 							  RX_ALLOC_SIZE,
+-							  PCI_DMA_FROMDEVICE));
++							  DMA_FROM_DEVICE));
+ 		wmb();
+ 		rxptr->rdes0 = cpu_to_le32(0x80000000);
+ 		rxptr = rxptr->next_rx_desc;
+diff -u -p a/dec/tulip/de2104x.c b/dec/tulip/de2104x.c
+--- a/dec/tulip/de2104x.c
++++ b/dec/tulip/de2104x.c
+@@ -454,8 +454,8 @@ static void de_rx (struct de_private *de
+ 
+ 			mapping =
+ 			de->rx_skb[rx_tail].mapping =
+-				pci_map_single(de->pdev, copy_skb->data,
+-					       buflen, PCI_DMA_FROMDEVICE);
++				dma_map_single(&de->pdev->dev, copy_skb->data,
++					       buflen, DMA_FROM_DEVICE);
+ 			de->rx_skb[rx_tail].skb = copy_skb;
+ 		} else {
+ 			pci_dma_sync_single_for_cpu(de->pdev, mapping, len, PCI_DMA_FROMDEVICE);
+@@ -625,7 +625,7 @@ static netdev_tx_t de_start_xmit (struct
+ 	txd = &de->tx_ring[entry];
+ 
+ 	len = skb->len;
+-	mapping = pci_map_single(de->pdev, skb->data, len, PCI_DMA_TODEVICE);
++	mapping = dma_map_single(&de->pdev->dev, skb->data, len, DMA_FROM_TOVICE);
+ 	if (entry == (DE_TX_RING_SIZE - 1))
+ 		flags |= RingEnd;
+ 	if (!tx_free || (tx_free == (DE_TX_RING_SIZE / 2)))
+@@ -771,8 +771,8 @@ static void __de_set_rx_mode (struct net
+ 
+ 	de->tx_skb[entry].skb = DE_SETUP_SKB;
+ 	de->tx_skb[entry].mapping = mapping =
+-	    pci_map_single (de->pdev, de->setup_frame,
+-			    sizeof (de->setup_frame), PCI_DMA_TODEVICE);
++	    dma_map_single(&de->pdev->dev, de->setup_frame,
++			    sizeof (de->setup_frame), DMA_FROM_TOVICE);
+ 
+ 	/* Put the setup frame on the Tx list. */
+ 	txd = &de->tx_ring[entry];
+@@ -1289,8 +1289,8 @@ static int de_refill_rx (struct de_priva
+ 
+ 		skb->dev = de->dev;
+ 
+-		de->rx_skb[i].mapping = pci_map_single(de->pdev,
+-			skb->data, de->rx_buf_sz, PCI_DMA_FROMDEVICE);
++		de->rx_skb[i].mapping = dma_map_single(&de->pdev->dev,
++			skb->data, de->rx_buf_sz, DMA_FROM_DEVICE);
+ 		de->rx_skb[i].skb = skb;
+ 
+ 		de->rx_ring[i].opts1 = cpu_to_le32(DescOwn);
+diff -u -p a/dec/tulip/dmfe.c b/dec/tulip/dmfe.c
+--- a/dec/tulip/dmfe.c
++++ b/dec/tulip/dmfe.c
+@@ -1347,8 +1347,8 @@ static void dmfe_reuse_skb(struct dmfe_b
+ 
+ 	if (!(rxptr->rdes0 & cpu_to_le32(0x80000000))) {
+ 		rxptr->rx_skb_ptr = skb;
+-		rxptr->rdes2 = cpu_to_le32( pci_map_single(db->pdev,
+-			    skb->data, RX_ALLOC_SIZE, PCI_DMA_FROMDEVICE) );
++		rxptr->rdes2 = cpu_to_le32(dma_map_single(&db->pdev->dev,
++			    skb->data, RX_ALLOC_SIZE, DMA_FROM_DEVICE) );
+ 		wmb();
+ 		rxptr->rdes0 = cpu_to_le32(0x80000000);
+ 		db->rx_avail_cnt++;
+@@ -1561,8 +1561,9 @@ static void allocate_rx_buffer(struct dm
+ 		if ( ( skb = dev_alloc_skb(RX_ALLOC_SIZE) ) == NULL )
+ 			break;
+ 		rxptr->rx_skb_ptr = skb; /* FIXME (?) */
+-		rxptr->rdes2 = cpu_to_le32( pci_map_single(db->pdev, skb->data,
+-				    RX_ALLOC_SIZE, PCI_DMA_FROMDEVICE) );
++		rxptr->rdes2 = cpu_to_le32(dma_map_single(&db->pdev->dev,
++					   skb->data,
++				    RX_ALLOC_SIZE, DMA_FROM_DEVICE) );
+ 		wmb();
+ 		rxptr->rdes0 = cpu_to_le32(0x80000000);
+ 		rxptr = rxptr->next_rx_desc;
+diff -u -p a/dec/tulip/interrupt.c b/dec/tulip/interrupt.c
+--- a/dec/tulip/interrupt.c
++++ b/dec/tulip/interrupt.c
+@@ -73,8 +73,8 @@ int tulip_refill_rx(struct net_device *d
+ 			if (skb == NULL)
+ 				break;
+ 
+-			mapping = pci_map_single(tp->pdev, skb->data, PKT_BUF_SZ,
+-						 PCI_DMA_FROMDEVICE);
++			mapping = dma_map_single(&tp->pdev->dev, skb->data, PKT_BUF_SZ,
++						 DMA_FROM_DEVICE);
+ 			tp->rx_buffers[entry].mapping = mapping;
+ 
+ 			skb->dev = dev;			/* Mark as being used by this device. */
+diff -u -p a/dlink/dl2k.c b/dlink/dl2k.c
+--- a/dlink/dl2k.c
++++ b/dlink/dl2k.c
+@@ -516,9 +516,9 @@ rio_timer (unsigned long data)
+ 				}
+ 				np->rx_skbuff[entry] = skb;
+ 				np->rx_ring[entry].fraginfo =
+-				    cpu_to_le64 (pci_map_single
+-					 (np->pdev, skb->data, np->rx_buf_sz,
+-					  PCI_DMA_FROMDEVICE));
++				    cpu_to_le64 (dma_map_single(&np->pdev->dev,
++						 skb->data, np->rx_buf_sz,
++					  DMA_FROM_DEVICE));
+ 			}
+ 			np->rx_ring[entry].fraginfo |=
+ 			    cpu_to_le64((u64)np->rx_buf_sz << 48);
+@@ -587,9 +587,9 @@ alloc_list (struct net_device *dev)
+ 		}
+ 		/* Rubicon now supports 40 bits of addressing space. */
+ 		np->rx_ring[i].fraginfo =
+-		    cpu_to_le64 ( pci_map_single (
+-			 	  np->pdev, skb->data, np->rx_buf_sz,
+-				  PCI_DMA_FROMDEVICE));
++		    cpu_to_le64 (dma_map_single(&np->pdev->dev, skb->data,
++                                 np->rx_buf_sz,
++				  DMA_FROM_DEVICE));
+ 		np->rx_ring[i].fraginfo |= cpu_to_le64((u64)np->rx_buf_sz << 48);
+ 	}
+ 
+@@ -628,9 +628,10 @@ start_xmit (struct sk_buff *skb, struct
+ 		    ((u64)np->vlan << 32) |
+ 		    ((u64)skb->priority << 45);
+ 	}
+-	txdesc->fraginfo = cpu_to_le64 (pci_map_single (np->pdev, skb->data,
++	txdesc->fraginfo = cpu_to_le64 (dma_map_single(&np->pdev->dev,
++					skb->data,
+ 							skb->len,
+-							PCI_DMA_TODEVICE));
++							DMA_FROM_TOVICE));
+ 	txdesc->fraginfo |= cpu_to_le64((u64)skb->len << 48);
+ 
+ 	/* DL2K bug: DMA fails to get next descriptor ptr in 10Mbps mode
+@@ -914,9 +915,9 @@ receive_packet (struct net_device *dev)
+ 			}
+ 			np->rx_skbuff[entry] = skb;
+ 			np->rx_ring[entry].fraginfo =
+-			    cpu_to_le64 (pci_map_single
+-					 (np->pdev, skb->data, np->rx_buf_sz,
+-					  PCI_DMA_FROMDEVICE));
++			    cpu_to_le64 (dma_map_single(&np->pdev->dev,
++					 skb->data, np->rx_buf_sz,
++					  DMA_FROM_DEVICE));
+ 		}
+ 		np->rx_ring[entry].fraginfo |=
+ 		    cpu_to_le64((u64)np->rx_buf_sz << 48);
+diff -u -p a/3com/3c59x.c b/3com/3c59x.c
+--- a/3com/3c59x.c
++++ b/3com/3c59x.c
+@@ -1765,7 +1765,10 @@ vortex_open(struct net_device *dev)
+ 				break;			/* Bad news!  */
+ 
+ 			skb_reserve(skb, NET_IP_ALIGN);	/* Align IP on 16 byte boundaries */
+-			vp->rx_ring[i].addr = cpu_to_le32(pci_map_single(VORTEX_PCI(vp), skb->data, PKT_BUF_SZ, PCI_DMA_FROMDEVICE));
++			vp->rx_ring[i].addr = cpu_to_le32(dma_map_single(&VORTEX_PCI(vp)->dev,
++							  skb->data,
++							  PKT_BUF_SZ,
++							  DMA_FROM_DEVICE));
+ 		}
+ 		if (i != RX_RING_SIZE) {
+ 			int j;
+@@ -2075,8 +2078,8 @@ vortex_start_xmit(struct sk_buff *skb, s
+ 	if (vp->bus_master) {
+ 		/* Set the bus-master controller to transfer the packet. */
+ 		int len = (skb->len + 3) & ~3;
+-		vp->tx_skb_dma = pci_map_single(VORTEX_PCI(vp), skb->data, len,
+-						PCI_DMA_TODEVICE);
++		vp->tx_skb_dma = dma_map_single(&VORTEX_PCI(vp)->dev, skb->data, len,
++						DMA_FROM_TOVICE);
+ 		spin_lock_irq(&vp->window_lock);
+ 		window_set(vp, 7);
+ 		iowrite32(vp->tx_skb_dma, ioaddr + Wn7_MasterAddr);
+@@ -2165,24 +2168,28 @@ boomerang_start_xmit(struct sk_buff *skb
+ 			vp->tx_ring[entry].status = cpu_to_le32(skb->len | TxIntrUploaded | AddTCPChksum | AddUDPChksum);
+ 
+ 	if (!skb_shinfo(skb)->nr_frags) {
+-		vp->tx_ring[entry].frag[0].addr = cpu_to_le32(pci_map_single(VORTEX_PCI(vp), skb->data,
+-										skb->len, PCI_DMA_TODEVICE));
++		vp->tx_ring[entry].frag[0].addr = cpu_to_le32(dma_map_single(&VORTEX_PCI(vp)->dev,
++							      skb->data,
++										skb->len,
++							      DMA_FROM_TOVICE));
+ 		vp->tx_ring[entry].frag[0].length = cpu_to_le32(skb->len | LAST_FRAG);
+ 	} else {
+ 		int i;
+ 
+-		vp->tx_ring[entry].frag[0].addr = cpu_to_le32(pci_map_single(VORTEX_PCI(vp), skb->data,
+-										skb_headlen(skb), PCI_DMA_TODEVICE));
++		vp->tx_ring[entry].frag[0].addr = cpu_to_le32(dma_map_single(&VORTEX_PCI(vp)->dev,
++							      skb->data,
++										skb_headlen(skb),
++							      DMA_FROM_TOVICE));
+ 		vp->tx_ring[entry].frag[0].length = cpu_to_le32(skb_headlen(skb));
+ 
+ 		for (i = 0; i < skb_shinfo(skb)->nr_frags; i++) {
+ 			skb_frag_t *frag = &skb_shinfo(skb)->frags[i];
+ 
+ 			vp->tx_ring[entry].frag[i+1].addr =
+-					cpu_to_le32(pci_map_single(
+-						VORTEX_PCI(vp),
++					cpu_to_le32(dma_map_single(&VORTEX_PCI(vp)->dev,
+ 						(void *)skb_frag_address(frag),
+-						skb_frag_size(frag), PCI_DMA_TODEVICE));
++						skb_frag_size(frag),
++						    DMA_FROM_TOVICE));
+ 
+ 			if (i == skb_shinfo(skb)->nr_frags-1)
+ 					vp->tx_ring[entry].frag[i+1].length = cpu_to_le32(skb_frag_size(frag)|LAST_FRAG);
+@@ -2191,7 +2198,9 @@ boomerang_start_xmit(struct sk_buff *skb
+ 		}
+ 	}
+ #else
+-	vp->tx_ring[entry].addr = cpu_to_le32(pci_map_single(VORTEX_PCI(vp), skb->data, skb->len, PCI_DMA_TODEVICE));
++	vp->tx_ring[entry].addr = cpu_to_le32(dma_map_single(&VORTEX_PCI(vp)->dev,
++					      skb->data, skb->len,
++					      DMA_FROM_TOVICE));
+ 	vp->tx_ring[entry].length = cpu_to_le32(skb->len | LAST_FRAG);
+ 	vp->tx_ring[entry].status = cpu_to_le32(skb->len | TxIntrUploaded);
+ #endif
+@@ -2509,8 +2518,8 @@ static int vortex_rx(struct net_device *
+ 				/* 'skb_put()' points to the start of sk_buff data area. */
+ 				if (vp->bus_master &&
+ 					! (ioread16(ioaddr + Wn7_MasterStatus) & 0x8000)) {
+-					dma_addr_t dma = pci_map_single(VORTEX_PCI(vp), skb_put(skb, pkt_len),
+-									   pkt_len, PCI_DMA_FROMDEVICE);
++					dma_addr_t dma = dma_map_single(&VORTEX_PCI(vp)->dev, skb_put(skb, pkt_len),
++									   pkt_len, DMA_FROM_DEVICE);
+ 					iowrite32(dma, ioaddr + Wn7_MasterAddr);
+ 					iowrite16((skb->len + 3) & ~3, ioaddr + Wn7_MasterLen);
+ 					iowrite16(StartDMAUp, ioaddr + EL3_CMD);
+@@ -2628,7 +2637,10 @@ boomerang_rx(struct net_device *dev)
+ 				break;			/* Bad news!  */
+ 			}
+ 
+-			vp->rx_ring[entry].addr = cpu_to_le32(pci_map_single(VORTEX_PCI(vp), skb->data, PKT_BUF_SZ, PCI_DMA_FROMDEVICE));
++			vp->rx_ring[entry].addr = cpu_to_le32(dma_map_single(&VORTEX_PCI(vp)->dev,
++							      skb->data,
++							      PKT_BUF_SZ,
++							      DMA_FROM_DEVICE));
+ 			vp->rx_skbuff[entry] = skb;
+ 		}
+ 		vp->rx_ring[entry].status = 0;	/* Clear complete bit. */
+diff -u -p a/3com/typhoon.c b/3com/typhoon.c
+--- a/3com/typhoon.c
++++ b/3com/typhoon.c
+@@ -791,8 +791,8 @@ typhoon_start_tx(struct sk_buff *skb, st
+ 	 * it with zeros to ETH_ZLEN for us.
+ 	 */
+ 	if(skb_shinfo(skb)->nr_frags == 0) {
+-		skb_dma = pci_map_single(tp->tx_pdev, skb->data, skb->len,
+-				       PCI_DMA_TODEVICE);
++		skb_dma = dma_map_single(&tp->tx_pdev->dev, skb->data, skb->len,
++				       DMA_FROM_TOVICE);
+ 		txd->flags = TYPHOON_FRAG_DESC | TYPHOON_DESC_VALID;
+ 		txd->len = cpu_to_le16(skb->len);
+ 		txd->frag.addr = cpu_to_le32(skb_dma);
+@@ -802,8 +802,8 @@ typhoon_start_tx(struct sk_buff *skb, st
+ 		int i, len;
+ 
+ 		len = skb_headlen(skb);
+-		skb_dma = pci_map_single(tp->tx_pdev, skb->data, len,
+-				         PCI_DMA_TODEVICE);
++		skb_dma = dma_map_single(&tp->tx_pdev->dev, skb->data, len,
++				         DMA_FROM_TOVICE);
+ 		txd->flags = TYPHOON_FRAG_DESC | TYPHOON_DESC_VALID;
+ 		txd->len = cpu_to_le16(len);
+ 		txd->frag.addr = cpu_to_le32(skb_dma);
+@@ -820,8 +820,8 @@ typhoon_start_tx(struct sk_buff *skb, st
+ 
+ 			len = skb_frag_size(frag);
+ 			frag_addr = skb_frag_address(frag);
+-			skb_dma = pci_map_single(tp->tx_pdev, frag_addr, len,
+-					 PCI_DMA_TODEVICE);
++			skb_dma = dma_map_single(&tp->tx_pdev->dev, frag_addr, len,
++					 DMA_FROM_TOVICE);
+ 			txd->flags = TYPHOON_FRAG_DESC | TYPHOON_DESC_VALID;
+ 			txd->len = cpu_to_le16(len);
+ 			txd->frag.addr = cpu_to_le32(skb_dma);
+@@ -1617,8 +1617,8 @@ typhoon_alloc_rx_skb(struct typhoon *tp,
+ #endif
+ 
+ 	skb->dev = tp->dev;
+-	dma_addr = pci_map_single(tp->pdev, skb->data,
+-				  PKT_BUF_SZ, PCI_DMA_FROMDEVICE);
++	dma_addr = dma_map_single(&tp->pdev->dev, skb->data,
++				  PKT_BUF_SZ, DMA_FROM_DEVICE);
+ 
+ 	/* Since no card does 64 bit DAC, the high bits will never
+ 	 * change from zero.
+diff -u -p a/fealnx.c b/fealnx.c
+--- a/fealnx.c
++++ b/fealnx.c
+@@ -1079,8 +1079,8 @@ static void allocate_rx_buffers(struct n
+ 
+ 		skb->dev = dev;	/* Mark as being used by this device. */
+ 		np->lack_rxbuf->skbuff = skb;
+-		np->lack_rxbuf->buffer = pci_map_single(np->pci_dev, skb->data,
+-			np->rx_buf_sz, PCI_DMA_FROMDEVICE);
++		np->lack_rxbuf->buffer = dma_map_single(&np->pci_dev->dev, skb->data,
++			np->rx_buf_sz, DMA_FROM_DEVICE);
+ 		np->lack_rxbuf->status = RXOWN;
+ 		++np->really_rx_count;
+ 	}
+@@ -1275,8 +1275,8 @@ static void init_ring(struct net_device
+ 		++np->really_rx_count;
+ 		np->rx_ring[i].skbuff = skb;
+ 		skb->dev = dev;	/* Mark as being used by this device. */
+-		np->rx_ring[i].buffer = pci_map_single(np->pci_dev, skb->data,
+-			np->rx_buf_sz, PCI_DMA_FROMDEVICE);
++		np->rx_ring[i].buffer = dma_map_single(&np->pci_dev->dev, skb->data,
++			np->rx_buf_sz, DMA_FROM_DEVICE);
+ 		np->rx_ring[i].status = RXOWN;
+ 		np->rx_ring[i].control |= RXIC;
+ 	}
+@@ -1314,8 +1314,8 @@ static netdev_tx_t start_tx(struct sk_bu
+ #define one_buffer
+ #define BPT 1022
+ #if defined(one_buffer)
+-	np->cur_tx_copy->buffer = pci_map_single(np->pci_dev, skb->data,
+-		skb->len, PCI_DMA_TODEVICE);
++	np->cur_tx_copy->buffer = dma_map_single(&np->pci_dev->dev, skb->data,
++		skb->len, DMA_FROM_TOVICE);
+ 	np->cur_tx_copy->control = TXIC | TXLD | TXFD | CRCEnable | PADEnable;
+ 	np->cur_tx_copy->control |= (skb->len << PKTSShift);	/* pkt size */
+ 	np->cur_tx_copy->control |= (skb->len << TBSShift);	/* buffer size */
+@@ -1330,8 +1330,8 @@ static netdev_tx_t start_tx(struct sk_bu
+ 		struct fealnx_desc *next;
+ 
+ 		/* for the first descriptor */
+-		np->cur_tx_copy->buffer = pci_map_single(np->pci_dev, skb->data,
+-			BPT, PCI_DMA_TODEVICE);
++		np->cur_tx_copy->buffer = dma_map_single(&np->pci_dev->dev, skb->data,
++			BPT, DMA_FROM_TOVICE);
+ 		np->cur_tx_copy->control = TXIC | TXFD | CRCEnable | PADEnable;
+ 		np->cur_tx_copy->control |= (skb->len << PKTSShift);	/* pkt size */
+ 		np->cur_tx_copy->control |= (BPT << TBSShift);	/* buffer size */
+@@ -1345,8 +1345,8 @@ static netdev_tx_t start_tx(struct sk_bu
+ // 89/12/29 add,
+ 		if (np->pci_dev->device == 0x891)
+ 			np->cur_tx_copy->control |= ETIControl | RetryTxLC;
+-		next->buffer = pci_map_single(ep->pci_dev, skb->data + BPT,
+-                                skb->len - BPT, PCI_DMA_TODEVICE);
++		next->buffer = dma_map_single(&ep->pci_dev->dev, skb->data + BPT,
++                                skb->len - BPT, DMA_FROM_TOVICE);
+ 
+ 		next->status = TXOWN;
+ 		np->cur_tx_copy->status = TXOWN;
+@@ -1354,8 +1354,8 @@ static netdev_tx_t start_tx(struct sk_bu
+ 		np->cur_tx_copy = next->next_desc_logical;
+ 		np->free_tx_count -= 2;
+ 	} else {
+-		np->cur_tx_copy->buffer = pci_map_single(np->pci_dev, skb->data,
+-			skb->len, PCI_DMA_TODEVICE);
++		np->cur_tx_copy->buffer = dma_map_single(&np->pci_dev->dev, skb->data,
++			skb->len, DMA_FROM_TOVICE);
+ 		np->cur_tx_copy->control = TXIC | TXLD | TXFD | CRCEnable | PADEnable;
+ 		np->cur_tx_copy->control |= (skb->len << PKTSShift);	/* pkt size */
+ 		np->cur_tx_copy->control |= (skb->len << TBSShift);	/* buffer size */
+diff -u -p a/rdc/r6040.c b/rdc/r6040.c
+--- a/rdc/r6040.c
++++ b/rdc/r6040.c
+@@ -350,9 +350,9 @@ static int r6040_alloc_rxbufs(struct net
+ 			goto err_exit;
+ 		}
+ 		desc->skb_ptr = skb;
+-		desc->buf = cpu_to_le32(pci_map_single(lp->pdev,
++		desc->buf = cpu_to_le32(dma_map_single(&lp->pdev->dev,
+ 					desc->skb_ptr->data,
+-					MAX_BUF_SIZE, PCI_DMA_FROMDEVICE));
++					MAX_BUF_SIZE, DMA_FROM_DEVICE));
+ 		desc->status = DSC_OWNER_MAC;
+ 		desc = desc->vndescp;
+ 	} while (desc != lp->rx_ring);
+@@ -577,9 +577,9 @@ static int r6040_rx(struct net_device *d
+ 
+ 		/* put new skb into descriptor */
+ 		descptr->skb_ptr = new_skb;
+-		descptr->buf = cpu_to_le32(pci_map_single(priv->pdev,
++		descptr->buf = cpu_to_le32(dma_map_single(&priv->pdev->dev,
+ 						descptr->skb_ptr->data,
+-					MAX_BUF_SIZE, PCI_DMA_FROMDEVICE));
++					MAX_BUF_SIZE, DMA_FROM_DEVICE));
+ 
+ next_descr:
+ 		/* put the descriptor back to the MAC */
+@@ -839,8 +839,8 @@ static netdev_tx_t r6040_start_xmit(stru
+ 		descptr->len = skb->len;
+ 
+ 	descptr->skb_ptr = skb;
+-	descptr->buf = cpu_to_le32(pci_map_single(lp->pdev,
+-		skb->data, skb->len, PCI_DMA_TODEVICE));
++	descptr->buf = cpu_to_le32(dma_map_single(&lp->pdev->dev,
++		skb->data, skb->len, DMA_FROM_TOVICE));
+ 	descptr->status = DSC_OWNER_MAC;
+ 
+ 	skb_tx_timestamp(skb);

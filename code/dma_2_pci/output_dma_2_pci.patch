@@ -1,0 +1,771 @@
+diff -u -p a/realtek/8139cp.c b/realtek/8139cp.c
+--- a/realtek/8139cp.c
++++ b/realtek/8139cp.c
+@@ -520,7 +520,7 @@ rx_status_loop:
+ 			goto rx_next;
+ 		}
+ 
+-		new_mapping = dma_map_single(&cp->pdev->dev, new_skb->data, buflen,
++		new_mapping = pci_map_single(cp->pdev, new_skb->data, buflen,
+ 					 PCI_DMA_FROMDEVICE);
+ 		if (dma_mapping_error(&cp->pdev->dev, new_mapping)) {
+ 			dev->stats.rx_dropped++;
+@@ -759,7 +759,7 @@ static netdev_tx_t cp_start_xmit (struct
+ 		dma_addr_t mapping;
+ 
+ 		len = skb->len;
+-		mapping = dma_map_single(&cp->pdev->dev, skb->data, len, PCI_DMA_TODEVICE);
++		mapping = pci_map_single(cp->pdev, skb->data, len, PCI_DMA_TODEVICE);
+ 		if (dma_mapping_error(&cp->pdev->dev, mapping))
+ 			goto out_dma_error;
+ 
+@@ -798,7 +798,7 @@ static netdev_tx_t cp_start_xmit (struct
+ 		 */
+ 		first_eor = eor;
+ 		first_len = skb_headlen(skb);
+-		first_mapping = dma_map_single(&cp->pdev->dev, skb->data,
++		first_mapping = pci_map_single(cp->pdev, skb->data,
+ 					       first_len, PCI_DMA_TODEVICE);
+ 		if (dma_mapping_error(&cp->pdev->dev, first_mapping))
+ 			goto out_dma_error;
+@@ -813,7 +813,7 @@ static netdev_tx_t cp_start_xmit (struct
+ 			dma_addr_t mapping;
+ 
+ 			len = skb_frag_size(this_frag);
+-			mapping = dma_map_single(&cp->pdev->dev,
++			mapping = pci_map_single(cp->pdev,
+ 						 skb_frag_address(this_frag),
+ 						 len, PCI_DMA_TODEVICE);
+ 			if (dma_mapping_error(&cp->pdev->dev, mapping)) {
+@@ -1060,7 +1060,7 @@ static int cp_refill_rx(struct cp_privat
+ 		if (!skb)
+ 			goto err_out;
+ 
+-		mapping = dma_map_single(&cp->pdev->dev, skb->data,
++		mapping = pci_map_single(cp->pdev, skb->data,
+ 					 cp->rx_buf_sz, PCI_DMA_FROMDEVICE);
+ 		if (dma_mapping_error(&cp->pdev->dev, mapping)) {
+ 			kfree_skb(skb);
+diff -u -p a/intel/ixgbevf/ixgbevf_main.c b/intel/ixgbevf/ixgbevf_main.c
+--- a/intel/ixgbevf/ixgbevf_main.c
++++ b/intel/ixgbevf/ixgbevf_main.c
+@@ -400,9 +400,9 @@ static void ixgbevf_alloc_rx_buffers(str
+ 			bi->skb = skb;
+ 		}
+ 		if (!bi->dma) {
+-			bi->dma = dma_map_single(&pdev->dev, skb->data,
++			bi->dma = pci_map_single(pdev, skb->data,
+ 						 rx_ring->rx_buf_len,
+-						 DMA_FROM_DEVICE);
++						 PCI_DMA_FROMDEVICE);
+ 		}
+ 		/* Refresh the desc even if buffer_addrs didn't change because
+ 		 * each write-back erases this info. */
+@@ -2894,9 +2894,9 @@ static int ixgbevf_tx_map(struct ixgbevf
+ 
+ 		tx_buffer_info->length = size;
+ 		tx_buffer_info->mapped_as_page = false;
+-		tx_buffer_info->dma = dma_map_single(&adapter->pdev->dev,
++		tx_buffer_info->dma = pci_map_single(adapter->pdev,
+ 						     skb->data + offset,
+-						     size, DMA_TO_DEVICE);
++						     size, PCI_DMA_TODEVICE);
+ 		if (dma_mapping_error(&pdev->dev, tx_buffer_info->dma))
+ 			goto dma_error;
+ 		tx_buffer_info->time_stamp = jiffies;
+diff -u -p a/intel/e1000/e1000_main.c b/intel/e1000/e1000_main.c
+--- a/intel/e1000/e1000_main.c
++++ b/intel/e1000/e1000_main.c
+@@ -2882,9 +2882,9 @@ static int e1000_tx_map(struct e1000_ada
+ 		/* set time_stamp *before* dma to help avoid a possible race */
+ 		buffer_info->time_stamp = jiffies;
+ 		buffer_info->mapped_as_page = false;
+-		buffer_info->dma = dma_map_single(&pdev->dev,
++		buffer_info->dma = pci_map_single(pdev,
+ 						  skb->data + offset,
+-						  size,	DMA_TO_DEVICE);
++						  size,	PCI_DMA_TODEVICE);
+ 		if (dma_mapping_error(&pdev->dev, buffer_info->dma))
+ 			goto dma_error;
+ 		buffer_info->next_to_watch = i;
+@@ -4284,10 +4284,10 @@ static void e1000_alloc_rx_buffers(struc
+ 		buffer_info->skb = skb;
+ 		buffer_info->length = adapter->rx_buffer_len;
+ map_skb:
+-		buffer_info->dma = dma_map_single(&pdev->dev,
++		buffer_info->dma = pci_map_single(pdev,
+ 						  skb->data,
+ 						  buffer_info->length,
+-						  DMA_FROM_DEVICE);
++						  PCI_DMA_FROMDEVICE);
+ 		if (dma_mapping_error(&pdev->dev, buffer_info->dma)) {
+ 			dev_kfree_skb(skb);
+ 			buffer_info->skb = NULL;
+diff -u -p a/intel/e1000/e1000_ethtool.c b/intel/e1000/e1000_ethtool.c
+--- a/intel/e1000/e1000_ethtool.c
++++ b/intel/e1000/e1000_ethtool.c
+@@ -1013,8 +1013,8 @@ static int e1000_setup_desc_rings(struct
+ 		txdr->buffer_info[i].skb = skb;
+ 		txdr->buffer_info[i].length = skb->len;
+ 		txdr->buffer_info[i].dma =
+-			dma_map_single(&pdev->dev, skb->data, skb->len,
+-				       DMA_TO_DEVICE);
++			pci_map_single(pdev, skb->data, skb->len,
++				       PCI_DMA_TODEVICE);
+ 		tx_desc->buffer_addr = cpu_to_le64(txdr->buffer_info[i].dma);
+ 		tx_desc->lower.data = cpu_to_le32(skb->len);
+ 		tx_desc->lower.data |= cpu_to_le32(E1000_TXD_CMD_EOP |
+@@ -1070,8 +1070,9 @@ static int e1000_setup_desc_rings(struct
+ 		rxdr->buffer_info[i].skb = skb;
+ 		rxdr->buffer_info[i].length = E1000_RXBUFFER_2048;
+ 		rxdr->buffer_info[i].dma =
+-			dma_map_single(&pdev->dev, skb->data,
+-				       E1000_RXBUFFER_2048, DMA_FROM_DEVICE);
++			pci_map_single(pdev, skb->data,
++				       E1000_RXBUFFER_2048,
++				       PCI_DMA_FROMDEVICE);
+ 		rx_desc->buffer_addr = cpu_to_le64(rxdr->buffer_info[i].dma);
+ 		memset(skb->data, 0x00, skb->len);
+ 	}
+diff -u -p a/intel/ixgbe/ixgbe_fcoe.c b/intel/ixgbe/ixgbe_fcoe.c
+--- a/intel/ixgbe/ixgbe_fcoe.c
++++ b/intel/ixgbe/ixgbe_fcoe.c
+@@ -614,10 +614,10 @@ void ixgbe_configure_fcoe(struct ixgbe_a
+ 		}
+ 
+ 		fcoe->extra_ddp_buffer_dma =
+-			dma_map_single(&adapter->pdev->dev,
++			pci_map_single(adapter->pdev,
+ 				       fcoe->extra_ddp_buffer,
+ 				       IXGBE_FCBUFF_MIN,
+-				       DMA_FROM_DEVICE);
++				       PCI_DMA_FROMDEVICE);
+ 		if (dma_mapping_error(&adapter->pdev->dev,
+ 				      fcoe->extra_ddp_buffer_dma)) {
+ 			e_err(drv, "failed to map extra DDP buffer\n");
+diff -u -p a/intel/ixgb/ixgb_main.c b/intel/ixgb/ixgb_main.c
+--- a/intel/ixgb/ixgb_main.c
++++ b/intel/ixgb/ixgb_main.c
+@@ -1365,9 +1365,9 @@ ixgb_tx_map(struct ixgb_adapter *adapter
+ 		WARN_ON(buffer_info->dma != 0);
+ 		buffer_info->time_stamp = jiffies;
+ 		buffer_info->mapped_as_page = false;
+-		buffer_info->dma = dma_map_single(&pdev->dev,
++		buffer_info->dma = pci_map_single(pdev,
+ 						  skb->data + offset,
+-						  size, DMA_TO_DEVICE);
++						  size, PCI_DMA_TODEVICE);
+ 		if (dma_mapping_error(&pdev->dev, buffer_info->dma))
+ 			goto dma_error;
+ 		buffer_info->next_to_watch = 0;
+@@ -2164,10 +2164,10 @@ ixgb_alloc_rx_buffers(struct ixgb_adapte
+ 		buffer_info->skb = skb;
+ 		buffer_info->length = adapter->rx_buffer_len;
+ map_skb:
+-		buffer_info->dma = dma_map_single(&pdev->dev,
++		buffer_info->dma = pci_map_single(pdev,
+ 		                                  skb->data,
+ 		                                  adapter->rx_buffer_len,
+-						  DMA_FROM_DEVICE);
++						  PCI_DMA_FROMDEVICE);
+ 
+ 		rx_desc = IXGB_RX_DESC(*rx_ring, i);
+ 		rx_desc->buff_addr = cpu_to_le64(buffer_info->dma);
+diff -u -p a/intel/e1000e/netdev.c b/intel/e1000e/netdev.c
+--- a/intel/e1000e/netdev.c
++++ b/intel/e1000e/netdev.c
+@@ -639,9 +639,9 @@ static void e1000_alloc_rx_buffers(struc
+ 
+ 		buffer_info->skb = skb;
+ map_skb:
+-		buffer_info->dma = dma_map_single(&pdev->dev, skb->data,
++		buffer_info->dma = pci_map_single(pdev, skb->data,
+ 						  adapter->rx_buffer_len,
+-						  DMA_FROM_DEVICE);
++						  PCI_DMA_FROMDEVICE);
+ 		if (dma_mapping_error(&pdev->dev, buffer_info->dma)) {
+ 			dev_err(&pdev->dev, "Rx DMA map failed\n");
+ 			adapter->rx_dma_failed++;
+@@ -740,9 +740,9 @@ static void e1000_alloc_rx_buffers_ps(st
+ 		}
+ 
+ 		buffer_info->skb = skb;
+-		buffer_info->dma = dma_map_single(&pdev->dev, skb->data,
++		buffer_info->dma = pci_map_single(pdev, skb->data,
+ 						  adapter->rx_ps_bsize0,
+-						  DMA_FROM_DEVICE);
++						  PCI_DMA_FROMDEVICE);
+ 		if (dma_mapping_error(&pdev->dev, buffer_info->dma)) {
+ 			dev_err(&pdev->dev, "Rx DMA map failed\n");
+ 			adapter->rx_dma_failed++;
+@@ -4676,9 +4676,9 @@ static int e1000_tx_map(struct e1000_ada
+ 		buffer_info->length = size;
+ 		buffer_info->time_stamp = jiffies;
+ 		buffer_info->next_to_watch = i;
+-		buffer_info->dma = dma_map_single(&pdev->dev,
++		buffer_info->dma = pci_map_single(pdev,
+ 						  skb->data + offset,
+-						  size, DMA_TO_DEVICE);
++						  size, PCI_DMA_TODEVICE);
+ 		buffer_info->mapped_as_page = false;
+ 		if (dma_mapping_error(&pdev->dev, buffer_info->dma))
+ 			goto dma_error;
+diff -u -p a/intel/e1000e/ethtool.c b/intel/e1000e/ethtool.c
+--- a/intel/e1000e/ethtool.c
++++ b/intel/e1000e/ethtool.c
+@@ -1110,8 +1110,8 @@ static int e1000_setup_desc_rings(struct
+ 		tx_ring->buffer_info[i].skb = skb;
+ 		tx_ring->buffer_info[i].length = skb->len;
+ 		tx_ring->buffer_info[i].dma =
+-			dma_map_single(&pdev->dev, skb->data, skb->len,
+-				       DMA_TO_DEVICE);
++			pci_map_single(pdev, skb->data, skb->len,
++				       PCI_DMA_TODEVICE);
+ 		if (dma_mapping_error(&pdev->dev,
+ 				      tx_ring->buffer_info[i].dma)) {
+ 			ret_val = 4;
+@@ -1175,8 +1175,8 @@ static int e1000_setup_desc_rings(struct
+ 		skb_reserve(skb, NET_IP_ALIGN);
+ 		rx_ring->buffer_info[i].skb = skb;
+ 		rx_ring->buffer_info[i].dma =
+-			dma_map_single(&pdev->dev, skb->data, 2048,
+-				       DMA_FROM_DEVICE);
++			pci_map_single(pdev, skb->data, 2048,
++				       PCI_DMA_FROMDEVICE);
+ 		if (dma_mapping_error(&pdev->dev,
+ 				      rx_ring->buffer_info[i].dma)) {
+ 			ret_val = 8;
+diff -u -p a/intel/igbvf/netdev.c b/intel/igbvf/netdev.c
+--- a/intel/igbvf/netdev.c
++++ b/intel/igbvf/netdev.c
+@@ -187,9 +187,9 @@ static void igbvf_alloc_rx_buffers(struc
+ 			}
+ 
+ 			buffer_info->skb = skb;
+-			buffer_info->dma = dma_map_single(&pdev->dev, skb->data,
++			buffer_info->dma = pci_map_single(pdev, skb->data,
+ 			                                  bufsz,
+-							  DMA_FROM_DEVICE);
++							  PCI_DMA_FROMDEVICE);
+ 		}
+ 		/* Refresh the desc even if buffer_addrs didn't change because
+ 		 * each write-back erases this info. */
+@@ -2038,8 +2038,8 @@ static inline int igbvf_tx_map_adv(struc
+ 	buffer_info->time_stamp = jiffies;
+ 	buffer_info->next_to_watch = i;
+ 	buffer_info->mapped_as_page = false;
+-	buffer_info->dma = dma_map_single(&pdev->dev, skb->data, len,
+-					  DMA_TO_DEVICE);
++	buffer_info->dma = pci_map_single(pdev, skb->data, len,
++					  PCI_DMA_TODEVICE);
+ 	if (dma_mapping_error(&pdev->dev, buffer_info->dma))
+ 		goto dma_error;
+ 
+diff -u -p a/sun/sunbmac.c b/sun/sunbmac.c
+--- a/sun/sunbmac.c
++++ b/sun/sunbmac.c
+@@ -241,10 +241,10 @@ static void bigmac_init_rings(struct big
+ 		skb_reserve(skb, 34);
+ 
+ 		bb->be_rxd[i].rx_addr =
+-			dma_map_single(&bp->bigmac_op->dev,
++			pci_map_single(bp->bigmac_op,
+ 				       skb->data,
+ 				       RX_BUF_ALLOC_SIZE - 34,
+-				       DMA_FROM_DEVICE);
++				       PCI_DMA_FROMDEVICE);
+ 		bb->be_rxd[i].rx_flags =
+ 			(RXD_OWN | ((RX_BUF_ALLOC_SIZE - 34) & RXD_LENGTH));
+ 	}
+@@ -843,10 +843,10 @@ static void bigmac_rx(struct bigmac *bp)
+ 			skb_put(new_skb, ETH_FRAME_LEN);
+ 			skb_reserve(new_skb, 34);
+ 			this->rx_addr =
+-				dma_map_single(&bp->bigmac_op->dev,
++				pci_map_single(bp->bigmac_op,
+ 					       new_skb->data,
+ 					       RX_BUF_ALLOC_SIZE - 34,
+-					       DMA_FROM_DEVICE);
++					       PCI_DMA_FROMDEVICE);
+ 			this->rx_flags =
+ 				(RXD_OWN | ((RX_BUF_ALLOC_SIZE - 34) & RXD_LENGTH));
+ 
+@@ -962,8 +962,8 @@ static int bigmac_start_xmit(struct sk_b
+ 	u32 mapping;
+ 
+ 	len = skb->len;
+-	mapping = dma_map_single(&bp->bigmac_op->dev, skb->data,
+-				 len, DMA_TO_DEVICE);
++	mapping = pci_map_single(bp->bigmac_op, skb->data,
++				 len, PCI_DMA_TODEVICE);
+ 
+ 	/* Avoid a race... */
+ 	spin_lock_irq(&bp->lock);
+diff -u -p a/ti/cpmac.c b/ti/cpmac.c
+--- a/ti/cpmac.c
++++ b/ti/cpmac.c
+@@ -399,9 +399,9 @@ static struct sk_buff *cpmac_rx_one(stru
+ 		dma_unmap_single(&priv->dev->dev, desc->data_mapping,
+ 				 CPMAC_SKB_SIZE, DMA_FROM_DEVICE);
+ 		desc->skb = skb;
+-		desc->data_mapping = dma_map_single(&priv->dev->dev, skb->data,
++		desc->data_mapping = pci_map_single(priv->dev, skb->data,
+ 						    CPMAC_SKB_SIZE,
+-						    DMA_FROM_DEVICE);
++						    PCI_DMA_FROMDEVICE);
+ 		desc->hw_data = (u32)desc->data_mapping;
+ 		if (unlikely(netif_msg_pktdata(priv))) {
+ 			printk(KERN_DEBUG "%s: received packet:\n",
+@@ -583,8 +583,8 @@ static int cpmac_start_xmit(struct sk_bu
+ 	spin_unlock(&priv->lock);
+ 	desc->dataflags = CPMAC_SOP | CPMAC_EOP | CPMAC_OWN;
+ 	desc->skb = skb;
+-	desc->data_mapping = dma_map_single(&dev->dev, skb->data, len,
+-					    DMA_TO_DEVICE);
++	desc->data_mapping = pci_map_single(dev, skb->data, len,
++					    PCI_DMA_TODEVICE);
+ 	desc->hw_data = (u32)desc->data_mapping;
+ 	desc->datalen = len;
+ 	desc->buflen = len;
+@@ -1002,9 +1002,9 @@ static int cpmac_open(struct net_device
+ 			goto fail_desc;
+ 		}
+ 		desc->skb = skb;
+-		desc->data_mapping = dma_map_single(&dev->dev, skb->data,
++		desc->data_mapping = pci_map_single(dev, skb->data,
+ 						    CPMAC_SKB_SIZE,
+-						    DMA_FROM_DEVICE);
++						    PCI_DMA_FROMDEVICE);
+ 		desc->hw_data = (u32)desc->data_mapping;
+ 		desc->buflen = CPMAC_SKB_SIZE;
+ 		desc->dataflags = CPMAC_OWN;
+diff -u -p a/freescale/gianfar.c b/freescale/gianfar.c
+--- a/freescale/gianfar.c
++++ b/freescale/gianfar.c
+@@ -2195,8 +2195,8 @@ static int gfar_start_xmit(struct sk_buf
+ 		lstatus |= BD_LFLAG(TXBD_TOE);
+ 	}
+ 
+-	txbdp_start->bufPtr = dma_map_single(&priv->ofdev->dev, skb->data,
+-			skb_headlen(skb), DMA_TO_DEVICE);
++	txbdp_start->bufPtr = pci_map_single(priv->ofdev, skb->data,
++			skb_headlen(skb), PCI_DMA_TODEVICE);
+ 
+ 	/*
+ 	 * If time stamping is requested one additional TxBD must be set up. The
+@@ -2595,8 +2595,8 @@ static void gfar_new_rxbdp(struct gfar_p
+ 	struct gfar_private *priv = netdev_priv(dev);
+ 	dma_addr_t buf;
+ 
+-	buf = dma_map_single(&priv->ofdev->dev, skb->data,
+-			     priv->rx_buffer_size, DMA_FROM_DEVICE);
++	buf = pci_map_single(priv->ofdev, skb->data,
++			     priv->rx_buffer_size, PCI_DMA_FROMDEVICE);
+ 	gfar_init_rxbdp(rx_queue, bdp, buf);
+ }
+ 
+diff -u -p a/freescale/fec.c b/freescale/fec.c
+--- a/freescale/fec.c
++++ b/freescale/fec.c
+@@ -338,8 +338,8 @@ fec_enet_start_xmit(struct sk_buff *skb,
+ 	/* Push the data cache so the CPM does not get stale memory
+ 	 * data.
+ 	 */
+-	bdp->cbd_bufaddr = dma_map_single(&fep->pdev->dev, bufaddr,
+-			FEC_ENET_TX_FRSIZE, DMA_TO_DEVICE);
++	bdp->cbd_bufaddr = pci_map_single(fep->pdev, bufaddr,
++			FEC_ENET_TX_FRSIZE, PCI_DMA_TODEVICE);
+ 
+ 	/* Send it on its way.  Tell FEC it's ready, interrupt when done,
+ 	 * it's the last BD of the frame, and to put the CRC on the end.
+@@ -718,8 +718,8 @@ fec_enet_rx(struct net_device *ndev)
+ 				netif_rx(skb);
+ 		}
+ 
+-		bdp->cbd_bufaddr = dma_map_single(&fep->pdev->dev, data,
+-				FEC_ENET_TX_FRSIZE, DMA_FROM_DEVICE);
++		bdp->cbd_bufaddr = pci_map_single(fep->pdev, data,
++				FEC_ENET_TX_FRSIZE, PCI_DMA_FROMDEVICE);
+ rx_processing_done:
+ 		/* Clear the status flags for this buffer */
+ 		status &= ~BD_ENET_RX_STATS;
+@@ -1198,8 +1198,8 @@ static int fec_enet_alloc_buffers(struct
+ 		}
+ 		fep->rx_skbuff[i] = skb;
+ 
+-		bdp->cbd_bufaddr = dma_map_single(&fep->pdev->dev, skb->data,
+-				FEC_ENET_RX_FRSIZE, DMA_FROM_DEVICE);
++		bdp->cbd_bufaddr = pci_map_single(fep->pdev, skb->data,
++				FEC_ENET_RX_FRSIZE, PCI_DMA_FROMDEVICE);
+ 		bdp->cbd_sc = BD_ENET_RX_EMPTY;
+ 		bdp++;
+ 	}
+diff -u -p a/xscale/ixp4xx_eth.c b/xscale/ixp4xx_eth.c
+--- a/xscale/ixp4xx_eth.c
++++ b/xscale/ixp4xx_eth.c
+@@ -711,8 +711,9 @@ static int eth_poll(struct napi_struct *
+ 
+ #ifdef __ARMEB__
+ 		if ((skb = netdev_alloc_skb(dev, RX_BUFF_SIZE))) {
+-			phys = dma_map_single(&dev->dev, skb->data,
+-					      RX_BUFF_SIZE, DMA_FROM_DEVICE);
++			phys = pci_map_single(dev, skb->data,
++					      RX_BUFF_SIZE,
++					      PCI_DMA_FROMDEVICE);
+ 			if (dma_mapping_error(&dev->dev, phys)) {
+ 				dev_kfree_skb(skb);
+ 				skb = NULL;
+@@ -858,7 +859,7 @@ static int eth_xmit(struct sk_buff *skb,
+ 	memcpy_swab32(mem, (u32 *)((int)skb->data & ~3), bytes / 4);
+ #endif
+ 
+-	phys = dma_map_single(&dev->dev, mem, bytes, DMA_TO_DEVICE);
++	phys = pci_map_single(dev, mem, bytes, PCI_DMA_TODEVICE);
+ 	if (dma_mapping_error(&dev->dev, phys)) {
+ 		dev_kfree_skb(skb);
+ #ifndef __ARMEB__
+@@ -1099,8 +1100,8 @@ static int init_queues(struct port *port
+ 		data = buff;
+ #endif
+ 		desc->buf_len = MAX_MRU;
+-		desc->data = dma_map_single(&port->netdev->dev, data,
+-					    RX_BUFF_SIZE, DMA_FROM_DEVICE);
++		desc->data = pci_map_single(port->netdev, data,
++					    RX_BUFF_SIZE, PCI_DMA_FROMDEVICE);
+ 		if (dma_mapping_error(&port->netdev->dev, desc->data)) {
+ 			free_buffer(buff);
+ 			return -EIO;
+diff -u -p a/broadcom/bnx2x/bnx2x_ethtool.c b/broadcom/bnx2x/bnx2x_ethtool.c
+--- a/broadcom/bnx2x/bnx2x_ethtool.c
++++ b/broadcom/bnx2x/bnx2x_ethtool.c
+@@ -1770,8 +1770,8 @@ static int bnx2x_run_loopback(struct bnx
+ 	memset(packet + 2*ETH_ALEN, 0x77, (ETH_HLEN - 2*ETH_ALEN));
+ 	for (i = ETH_HLEN; i < pkt_size; i++)
+ 		packet[i] = (unsigned char) (i & 0xff);
+-	mapping = dma_map_single(&bp->pdev->dev, skb->data,
+-				 skb_headlen(skb), DMA_TO_DEVICE);
++	mapping = pci_map_single(bp->pdev, skb->data,
++				 skb_headlen(skb), PCI_DMA_TODEVICE);
+ 	if (unlikely(dma_mapping_error(&bp->pdev->dev, mapping))) {
+ 		rc = -ENOMEM;
+ 		dev_kfree_skb(skb);
+diff -u -p a/broadcom/bnx2x/bnx2x_cmn.c b/broadcom/bnx2x/bnx2x_cmn.c
+--- a/broadcom/bnx2x/bnx2x_cmn.c
++++ b/broadcom/bnx2x/bnx2x_cmn.c
+@@ -314,9 +314,9 @@ static void bnx2x_tpa_start(struct bnx2x
+ 		BNX2X_ERR("start of bin not in stop [%d]\n", queue);
+ 
+ 	/* Try to map an empty skb from the aggregation info  */
+-	mapping = dma_map_single(&bp->pdev->dev,
++	mapping = pci_map_single(bp->pdev,
+ 				 first_buf->skb->data,
+-				 fp->rx_buf_size, DMA_FROM_DEVICE);
++				 fp->rx_buf_size, PCI_DMA_FROMDEVICE);
+ 	/*
+ 	 *  ...if it fails - move the skb from the consumer to the producer
+ 	 *  and set the current aggregation state as ERROR to drop it
+@@ -2680,8 +2680,8 @@ netdev_tx_t bnx2x_start_xmit(struct sk_b
+ 	}
+ #endif
+ 	/* Map skb linear data for DMA */
+-	mapping = dma_map_single(&bp->pdev->dev, skb->data,
+-				 skb_headlen(skb), DMA_TO_DEVICE);
++	mapping = pci_map_single(bp->pdev, skb->data,
++				 skb_headlen(skb), PCI_DMA_TODEVICE);
+ 	if (unlikely(dma_mapping_error(&bp->pdev->dev, mapping))) {
+ 		DP(NETIF_MSG_TX_QUEUED, "SKB mapping failed - "
+ 		   "silently dropping this SKB\n");
+diff -u -p a/broadcom/bnx2.c b/broadcom/bnx2.c
+--- a/broadcom/bnx2.c
++++ b/broadcom/bnx2.c
+@@ -2750,7 +2750,7 @@ bnx2_alloc_rx_skb(struct bnx2 *bp, struc
+ 	if (unlikely((align = (unsigned long) skb->data & (BNX2_RX_ALIGN - 1))))
+ 		skb_reserve(skb, BNX2_RX_ALIGN - align);
+ 
+-	mapping = dma_map_single(&bp->pdev->dev, skb->data, bp->rx_buf_use_size,
++	mapping = pci_map_single(bp->pdev, skb->data, bp->rx_buf_use_size,
+ 				 PCI_DMA_FROMDEVICE);
+ 	if (dma_mapping_error(&bp->pdev->dev, mapping)) {
+ 		dev_kfree_skb(skb);
+@@ -5776,7 +5776,7 @@ bnx2_run_loopback(struct bnx2 *bp, int l
+ 	for (i = 14; i < pkt_size; i++)
+ 		packet[i] = (unsigned char) (i & 0xff);
+ 
+-	map = dma_map_single(&bp->pdev->dev, skb->data, pkt_size,
++	map = pci_map_single(bp->pdev, skb->data, pkt_size,
+ 			     PCI_DMA_TODEVICE);
+ 	if (dma_mapping_error(&bp->pdev->dev, map)) {
+ 		dev_kfree_skb(skb);
+@@ -6508,7 +6508,7 @@ bnx2_start_xmit(struct sk_buff *skb, str
+ 	} else
+ 		mss = 0;
+ 
+-	mapping = dma_map_single(&bp->pdev->dev, skb->data, len, PCI_DMA_TODEVICE);
++	mapping = pci_map_single(bp->pdev, skb->data, len, PCI_DMA_TODEVICE);
+ 	if (dma_mapping_error(&bp->pdev->dev, mapping)) {
+ 		dev_kfree_skb(skb);
+ 		return NETDEV_TX_OK;
+diff -u -p a/broadcom/bcm63xx_enet.c b/broadcom/bcm63xx_enet.c
+--- a/broadcom/bcm63xx_enet.c
++++ b/broadcom/bcm63xx_enet.c
+@@ -197,9 +197,9 @@ static int bcm_enet_refill_rx(struct net
+ 				break;
+ 			priv->rx_skb[desc_idx] = skb;
+ 
+-			p = dma_map_single(&priv->pdev->dev, skb->data,
++			p = pci_map_single(priv->pdev, skb->data,
+ 					   priv->rx_skb_size,
+-					   DMA_FROM_DEVICE);
++					   PCI_DMA_FROMDEVICE);
+ 			desc->address = p;
+ 		}
+ 
+@@ -535,8 +535,8 @@ static int bcm_enet_start_xmit(struct sk
+ 	priv->tx_skb[priv->tx_curr_desc] = skb;
+ 
+ 	/* fill descriptor */
+-	desc->address = dma_map_single(&priv->pdev->dev, skb->data, skb->len,
+-				       DMA_TO_DEVICE);
++	desc->address = pci_map_single(priv->pdev, skb->data, skb->len,
++				       PCI_DMA_TODEVICE);
+ 
+ 	len_stat = (skb->len << DMADESC_LENGTH_SHIFT) & DMADESC_LENGTH_MASK;
+ 	len_stat |= DMADESC_ESOP_MASK |
+diff -u -p a/brocade/bna/bnad.c b/brocade/bna/bnad.c
+--- a/brocade/bna/bnad.c
++++ b/brocade/bna/bnad.c
+@@ -379,9 +379,9 @@ bnad_alloc_n_post_rxbufs(struct bnad *bn
+ 			goto finishing;
+ 		}
+ 		unmap_array[unmap_prod].skb = skb;
+-		dma_addr = dma_map_single(&bnad->pcidev->dev, skb->data,
++		dma_addr = pci_map_single(bnad->pcidev, skb->data,
+ 					  rcb->rxq->buffer_size,
+-					  DMA_FROM_DEVICE);
++					  PCI_DMA_FROMDEVICE);
+ 		dma_unmap_addr_set(&unmap_array[unmap_prod], dma_addr,
+ 				   dma_addr);
+ 		BNA_SET_DMA_ADDR(dma_addr, &rxent->host_addr);
+@@ -2730,8 +2730,8 @@ bnad_start_xmit(struct sk_buff *skb, str
+ 	unmap_q->unmap_array[unmap_prod].skb = skb;
+ 	len = skb_headlen(skb);
+ 	txqent->vector[0].length = htons(len);
+-	dma_addr = dma_map_single(&bnad->pcidev->dev, skb->data,
+-				  skb_headlen(skb), DMA_TO_DEVICE);
++	dma_addr = pci_map_single(bnad->pcidev, skb->data,
++				  skb_headlen(skb), PCI_DMA_TODEVICE);
+ 	dma_unmap_addr_set(&unmap_q->unmap_array[unmap_prod], dma_addr,
+ 			   dma_addr);
+ 
+diff -u -p a/cadence/macb.c b/cadence/macb.c
+--- a/cadence/macb.c
++++ b/cadence/macb.c
+@@ -654,8 +654,8 @@ static int macb_start_xmit(struct sk_buf
+ 
+ 	entry = bp->tx_head;
+ 	dev_dbg(&bp->pdev->dev, "Allocated ring entry %u\n", entry);
+-	mapping = dma_map_single(&bp->pdev->dev, skb->data,
+-				 len, DMA_TO_DEVICE);
++	mapping = pci_map_single(bp->pdev, skb->data,
++				 len, PCI_DMA_TODEVICE);
+ 	bp->tx_skb[entry].skb = skb;
+ 	bp->tx_skb[entry].mapping = mapping;
+ 	dev_dbg(&bp->pdev->dev, "Mapped skb data %p to DMA addr %08lx\n",
+diff -u -p a/oki-semi/pch_gbe/pch_gbe_main.c b/oki-semi/pch_gbe/pch_gbe_main.c
+--- a/oki-semi/pch_gbe/pch_gbe_main.c
++++ b/oki-semi/pch_gbe/pch_gbe_main.c
+@@ -1044,9 +1044,9 @@ static void pch_gbe_tx_queue(struct pch_
+ 	       (skb->len - ETH_HLEN));
+ 	/*-- Set Buffer information --*/
+ 	buffer_info->length = tmp_skb->len;
+-	buffer_info->dma = dma_map_single(&adapter->pdev->dev, tmp_skb->data,
++	buffer_info->dma = pci_map_single(adapter->pdev, tmp_skb->data,
+ 					  buffer_info->length,
+-					  DMA_TO_DEVICE);
++					  PCI_DMA_TODEVICE);
+ 	if (dma_mapping_error(&adapter->pdev->dev, buffer_info->dma)) {
+ 		pr_err("TX DMA map failed\n");
+ 		buffer_info->dma = 0;
+@@ -1275,10 +1275,10 @@ pch_gbe_alloc_rx_buffers(struct pch_gbe_
+ 		skb_reserve(skb, NET_IP_ALIGN);
+ 		buffer_info->skb = skb;
+ 
+-		buffer_info->dma = dma_map_single(&pdev->dev,
++		buffer_info->dma = pci_map_single(pdev,
+ 						  buffer_info->rx_buffer,
+ 						  buffer_info->length,
+-						  DMA_FROM_DEVICE);
++						  PCI_DMA_FROMDEVICE);
+ 		if (dma_mapping_error(&adapter->pdev->dev, buffer_info->dma)) {
+ 			dev_kfree_skb(skb);
+ 			buffer_info->skb = NULL;
+diff -u -p a/renesas/sh_eth.c b/renesas/sh_eth.c
+--- a/renesas/sh_eth.c
++++ b/renesas/sh_eth.c
+@@ -658,8 +658,8 @@ static void sh_eth_ring_format(struct ne
+ 		mdp->rx_skbuff[i] = skb;
+ 		if (skb == NULL)
+ 			break;
+-		dma_map_single(&ndev->dev, skb->tail, mdp->rx_buf_sz,
+-				DMA_FROM_DEVICE);
++		pci_map_single(ndev, skb->tail, mdp->rx_buf_sz,
++				PCI_DMA_FROMDEVICE);
+ 		skb->dev = ndev; /* Mark as being used by this device. */
+ 		sh_eth_set_receive_align(skb);
+ 
+@@ -958,8 +958,8 @@ static int sh_eth_rx(struct net_device *
+ 			mdp->rx_skbuff[entry] = skb;
+ 			if (skb == NULL)
+ 				break;	/* Better luck next round. */
+-			dma_map_single(&ndev->dev, skb->tail, mdp->rx_buf_sz,
+-					DMA_FROM_DEVICE);
++			pci_map_single(ndev, skb->tail, mdp->rx_buf_sz,
++					PCI_DMA_FROMDEVICE);
+ 			skb->dev = ndev;
+ 			sh_eth_set_receive_align(skb);
+ 
+@@ -1501,8 +1501,8 @@ static int sh_eth_start_xmit(struct sk_b
+ 	if (!mdp->cd->hw_swap)
+ 		sh_eth_soft_swap(phys_to_virt(ALIGN(txdesc->addr, 4)),
+ 				 skb->len + 2);
+-	txdesc->addr = dma_map_single(&ndev->dev, skb->data, skb->len,
+-				      DMA_TO_DEVICE);
++	txdesc->addr = pci_map_single(ndev, skb->data, skb->len,
++				      PCI_DMA_TODEVICE);
+ 	if (skb->len < ETHERSMALL)
+ 		txdesc->buffer_length = ETHERSMALL;
+ 	else
+diff -u -p a/ibm/ibmveth.c b/ibm/ibmveth.c
+--- a/ibm/ibmveth.c
++++ b/ibm/ibmveth.c
+@@ -238,8 +238,8 @@ static void ibmveth_replenish_buffer_poo
+ 		BUG_ON(index == IBM_VETH_INVALID_MAP);
+ 		BUG_ON(pool->skbuff[index] != NULL);
+ 
+-		dma_addr = dma_map_single(&adapter->vdev->dev, skb->data,
+-				pool->buff_size, DMA_FROM_DEVICE);
++		dma_addr = pci_map_single(adapter->vdev, skb->data,
++				pool->buff_size, PCI_DMA_FROMDEVICE);
+ 
+ 		if (dma_mapping_error(&adapter->vdev->dev, dma_addr))
+ 			goto failure;
+@@ -642,8 +642,9 @@ static int ibmveth_open(struct net_devic
+ 		goto err_out_free_irq;
+ 	}
+ 	adapter->bounce_buffer_dma =
+-	    dma_map_single(&adapter->vdev->dev, adapter->bounce_buffer,
+-			   netdev->mtu + IBMVETH_BUFF_OH, DMA_BIDIRECTIONAL);
++	    pci_map_single(adapter->vdev, adapter->bounce_buffer,
++			   netdev->mtu + IBMVETH_BUFF_OH,
++			   PCI_DMA_BIDIRECTIONAL);
+ 	if (dma_mapping_error(dev, adapter->bounce_buffer_dma)) {
+ 		netdev_err(netdev, "unable to map bounce buffer\n");
+ 		rc = -ENOMEM;
+@@ -996,8 +997,8 @@ retry_bounce:
+ 	}
+ 
+ 	/* Map the header */
+-	dma_addr = dma_map_single(&adapter->vdev->dev, skb->data,
+-				  skb_headlen(skb), DMA_TO_DEVICE);
++	dma_addr = pci_map_single(adapter->vdev, skb->data,
++				  skb_headlen(skb), PCI_DMA_TODEVICE);
+ 	if (dma_mapping_error(&adapter->vdev->dev, dma_addr))
+ 		goto map_failed;
+ 
+diff -u -p a/ibm/emac/core.c b/ibm/emac/core.c
+--- a/ibm/emac/core.c
++++ b/ibm/emac/core.c
+@@ -1007,8 +1007,8 @@ static int emac_resize_rx_ring(struct em
+ 
+ 		skb_reserve(skb, EMAC_RX_SKB_HEADROOM + 2);
+ 		dev->rx_desc[i].data_ptr =
+-		    dma_map_single(&dev->ofdev->dev, skb->data - 2, rx_sync_size,
+-				   DMA_FROM_DEVICE) + 2;
++		    pci_map_single(dev->ofdev, skb->data - 2, rx_sync_size,
++				   PCI_DMA_FROMDEVICE) + 2;
+ 		dev->rx_skb[i] = skb;
+ 	}
+  skip:
+@@ -1106,8 +1106,8 @@ static inline int emac_alloc_rx_skb(stru
+ 
+ 	skb_reserve(skb, EMAC_RX_SKB_HEADROOM + 2);
+ 	dev->rx_desc[slot].data_ptr =
+-	    dma_map_single(&dev->ofdev->dev, skb->data - 2, dev->rx_sync_size,
+-			   DMA_FROM_DEVICE) + 2;
++	    pci_map_single(dev->ofdev, skb->data - 2, dev->rx_sync_size,
++			   PCI_DMA_FROMDEVICE) + 2;
+ 	wmb();
+ 	dev->rx_desc[slot].ctrl = MAL_RX_CTRL_EMPTY |
+ 	    (slot == (NUM_RX_BUFF - 1) ? MAL_RX_CTRL_WRAP : 0);
+@@ -1374,9 +1374,9 @@ static int emac_start_xmit(struct sk_buf
+ 	DBG2(dev, "xmit(%u) %d" NL, len, slot);
+ 
+ 	dev->tx_skb[slot] = skb;
+-	dev->tx_desc[slot].data_ptr = dma_map_single(&dev->ofdev->dev,
++	dev->tx_desc[slot].data_ptr = pci_map_single(dev->ofdev,
+ 						     skb->data, len,
+-						     DMA_TO_DEVICE);
++						     PCI_DMA_TODEVICE);
+ 	dev->tx_desc[slot].data_len = (u16) len;
+ 	wmb();
+ 	dev->tx_desc[slot].ctrl = ctrl;
+@@ -1444,7 +1444,7 @@ static int emac_start_xmit_sg(struct sk_
+ 	dev->tx_skb[slot] = NULL;
+ 	chunk = min(len, MAL_MAX_TX_SIZE);
+ 	dev->tx_desc[slot].data_ptr = pd =
+-	    dma_map_single(&dev->ofdev->dev, skb->data, len, DMA_TO_DEVICE);
++	    pci_map_single(dev->ofdev, skb->data, len, PCI_DMA_TODEVICE);
+ 	dev->tx_desc[slot].data_len = (u16) chunk;
+ 	len -= chunk;
+ 	if (unlikely(len))
+@@ -1579,8 +1579,8 @@ static inline void emac_recycle_rx_skb(s
+ 	DBG2(dev, "recycle %d %d" NL, slot, len);
+ 
+ 	if (len)
+-		dma_map_single(&dev->ofdev->dev, skb->data - 2,
+-			       EMAC_DMA_ALIGN(len + 2), DMA_FROM_DEVICE);
++		pci_map_single(dev->ofdev, skb->data - 2,
++			       EMAC_DMA_ALIGN(len + 2), PCI_DMA_FROMDEVICE);
+ 
+ 	dev->rx_desc[slot].data_len = 0;
+ 	wmb();
+diff -u -p a/dlink/sundance.c b/dlink/sundance.c
+--- a/dlink/sundance.c
++++ b/dlink/sundance.c
+@@ -1026,9 +1026,9 @@ static void init_ring(struct net_device
+ 			break;
+ 		skb->dev = dev;		/* Mark as being used by this device. */
+ 		skb_reserve(skb, 2);	/* 16 byte align the IP header. */
+-		np->rx_ring[i].frag[0].addr = cpu_to_le32(
+-			dma_map_single(&np->pci_dev->dev, skb->data,
+-				np->rx_buf_sz, DMA_FROM_DEVICE));
++		np->rx_ring[i].frag[0].addr = cpu_to_le32(pci_map_single(np->pci_dev,
++							  skb->data,
++				np->rx_buf_sz, PCI_DMA_FROMDEVICE));
+ 		if (dma_mapping_error(&np->pci_dev->dev,
+ 					np->rx_ring[i].frag[0].addr)) {
+ 			dev_kfree_skb(skb);
+@@ -1085,8 +1085,8 @@ start_tx (struct sk_buff *skb, struct ne
+ 
+ 	txdesc->next_desc = 0;
+ 	txdesc->status = cpu_to_le32 ((entry << 2) | DisableAlign);
+-	txdesc->frag[0].addr = cpu_to_le32(dma_map_single(&np->pci_dev->dev,
+-				skb->data, skb->len, DMA_TO_DEVICE));
++	txdesc->frag[0].addr = cpu_to_le32(pci_map_single(np->pci_dev,
++				skb->data, skb->len, PCI_DMA_TODEVICE));
+ 	if (dma_mapping_error(&np->pci_dev->dev,
+ 				txdesc->frag[0].addr))
+ 			goto drop_frame;
+@@ -1417,9 +1417,9 @@ static void refill_rx (struct net_device
+ 				break;		/* Better luck next round. */
+ 			skb->dev = dev;		/* Mark as being used by this device. */
+ 			skb_reserve(skb, 2);	/* Align IP on 16 byte boundaries */
+-			np->rx_ring[entry].frag[0].addr = cpu_to_le32(
+-				dma_map_single(&np->pci_dev->dev, skb->data,
+-					np->rx_buf_sz, DMA_FROM_DEVICE));
++			np->rx_ring[entry].frag[0].addr = cpu_to_le32(pci_map_single(np->pci_dev,
++								      skb->data,
++					np->rx_buf_sz, PCI_DMA_FROMDEVICE));
+ 			if (dma_mapping_error(&np->pci_dev->dev,
+ 				    np->rx_ring[entry].frag[0].addr)) {
+ 			    dev_kfree_skb_irq(skb);
