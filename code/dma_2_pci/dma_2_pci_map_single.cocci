@@ -1,5 +1,6 @@
 @@
-expression E1, E2, E3, E4;
+struct pci_dev *E1;
+expression E2, E3, E4;
 @@
 
 - dma_map_single(&E1->dev,
@@ -7,7 +8,8 @@ expression E1, E2, E3, E4;
 	E2, E3, E4)
 
 @@
-expression E1, E2, E3;
+struct pci_dev *E1;
+expression E2, E3;
 @@
 pci_map_single(E1, E2, E3,
 (
