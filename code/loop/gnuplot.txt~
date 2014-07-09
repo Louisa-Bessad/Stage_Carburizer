@@ -1,6 +1,0 @@
-set title "Repartition des boucles dans les drivers du noyau Linux"
-set xtics rotate by -45
-set style histogram clustered
-set style fill solid border
-set style data histogram
-plot 'forgnuplot.dat' using 2:xticlabels(1) title columnheader
