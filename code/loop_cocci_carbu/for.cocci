@@ -59,6 +59,7 @@ for(...;...; --E1,...){
 ...
 }
 |
+
 //for(...;...; dans la suite de la condition var incremente direct avec ou sans paranthèse)
 for(...;...; ..., E1++)
 E2;
@@ -88,6 +89,7 @@ for(...;...; ..., --E1){
 ...
 }
 |
+
 //for(...;...; incrementation avec variable)
 for(...;...; E1 += E2)
 E3;
@@ -117,6 +119,7 @@ for(...;...; E1 -= E2,...){
 ...
 }
 |
+
 //infinite for with break condition
 for(...;...;...){
 <+...

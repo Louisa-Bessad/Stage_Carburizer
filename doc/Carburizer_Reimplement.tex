@@ -1,0 +1,37 @@
+\documentclass[11pt]{article}
+
+
+\usepackage[francais]{babel}
+\usepackage{epsfig}
+\usepackage{calc}
+\usepackage{url}
+\usepackage{boxedminipage}
+\usepackage[top=1.5cm, bottom=1.5cm, left=2cm, right=2cm]{geometry} 
+
+\usepackage[language=french]{csquotes}
+
+\usepackage{titlesec}
+\usepackage[scale=0.75, vscale=0.8]{geometry}
+
+\titleformat{\section}[block]{\large}{\textbf\thesection.}{1em}{\textbf}
+
+\title{\fontsize{15pt}{10pt}\selectfont\textbf{Reimplementation of Carburizer}}
+
+\author{Louisa Bessad}
+
+\begin{document}
+
+\maketitle
+
+\section{Abstract}
+Carburizer was created to insure; input checking from the driver, a failure detection before corruption appears and a fix of device failures. In this way the reliability of systems can be improved. But it does not handle all issues and few platforms or drivers had been tested. The goal of this document is to reimplement some funtions of Carburizer with Coccinelle. In this way; we have to look for different types of code.
+
+\section{Looking for different types of code}
+First, we will look for loop without timeout. 
+
+\section{Solutions}
+To find loop without timeout we will apply a patch to find and modify every loop in the Linux3.2.59 Kernel. When we find a loop we will search if it contain a timeout. If there is no timeout we will insert code to insure an exit for the loop. We will consider as a timeout a variable what is incremented or decremented in the loop and used as a condition of loop exiting.
+
+\section{Results}
+
+\end{document}

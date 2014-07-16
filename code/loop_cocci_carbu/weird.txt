@@ -1,0 +1,83 @@
+--- a/base/map.c
++++ b/base/map.c
+@@ -55,12 +55,23 @@ int kobj_map(struct kobj_map *domain, de
+ 		p->data = data;
+ 	}
+ 	mutex_lock(domain->lock);
++	unsigned long long delta = (cpu / khz / HZ) * 2;
++	unsigned long long _start = 0;
++	unsigned long long _cur = 0;
++	unsigned long long timeout;
++	timeout = rdstcll(start) + delta;
+ 	for (i = 0, p -= n; i < n; i++, p++, index++) {
+ 		struct probe **s = &domain->probes[index % 255];
+ 		while (*s && (*s)->range < range)
+ 			s = &(*s)->next;
+ 		p->next = *s;
+ 		*s = p;
++		if (_cur < timeout) {
++			rdstcll(_cur);
++		}
++		else {
++			break;
++		}
+ 	}
+ 	mutex_unlock(domain->lock);
+ 	return 0;
+
+
+diff -u -p a/input/joystick/joydump.c b/input/joystick/joydump.c
+--- a/input/joystick/joydump.c
++++ b/input/joystick/joydump.c
+@@ -130,12 +130,23 @@ static int joydump_connect(struct gamepo
+ 	printk(" |\n");
+ 	dump++;
+ 
+-	for (i = 1; i < t; i++, dump++, prev++) {
++	unsigned long long delta = (cpu / khz / HZ) * 2;
++	unsigned long long _start = 0;
++	unsigned long long _cur = 0;
++	unsigned long long timeout;
++	timeout = rdstcll(start) + delta;
++		for (i = 1; i < t; i++, dump++, prev++) {
+ 		printk(KERN_INFO "joydump: | index: %3d delta: %3d us data: ",
+ 			i, dump->time - prev->time);
+ 		for (j = 7; j >= 0; j--)
+ 			printk("%d", (dump->data >> j) & 1);
+ 		printk(" |\n");
++		if (_cur < timeout) {
++			rdstcll(_cur);
++		}
++		else {
++			break;
++		}
+ 	}
+ 	kfree(buf);
+ 
+
++++ b/input/joystick/adi.c
+@@ -158,6 +158,11 @@ static void adi_read_packet(struct adi_p
+ 	do {
+ 		u = v;
+ 		w = u ^ (v = x = gameport_read(gameport));
++		unsigned long long delta = (cpu / khz / HZ) * 2;
++		unsigned long long _start = 0;
++		unsigned long long _cur = 0;
++		unsigned long long timeout;
++		timeout = rdstcll(start) + delta;
+ 		for (i = 0; i < 2; i++, w >>= 2, x >>= 2) {
+ 			t[i]--;
+ 			if ((w & 0x30) && s[i]) {
+@@ -166,6 +171,12 @@ static void adi_read_packet(struct adi_p
+ 					t[i] = gameport_time(gameport, ADI_MAX_STROBE);
+ 				} else t[i] = 0;
+ 			} else if (!(x & 0x30)) s[i] = 1;
++			if (_cur < timeout) {
++				rdstcll(_cur);
++			}
++			else {
++				break;
++			}
+ 		}
+ 	} while (t[0] > 0 || t[1] > 0);
+ 
