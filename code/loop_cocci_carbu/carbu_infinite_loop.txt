@@ -1,0 +1,820 @@
+ticks 1  Infinite Loop:378    CC [M]  drivers/ata/sata_qstor.o
+ticks 25  Infinite Loop:143
+Infinite Loop:152
+Infinite Loop:155
+Infinite Loop:244
+Infinite Loop:511
+Infinite Loop:513
+Infinite Loop:574  
+Infinite Loop:576  
+Infinite Loop:581  
+Infinite Loop:584 
+Infinite Loop:588  
+Infinite Loop:701  
+Infinite Loop:751  
+Infinite Loop:896  
+Infinite Loop:898  
+Infinite Loop:928  
+Infinite Loop:930  
+Infinite Loop:1027  
+Infinite Loop:1214  
+Infinite Loop:1226  
+Infinite Loop:1232  
+Infinite Loop:1240  
+Infinite Loop:1556  
+Infinite Loop:1568  
+Infinite Loop:1571    CC [M]  drivers/atm/zatm.o
+ticks 23  Infinite Loop:171  
+Infinite Loop:178  
+Infinite Loop:181  
+Infinite Loop:190  
+Infinite Loop:196  
+Infinite Loop:201  
+Infinite Loop:215  
+Infinite Loop:219  
+Infinite Loop:223  
+Infinite Loop:227  
+Infinite Loop:325  
+Infinite Loop:327  
+Infinite Loop:342  
+Infinite Loop:453  
+Infinite Loop:458  
+Infinite Loop:460  
+Infinite Loop:466  
+Infinite Loop:1050  
+Infinite Loop:1167  
+Infinite Loop:1452  
+Infinite Loop:2849  
+Infinite Loop:2864  
+Infinite Loop:2867    CC [M]  drivers/atm/nicstar.o
+ticks 6  Infinite Loop:430  
+Infinite Loop:441  
+Infinite Loop:836  
+Infinite Loop:873  
+Infinite Loop:1397  
+Infinite Loop:1766    CC [M]  drivers/atm/horizon.o
+ticks 3  Infinite Loop:1042  
+Infinite Loop:1229  
+Infinite Loop:2225    CC [M]  drivers/atm/iphase.o
+ticks 7  Infinite Loop:626  
+Infinite Loop:643  
+Infinite Loop:689  
+Infinite Loop:880  
+Infinite Loop:1215  
+Infinite Loop:1421  
+Infinite Loop:1758    CC [M]  drivers/atm/eni.o
+ticks 3  Infinite Loop:166  
+Infinite Loop:1264  
+Infinite Loop:3590    CC [M]  drivers/atm/idt77252.o
+ticks 2  Infinite Loop:589  
+Infinite Loop:613    CC [M]  drivers/atm/solos-pci.o
+ticks 4  Infinite Loop:603  
+Infinite Loop:684  
+Infinite Loop:712  
+Infinite Loop:783    CC [M]  drivers/atm/firestream.o
+ticks 3  Infinite Loop:1268  
+Infinite Loop:1727  
+Infinite Loop:1907    CC [M]  drivers/atm/lanai.o
+ticks 5  Infinite Loop:188  
+Infinite Loop:204  
+Infinite Loop:2376  
+Infinite Loop:2473  
+Infinite Loop:2478    CC [M]  drivers/atm/he.o
+ticks 6  Infinite Loop:149  
+Infinite Loop:291  
+Infinite Loop:308  
+Infinite Loop:326  
+Infinite Loop:394  
+Infinite Loop:453    CC [M]  drivers/bcma/scan.o
+ticks 1  Infinite Loop:597    CC [M]  drivers/block/xd.o
+ticks 17  Infinite Loop:726  
+Infinite Loop:772  
+Infinite Loop:1496  
+Infinite Loop:1500  
+Infinite Loop:1507  
+Infinite Loop:1511  
+Infinite Loop:1518  
+Infinite Loop:1522  
+Infinite Loop:2803  
+Infinite Loop:2833  
+Infinite Loop:2863  
+Infinite Loop:2893  
+Infinite Loop:2925  
+Infinite Loop:2963  
+Infinite Loop:2999  
+Infinite Loop:5470  
+Infinite Loop:5508    CC [M]  drivers/block/DAC960.o
+ticks 2  Infinite Loop:808  
+Infinite Loop:828    CC      drivers/char/hpet.o
+ticks 2  Infinite Loop:854  
+Infinite Loop:909    CC [M]  drivers/char/pcmcia/synclink_cs.o
+ticks 1  Infinite Loop:310    CC [M]  drivers/char/pcmcia/cm4000_cs.o
+ticks 1  Infinite Loop:328    CC      drivers/char/tpm/tpm_tis.o
+ticks 2  arr:-1  Infinite Loop:197  
+Infinite Loop:436    CC [M]  drivers/char/applicom.o
+ticks 3  Infinite Loop:741  
+Infinite Loop:847 
+Infinite Loop:855    CC [M]  drivers/char/sonypi.o
+ticks 2  Infinite Loop:51  
+Infinite Loop:42    CC      drivers/clocksource/acpi_pm.o
+ticks 2  Infinite Loop:948  
+Infinite Loop:984    CC [M]  drivers/dma/intel_mid_dma.o
+ticks 2  Infinite Loop:403  
+Infinite Loop:599    CC [M]  drivers/dma/ioat/dca.o
+ticks 2  Infinite Loop:2035  
+Infinite Loop:2047    CC [M]  drivers/firewire/ohci.o
+ticks 1  Infinite Loop:253    CC      drivers/gpio/gpio-langwell.o
+ticks 1  Infinite Loop:1121    CC [M]  drivers/gpu/drm/mga/mga_dma.o
+ticks 6  Infinite Loop:841  
+Infinite Loop:862  
+Infinite Loop:901  
+Infinite Loop:936  
+Infinite Loop:972  
+Infinite Loop:998    CC [M]  drivers/gpu/drm/mga/mga_state.o
+ticks 2  Infinite Loop:970  
+Infinite Loop:980    CC [M]  drivers/gpu/drm/radeon/radeon_cp.o
+ticks 2  Infinite Loop:166  
+Infinite Loop:321    CC [M]  drivers/gpu/drm/vmwgfx/vmwgfx_fifo.o
+ticks 1  Infinite Loop:385    CC [M]  drivers/gpu/drm/vmwgfx/vmwgfx_fence.o
+ticks 1  Infinite Loop:310    CC [M]  drivers/hwmon/lm75.o
+ticks 1  Infinite Loop:273    CC [M]  drivers/hwmon/lm77.o
+ticks 1  Infinite Loop:282    CC [M]  drivers/hwmon/lm92.o
+ticks 1  Infinite Loop:400    CC [M]  drivers/i2c/busses/i2c-i801.o
+ticks 2  Infinite Loop:228  
+Infinite Loop:600    CC [M]  drivers/i2c/busses/i2c-xiic.o
+ticks 1  Infinite Loop:84    CC [M]  drivers/i2c/busses/i2c-pca-isa.o
+ticks 1  Infinite Loop:338    CC [M]  drivers/infiniband/hw/amso1100/c2.o
+ticks 1  Infinite Loop:47    CC [M]  drivers/infiniband/hw/amso1100/c2_intr.o
+ticks 1  Infinite Loop:735    CC [M]  drivers/infiniband/hw/amso1100/c2_qp.o
+ticks 2  Infinite Loop:2501  
+Infinite Loop:2509    CC [M]  drivers/infiniband/hw/nes/nes_hw.o
+ticks 2  Infinite Loop:402  
+Infinite Loop:774    CC [M]  drivers/infiniband/hw/nes/nes_utils.o
+ticks 1  Infinite Loop:216    CC [M]  drivers/input/joystick/grip_mp.o
+ticks 1  Infinite Loop:384    CC [M]  drivers/input/keyboard/lm8323.o
+ticks 1  Infinite Loop:291    CC [M]  drivers/input/misc/apanel.o
+ticks 2  Infinite Loop:1049  Infinite Loop:1055    CC [M]  drivers/input/serio/i8042.o
+ticks 3  Infinite Loop:52  
+Infinite Loop:68  
+Infinite Loop:93    CC [M]  drivers/input/serio/pcips2.o
+ticks 2  Infinite Loop:43  
+Infinite Loop:67    CC [M]  drivers/input/serio/altera_ps2.o
+ticks 6  Infinite Loop:504  
+Infinite Loop:738  
+Infinite Loop:924  
+Infinite Loop:932  
+Infinite Loop:961  
+Infinite Loop:1168    CC      drivers/iommu/dmar.o
+ticks 7  Infinite Loop:954  
+Infinite Loop:972  
+Infinite Loop:1006  
+Infinite Loop:1055  
+Infinite Loop:1180  
+Infinite Loop:1196  
+Infinite Loop:1213    CC      drivers/iommu/intel-iommu.o
+ticks 1  Infinite Loop:260    CC [M]  drivers/isdn/hardware/avm/b1.o
+ticks 1  Infinite Loop:260    CC [M]  drivers/isdn/hardware/avm/b1dma.o
+ticks 2  Infinite Loop:260  
+Infinite Loop:152    CC [M]  drivers/isdn/hardware/avm/t1isa.o
+ticks 1  Infinite Loop:230    CC [M]  drivers/isdn/hardware/mISDN/hfcpci.o
+ticks 2  Infinite Loop:307  
+Infinite Loop:351    CC [M]  drivers/isdn/hardware/mISDN/hfcmulti.o
+ticks 24  Infinite Loop:48  
+Infinite Loop:52  
+Infinite Loop:56  
+Infinite Loop:65  
+Infinite Loop:69  
+Infinite Loop:73  
+Infinite Loop:81  
+Infinite Loop:84  
+Infinite Loop:88  
+Infinite Loop:97  
+Infinite Loop:100  
+Infinite Loop:104  
+Infinite Loop:113  
+Infinite Loop:118  
+Infinite Loop:120  
+Infinite Loop:131  
+Infinite Loop:136  
+Infinite Loop:138  
+Infinite Loop:148  
+Infinite Loop:153  
+Infinite Loop:155  
+Infinite Loop:166  
+Infinite Loop:171  
+Infinite Loop:173    CC [M]  drivers/isdn/hisax/telespci.o
+ticks 1  Infinite Loop:110    CC [M]  drivers/isdn/hisax/avm_a1.o
+ticks 1  Infinite Loop:150    CC [M]  drivers/isdn/hisax/avm_a1p.o
+ticks 3  Infinite Loop:469  
+Infinite Loop:475  
+Infinite Loop:480    CC [M]  drivers/isdn/hisax/elsa.o
+ticks 6  Infinite Loop:90  
+Infinite Loop:93  
+Infinite Loop:107  
+Infinite Loop:197  
+Infinite Loop:302  
+Infinite Loop:737    CC [M]  drivers/isdn/hisax/hfc_sx.o
+ticks 8  Infinite Loop:304  
+Infinite Loop:321  
+Infinite Loop:334  
+Infinite Loop:683  
+Infinite Loop:732  
+Infinite Loop:760  
+Infinite Loop:866  
+Infinite Loop:1043    CC [M]  drivers/isdn/hisax/hfc4s8s_l1.o
+ticks 2  Infinite Loop:257  Infinite Loop:312    CC [M]  drivers/isdn/icn/icn.o
+ticks 1  Infinite Loop:542    CC [M]  drivers/isdn/pcbit/layer2.o
+ticks 1  Infinite Loop:117    CC [M]  drivers/isdn/sc/init.o
+ticks 1  Infinite Loop:361    CC [M]  drivers/isdn/sc/command.o
+ticks 1  Infinite Loop:137    CC [M]  drivers/isdn/sc/message.o
+ticks 2  Infinite Loop:72  
+Infinite Loop:86    CC [M]  drivers/media/common/saa7146_core.o
+ticks 6  Infinite Loop:1009  
+Infinite Loop:1295  
+Infinite Loop:1355  
+Infinite Loop:1375  
+Infinite Loop:1387  
+Infinite Loop:1396    CC [M]  drivers/media/dvb/ddbridge/ddbridge-core.o
+ticks 1  Infinite Loop:585    CC [M]  drivers/media/dvb/pluto2/pluto2.o
+ticks 1  Infinite Loop:914    CC [M]  drivers/media/dvb/pt1/pt1.o
+ticks 1  Infinite Loop:296    CC [M]  drivers/media/radio/radio-cadet.o
+ticks 2  Infinite Loop:827  
+Infinite Loop:879    CC [M]  drivers/media/radio/si4713-i2c.o
+ticks 1  Infinite Loop:348    CC [M]  drivers/media/rc/fintek-cir.o
+ticks 1  Infinite Loop:893    CC [M]  drivers/media/rc/nuvoton-cir.o
+ticks 1  Infinite Loop:765    CC [M]  drivers/media/rc/ene_ir.o
+ticks 1  Infinite Loop:356    CC [M]  drivers/media/rc/winbond-cir.o
+ticks 1  Infinite Loop:4035    CC [M]  drivers/media/video/bt8xx/bttv-driver.o
+ticks 1  Infinite Loop:604    CC [M]  drivers/media/video/cx88/cx88-input.o
+ticks 1  Infinite Loop:373    CC [M]  drivers/media/video/em28xx/em28xx-i2c.o
+ticks 1  Infinite Loop:184    CC [M]  drivers/media/video/ivtv/ivtv-firmware.o
+ticks 2  Infinite Loop:481  
+Infinite Loop:676    CC [M]  drivers/media/video/saa7134/saa7134-tvaudio.o
+ticks 3  Infinite Loop:426  
+Infinite Loop:502  
+Infinite Loop:621    CC [M]  drivers/media/video/saa7164/saa7164-core.o
+ticks 4  Infinite Loop:43  
+Infinite Loop:59  
+Infinite Loop:235  
+Infinite Loop:294    CC [M]  drivers/media/video/saa7164/saa7164-fw.o
+ticks 2  Infinite Loop:116  
+Infinite Loop:1358    CC [M]  drivers/media/video/zoran/zoran_device.o
+ticks 2  Infinite Loop:94  
+Infinite Loop:109    CC [M]  drivers/media/video/saa7185.o
+ticks 2  Infinite Loop:100  
+Infinite Loop:115    CC [M]  drivers/media/video/adv7170.o
+ticks 2  Infinite Loop:99  
+Infinite Loop:114    CC [M]  drivers/media/video/adv7175.o
+ticks 2  Infinite Loop:119  
+Infinite Loop:134    CC [M]  drivers/media/video/bt819.o
+ticks 1  Infinite Loop:725    CC [M]  drivers/media/video/ov5642.o
+ticks 2  Infinite Loop:173  
+Infinite Loop:176    CC [M]  drivers/media/video/pms.o
+ticks 1  Infinite Loop:216    CC [M]  drivers/media/video/hexium_gemini.o
+ticks 2  Infinite Loop:102  
+Infinite Loop:154    CC [M]  drivers/memstick/host/tifm_ms.o
+ticks 2  Infinite Loop:172  
+Infinite Loop:247    CC [M]  drivers/memstick/host/jmb38x_ms.o
+ticks 2  Infinite Loop:605  
+Infinite Loop:1330    CC [M]  drivers/message/fusion/mptbase.o
+ticks 1  Infinite Loop:322    CC [M]  drivers/message/fusion/mptfc.o
+ticks 1  Infinite Loop:237    CC [M]  drivers/message/i2o/pci.o
+ticks 1  Infinite Loop:169    CC      drivers/mfd/tc3589x.o
+ticks 1  Infinite Loop:264    CC [M]  drivers/misc/eeprom/at24.o
+ticks 2  Infinite Loop:63  
+Infinite Loop:69    CC [M]  drivers/misc/eeprom/eeprom.o
+ticks 1  Infinite Loop:193    CC [M]  drivers/misc/ibmasm/remote.o
+ticks 4  Infinite Loop:201  
+Infinite Loop:406  
+Infinite Loop:973  
+Infinite Loop:1144    CC [M]  drivers/mmc/host/sdhci.o
+ticks 4  Infinite Loop:381  
+Infinite Loop:435  
+Infinite Loop:498  
+Infinite Loop:694    CC [M]  drivers/mmc/host/wbsd.o
+ticks 4  Infinite Loop:381  
+Infinite Loop:384  
+Infinite Loop:767  
+Infinite Loop:1124    CC [M]  drivers/mtd/devices/doc2000.o
+ticks 2  Infinite Loop:208  
+Infinite Loop:211    CC [M]  drivers/mtd/devices/doc2001.o
+ticks 2  Infinite Loop:316  
+Infinite Loop:319    CC [M]  drivers/mtd/devices/doc2001plus.o
+ticks 1  Infinite Loop:579    CC [M]  drivers/mtd/devices/docg3.o
+ticks 3  Infinite Loop:187  
+Infinite Loop:938  
+Infinite Loop:981    CC [M]  drivers/mtd/nand/denali.o
+ticks 1  Infinite Loop:1589    CC [M]  drivers/mtd/nand/diskonchip.o
+ticks 5  Infinite Loop:612  
+Infinite Loop:629  
+Infinite Loop:889  
+Infinite Loop:892  
+Infinite Loop:906    CC [M]  drivers/net/appletalk/cops.o
+ticks 2  Infinite Loop:266  
+Infinite Loop:331    CC [M]  drivers/net/can/softing/softing_fw.o
+ticks 3  Infinite Loop:1051  
+Infinite Loop:1094  
+Infinite Loop:1527    CC [M]  drivers/net/ethernet/3com/3c509.o
+ticks 1  Infinite Loop:1276    CC [M]  drivers/net/ethernet/3com/3c515.o
+ticks 4  Infinite Loop:2318  
+Infinite Loop:2451  
+Infinite Loop:2487  
+Infinite Loop:2517    CC [M]  drivers/net/ethernet/3com/3c59x.o
+ticks 1  Infinite Loop:175    CC [M]  drivers/net/ethernet/8390/ne2.o
+ticks 1  Infinite Loop:1563    CC [M]  drivers/net/ethernet/adaptec/starfire.o
+ticks 3  Infinite Loop:133  
+Infinite Loop:163  
+Infinite Loop:726    CC [M]  drivers/net/ethernet/amd/amd8111e.o
+ticks 2  Infinite Loop:1025  
+Infinite Loop:1123    CC [M]  drivers/net/ethernet/amd/depca.o
+ticks 1  Infinite Loop:529    CC [M]  drivers/net/ethernet/amd/lance.o
+ticks 3  Infinite Loop:2649  
+Infinite Loop:5621  
+Infinite Loop:5677    CC [M]  drivers/net/ethernet/broadcom/bnx2.o
+ticks 4  Infinite Loop:1708  
+Infinite Loop:743  
+Infinite Loop:749  
+Infinite Loop:9927    CC [M]  drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.o
+ticks 1  Infinite Loop:1461    CC [M]  drivers/net/ethernet/broadcom/bnx2x/bnx2x_link.o
+ticks 3  Infinite Loop:1593  
+Infinite Loop:1679  
+Infinite Loop:1694    CC [M]  drivers/net/ethernet/broadcom/bnx2x/bnx2x_ethtool.o
+ticks 1  Infinite Loop:1406    CC [M]  drivers/net/ethernet/chelsio/cxgb3/t3_hw.o
+ticks 2  Infinite Loop:223  
+Infinite Loop:898    CC [M]  drivers/net/ethernet/chelsio/cxgb4/t4_hw.o
+ticks 1  Infinite Loop:1894    CC [M]  drivers/net/ethernet/chelsio/cxgb4/sge.o
+ticks 2  Infinite Loop:173  
+Infinite Loop:1035    CC [M]  drivers/net/ethernet/chelsio/cxgb4vf/t4vf_hw.o
+ticks 1  Infinite Loop:1510    CC [M]  drivers/net/ethernet/cirrus/cs89x0.o
+ticks 1  Infinite Loop:124    CC [M]  drivers/net/ethernet/cisco/enic/vnic_dev.o
+ticks 1  Infinite Loop:980    CC [M]  drivers/net/ethernet/dec/tulip/xircom_cb.o
+ticks 1  Infinite Loop:128    CC [M]  drivers/net/ethernet/dec/tulip/interrupt.o
+ticks 7  Infinite Loop:1609  
+Infinite Loop:1779  
+Infinite Loop:1800  
+Infinite Loop:4044  
+Infinite Loop:4047  
+Infinite Loop:4070  
+Infinite Loop:4072    CC [M]  drivers/net/ethernet/dec/tulip/de4x5.o
+ticks 1  Infinite Loop:1723    CC [M]  drivers/net/ethernet/dec/tulip/uli526x.o
+ticks 9  Infinite Loop:713  
+Infinite Loop:714  
+Infinite Loop:715  
+Infinite Loop:716  
+Infinite Loop:943  
+Infinite Loop:1065  
+Infinite Loop:1120  
+Infinite Loop:1121  
+Infinite Loop:1122    CC [M]  drivers/net/ethernet/dec/ewrk3.o
+ticks 2  Infinite Loop:1173  
+Infinite Loop:1247    CC [M]  drivers/net/ethernet/dlink/sundance.o
+ticks 1  Infinite Loop:1336    CC [M]  drivers/net/ethernet/fujitsu/eth16i.o
+ticks 2  Infinite Loop:1738  
+Infinite Loop:1902    CC [M]  drivers/net/ethernet/hp/hp100.o
+ticks 11  Infinite Loop:400  
+Infinite Loop:558  
+Infinite Loop:712  
+Infinite Loop:797  
+Infinite Loop:1246  
+Infinite Loop:1319  
+Infinite Loop:1477  
+Infinite Loop:1480  
+Infinite Loop:1483  
+Infinite Loop:1519  
+Infinite Loop:1544    CC [M]  drivers/net/ethernet/i825xx/eexpress.o
+ticks 1  Infinite Loop:558    CC [M]  drivers/net/ethernet/i825xx/3c527.o
+ticks 3  Infinite Loop:891  
+Infinite Loop:959  
+Infinite Loop:982    CC [M]  drivers/net/ethernet/i825xx/ni52.o
+ticks 1  Infinite Loop:1828    CC [M]  drivers/net/ethernet/icplus/ipg.o
+ticks 5  Infinite Loop:2377  
+Infinite Loop:2388  
+Infinite Loop:3021  
+Infinite Loop:4447  
+Infinite Loop:4498    CC [M]  drivers/net/ethernet/marvell/sky2.o
+ticks 3  Infinite Loop:674  
+Infinite Loop:685  
+Infinite Loop:712    CC [M]  drivers/net/ethernet/micrel/ks8842.o
+ticks 1  Infinite Loop:994    CC [M]  drivers/net/ethernet/micrel/ks8851_mll.o
+ticks 1  Infinite Loop:1532    CC [M]  drivers/net/ethernet/natsemi/ns83820.o
+ticks 2  Infinite Loop:950  
+Infinite Loop:4587    CC [M]  drivers/net/ethernet/nvidia/forcedeth.o
+ticks 1  Infinite Loop:150    CC [M]  drivers/net/ethernet/qlogic/qla3xxx.o
+ticks 2  Infinite Loop:602  
+Infinite Loop:686    CC [M]  drivers/net/ethernet/qlogic/qlge/qlge_dbg.o
+ticks 1  Infinite Loop:1245    CC [M]  drivers/net/ethernet/qlogic/qlge/qlge_mpi.o
+ticks 1  Infinite Loop:232    CC [M]  drivers/net/ethernet/realtek/atp.o
+ticks 4  Infinite Loop:1893  
+Infinite Loop:4351  
+Infinite Loop:4357  
+Infinite Loop:5809    CC [M]  drivers/net/ethernet/realtek/r8169.o
+ticks 1  Infinite Loop:251    CC [M]  drivers/net/ethernet/seeq/seeq8005.o
+ticks 1  Infinite Loop:692    CC [M]  drivers/net/ethernet/sfc/tx.o
+ticks 3  Infinite Loop:319  
+Infinite Loop:660  
+Infinite Loop:761    CC [M]  drivers/net/ethernet/silan/sc92031.o
+ticks 3  Infinite Loop:986  
+Infinite Loop:1139  
+Infinite Loop:1276    CC [M]  drivers/net/ethernet/sis/sis190.o
+ticks 4  Infinite Loop:59  
+Infinite Loop:61  
+Infinite Loop:93  
+Infinite Loop:100    CC [M]  drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.o
+ticks 1  Infinite Loop:227    CC [M]  drivers/net/ethernet/stmicro/stmmac/dwmac_lib.o
+ticks 1  Infinite Loop:651    CC [M]  drivers/net/ethernet/sun/sunhme.o
+ticks 1  Infinite Loop:3236    CC [M]  drivers/net/ethernet/sun/cassini.o
+ticks 4  Infinite Loop:8209  
+Infinite Loop:8238  
+Infinite Loop:8513  
+Infinite Loop:8529    CC [M]  drivers/net/ethernet/sun/niu.o
+ticks 1  Infinite Loop:689    CC [M]  drivers/net/ethernet/ti/tlan.o
+ticks 1  Infinite Loop:818    CC [M]  drivers/net/ethernet/via/via-rhine.o
+ticks 2  Infinite Loop:1546  
+Infinite Loop:1411    CC [M]  drivers/net/ethernet/via/via-velocity.o
+ticks 1  Infinite Loop:1027    CC [M]  drivers/net/ethernet/xircom/xirc2ps_cs.o
+ticks 4  Infinite Loop:108  
+Infinite Loop:124  
+Infinite Loop:143  
+Infinite Loop:167    CC [M]  drivers/net/ethernet/dnet.o
+ticks 1  Infinite Loop:1918    CC [M]  drivers/net/ethernet/jme.o
+ticks 1  Infinite Loop:742    CC [M]  drivers/net/fddi/skfp/hwmtm.o
+ticks 2  Infinite Loop:243  
+Infinite Loop:253    CC [M]  drivers/net/fddi/skfp/hwt.o
+ticks 1  Infinite Loop:305    CC [M]  drivers/net/hamradio/baycom_ser_fdx.o
+ticks 1  Infinite Loop:390    CC [M]  drivers/net/hamradio/baycom_ser_hdx.o
+ticks 1  Infinite Loop:1074    CC [M]  drivers/net/hippi/rrunner.o
+ticks 3  Infinite Loop:1782  
+Infinite Loop:1798  
+Infinite Loop:1935    CC [M]  drivers/net/irda/nsc-ircc.o
+ticks 3  Infinite Loop:807  
+Infinite Loop:817  
+Infinite Loop:918    CC [M]  drivers/net/irda/w83977af_ir.o
+ticks 1  Infinite Loop:2336    CC [M]  drivers/net/irda/smsc-ircc2.o
+ticks 1  Infinite Loop:936    CC [M]  drivers/net/irda/ali-ircc.o
+ticks 2  Infinite Loop:265  
+Infinite Loop:447    CC [M]  drivers/net/tokenring/ibmtr_cs.o
+ticks 2  Infinite Loop:265  
+Infinite Loop:447    CC [M]  drivers/net/tokenring/ibmtr.o
+ticks 2  Infinite Loop:474  
+Infinite Loop:1419    CC [M]  drivers/net/tokenring/olympic.o
+ticks 1  Infinite Loop:435    CC [M]  drivers/net/tokenring/madgemc.o
+ticks 1  Infinite Loop:108    CC [M]  drivers/net/tokenring/skisa.o
+ticks 2  Infinite Loop:1222  
+Infinite Loop:1250    CC [M]  drivers/net/tokenring/smctr.o
+ticks 7  Infinite Loop:223  
+Infinite Loop:231  
+Infinite Loop:255  
+Infinite Loop:263  
+Infinite Loop:275  
+Infinite Loop:1126  
+Infinite Loop:1776    CC [M]  drivers/net/tokenring/3c359.o
+ticks 2  Infinite Loop:339  
+Infinite Loop:1503    CC [M]  drivers/net/wan/z85230.o
+ticks 1  Infinite Loop:1351    CC [M]  drivers/net/wan/farsync.o
+ticks 1  Infinite Loop:551    CC [M]  drivers/net/wan/sbni.o
+ticks 3  Infinite Loop:307  
+Infinite Loop:359  
+Infinite Loop:696    CC [M]  drivers/net/wan/n2.o
+ticks 2  Infinite Loop:307  
+Infinite Loop:359    CC [M]  drivers/net/wan/c101.o
+ticks 1  Infinite Loop:254    CC [M]  drivers/net/wan/wanxl.o
+ticks 2  Infinite Loop:306  
+Infinite Loop:620    CC [M]  drivers/net/wan/pci200syn.o
+ticks 2  Infinite Loop:306  
+Infinite Loop:620    CC [M]  drivers/net/wan/pc300too.o
+ticks 3  Infinite Loop:3015  
+Infinite Loop:5031  
+Infinite Loop:8364    CC [M]  drivers/net/wireless/ipw2x00/ipw2200.o
+ticks 1  Infinite Loop:133    CC [M]  drivers/net/wireless/iwlegacy/iwl-core.o
+ticks 1  Infinite Loop:133    CC [M]  drivers/net/wireless/iwlegacy/iwl-eeprom.o
+ticks 1  Infinite Loop:133    CC [M]  drivers/net/wireless/iwlegacy/iwl-rx.o
+ticks 1  Infinite Loop:133    CC [M]  drivers/net/wireless/iwlegacy/iwl-tx.o
+ticks 1  Infinite Loop:133    CC [M]  drivers/net/wireless/iwlegacy/iwl-debugfs.o
+ticks 2  Infinite Loop:133  
+Infinite Loop:1385    CC [M]  drivers/net/wireless/iwlegacy/iwl3945-base.o
+ticks 3  Infinite Loop:133  
+Infinite Loop:378  
+Infinite Loop:2479    CC [M]  drivers/net/wireless/iwlegacy/iwl-3945.o
+ticks 2  Infinite Loop:133  
+Infinite Loop:76    CC [M]  drivers/net/wireless/iwlegacy/iwl-4965.o
+ticks 1  Infinite Loop:133    CC [M]  drivers/net/wireless/iwlegacy/iwl4965-base.o
+ticks 1  Infinite Loop:133    CC [M]  drivers/net/wireless/iwlegacy/iwl-4965-ucode.o
+ticks 2  Infinite Loop:133  
+Infinite Loop:378    CC [M]  drivers/net/wireless/iwlegacy/iwl-4965-tx.o
+ticks 2  Infinite Loop:133  
+Infinite Loop:378    CC [M]  drivers/net/wireless/iwlegacy/iwl-4965-lib.o
+ticks 1  Infinite Loop:133    CC [M]  drivers/net/wireless/iwlegacy/iwl-4965-eeprom.o
+ticks 1  Infinite Loop:143    CC [M]  drivers/net/wireless/prism54/isl_38xx.o
+ticks 3  Infinite Loop:8120  
+Infinite Loop:8132  
+Infinite Loop:8152    CC [M]  drivers/net/wireless/airo.o
+ticks 1  Infinite Loop:1190    CC [M]  drivers/net/wireless/atmel.o
+ticks 1  Infinite Loop:2151    CC [M]  drivers/net/wireless/ray_cs.o
+ticks 3  Infinite Loop:804  
+Infinite Loop:900  
+Infinite Loop:2024    CC [M]  drivers/parport/parport_pc.o
+ticks 1  Infinite Loop:74    CC      drivers/pci/rom.o
+ticks 3  Infinite Loop:106  
+Infinite Loop:273  
+Infinite Loop:650    CC [M]  drivers/pci/hotplug/cpqphp_core.o
+ticks 2  Infinite Loop:62  
+Infinite Loop:1272    CC [M]  drivers/pci/hotplug/cpqphp_pci.o
+ticks 1  Infinite Loop:277    CC [M]  drivers/pci/hotplug/ibmphp_ebda.o
+ticks 1  Infinite Loop:233    CC [M]  drivers/pcmcia/tcic.o
+ticks 4  Infinite Loop:575  
+Infinite Loop:584  
+Infinite Loop:599  
+Infinite Loop:608    CC      drivers/platform/x86/intel_scu_ipc.o
+ticks 2  Infinite Loop:3129  
+Infinite Loop:3138    CC [M]  drivers/platform/x86/sony-laptop.o
+ticks 1  Infinite Loop:77    CC [M]  drivers/rtc/rtc-rx8581.o
+ticks 1  Infinite Loop:94    CC [M]  drivers/scsi/aacraid/rx.o
+ticks 9  Infinite Loop:1485  
+Infinite Loop:1501  
+Infinite Loop:2248  
+Infinite Loop:2316  
+Infinite Loop:2373  
+Infinite Loop:2434  
+Infinite Loop:2609  
+Infinite Loop:2617  
+Infinite Loop:2625    CC [M]  drivers/scsi/arcmsr/arcmsr_hba.o
+ticks 1  Infinite Loop:333    CC [M]  drivers/scsi/be2iscsi/be_cmds.o
+ticks 1  Infinite Loop:92    CC [M]  drivers/scsi/fnic/vnic_dev.o
+ticks 1  Infinite Loop:1951    CC [M]  drivers/scsi/isci/host.o
+ticks 1  Infinite Loop:2105    CC [M]  drivers/scsi/megaraid/megaraid_mbox.o
+ticks 1  Infinite Loop:2727    CC [M]  drivers/scsi/megaraid/megaraid_sas_base.o
+ticks 1  Infinite Loop:666    CC [M]  drivers/scsi/megaraid/megaraid_sas_fusion.o
+ticks 3  Infinite Loop:133  
+Infinite Loop:487  
+Infinite Loop:490    CC [M]  drivers/scsi/mvsas/mv_64xx.o
+ticks 1  Infinite Loop:629    CC [M]  drivers/scsi/mvsas/mv_94xx.o
+ticks 3  Infinite Loop:2212  
+Infinite Loop:2384  
+Infinite Loop:2537    CC [M]  drivers/scsi/pcmcia/aha152x_core.o
+ticks 2  Infinite Loop:251  
+Infinite Loop:306    CC [M]  drivers/scsi/pcmcia/sym53c500_cs.o
+ticks 1  Infinite Loop:24    CC [M]  drivers/scsi/qla2xxx/qla_init.o
+ticks 2  Infinite Loop:24  
+Infinite Loop:577    CC [M]  drivers/scsi/qla2xxx/qla_iocb.o
+ticks 4  Infinite Loop:24  
+Infinite Loop:2103  
+Infinite Loop:2115  
+Infinite Loop:2319    CC [M]  drivers/scsi/qla2xxx/qla_isr.o
+ticks 9  Infinite Loop:86  
+Infinite Loop:179  
+Infinite Loop:232  
+Infinite Loop:261  
+Infinite Loop:469  
+Infinite Loop:551  
+Infinite Loop:632  
+Infinite Loop:698  
+Infinite Loop:711    CC [M]  drivers/scsi/qla2xxx/qla_dbg.o
+ticks 7  Infinite Loop:24  
+Infinite Loop:30  
+Infinite Loop:40  
+Infinite Loop:463  
+Infinite Loop:508  
+Infinite Loop:1796  
+Infinite Loop:2574    CC [M]  drivers/scsi/qla2xxx/qla_sup.o
+ticks 4  Infinite Loop:2162  
+Infinite Loop:2993  
+Infinite Loop:3299  
+Infinite Loop:3497    CC [M]  drivers/scsi/qla2xxx/qla_nx.o
+ticks 2  Infinite Loop:2861  
+Infinite Loop:3468    CC [M]  drivers/scsi/sym53c8xx_2/sym_hipd.o
+ticks 3  Infinite Loop:6099  
+Infinite Loop:6325  
+Infinite Loop:6754    CC [M]  drivers/scsi/ncr53c8xx.o
+ticks 3  Infinite Loop:5165  
+Infinite Loop:5681  
+Infinite Loop:6183    CC [M]  drivers/scsi/advansys.o
+ticks 71  Infinite Loop:1764  
+Infinite Loop:1794  
+Infinite Loop:1839  
+Infinite Loop:2075 
+Infinite Loop:2286  
+Infinite Loop:2287  
+Infinite Loop:2687  
+Infinite Loop:2692  
+Infinite Loop:2718  
+Infinite Loop:2726  
+Infinite Loop:2759  
+Infinite Loop:2769  
+Infinite Loop:2771  
+Infinite Loop:2819  
+Infinite Loop:2821  
+Infinite Loop:2831  
+Infinite Loop:2833  
+Infinite Loop:2839  
+Infinite Loop:2841  
+Infinite Loop:2855  
+Infinite Loop:2862  
+Infinite Loop:2881  
+Infinite Loop:2887  
+Infinite Loop:2926  
+Infinite Loop:2939  
+Infinite Loop:2946  
+Infinite Loop:2961  
+Infinite Loop:2963  
+Infinite Loop:3038  
+Infinite Loop:3040  
+Infinite Loop:3054  
+Infinite Loop:3060  
+Infinite Loop:3065  
+Infinite Loop:3075  
+Infinite Loop:3096  
+Infinite Loop:3104  
+Infinite Loop:3109  
+Infinite Loop:3115  
+Infinite Loop:3120  
+Infinite Loop:3129  
+Infinite Loop:3136  
+Infinite Loop:3254  
+Infinite Loop:3337  
+Infinite Loop:3349  
+Infinite Loop:3384  
+Infinite Loop:3489  
+Infinite Loop:3495  
+Infinite Loop:3503  
+Infinite Loop:3539  
+Infinite Loop:3641  
+Infinite Loop:3768  
+Infinite Loop:3788  
+Infinite Loop:3795  
+Infinite Loop:3802  
+Infinite Loop:3807  
+Infinite Loop:3863  
+Infinite Loop:4255  
+Infinite Loop:4262  
+Infinite Loop:4349  
+Infinite Loop:4381  
+Infinite Loop:4402  
+Infinite Loop:4421  
+Infinite Loop:5716  
+Infinite Loop:5930  
+Infinite Loop:6184  
+Infinite Loop:6213  
+Infinite Loop:6217  
+Infinite Loop:6241  
+Infinite Loop:7295  
+Infinite Loop:201  
+Infinite Loop:250    CC [M]  drivers/scsi/BusLogic.o
+ticks 1  Infinite Loop:2224    CC [M]  drivers/scsi/dpt_i2o.o
+ticks 2  Infinite Loop:770  
+Infinite Loop:775    CC [M]  drivers/scsi/ultrastor.o
+ticks 4  Infinite Loop:2212  
+Infinite Loop:2384  
+Infinite Loop:2537  
+Infinite Loop:3788    CC [M]  drivers/scsi/aha152x.o
+ticks 1  Infinite Loop:195    CC [M]  drivers/scsi/aha1542.o
+ticks 3  Infinite Loop:248  
+Infinite Loop:480  
+Infinite Loop:490    CC [M]  drivers/scsi/aha1740.o
+ticks 24  Infinite Loop:1496  
+Infinite Loop:3239  
+Infinite Loop:3302  
+Infinite Loop:3346  
+Infinite Loop:3475  
+Infinite Loop:4363  
+Infinite Loop:4858  
+Infinite Loop:4859  
+Infinite Loop:6257  
+Infinite Loop:6474  
+Infinite Loop:6912  
+Infinite Loop:6922  
+Infinite Loop:6925  
+Infinite Loop:6936  
+Infinite Loop:6939  
+Infinite Loop:6952  
+Infinite Loop:6956  
+Infinite Loop:6973  
+Infinite Loop:6975  
+Infinite Loop:6977  
+Infinite Loop:9178  
+Infinite Loop:9724  
+Infinite Loop:10658  
+Infinite Loop:10817    CC [M]  drivers/scsi/aic7xxx_old.o
+ticks 1  Infinite Loop:636    CC [M]  drivers/scsi/fd_mcs.o
+ticks 6  Infinite Loop:223  
+Infinite Loop:724  
+Infinite Loop:730  
+Infinite Loop:1539  
+Infinite Loop:1624  
+Infinite Loop:1948    CC [M]  drivers/scsi/in2000.o
+ticks 19  Infinite Loop:398  
+Infinite Loop:584  Infinite Loop:592  Infinite Loop:609  Infinite Loop:669  Infinite Loop:678  Infinite Loop:693  Infinite Loop:719  Infinite Loop:737  Infinite Loop:1623  Infinite Loop:2011  Infinite Loop:2013  Infinite Loop:2031  Infinite Loop:2045  Infinite Loop:2123  Infinite Loop:2312  Infinite Loop:2348  Infinite Loop:2580  Infinite Loop:883    CC [M]  drivers/scsi/g_NCR5380.o
+ticks 18  Infinite Loop:584  Infinite Loop:592  Infinite Loop:609  Infinite Loop:669  Infinite Loop:678  Infinite Loop:693  Infinite Loop:719  Infinite Loop:737  Infinite Loop:1623  Infinite Loop:2011  Infinite Loop:2013  Infinite Loop:2031  Infinite Loop:2045  Infinite Loop:2123  Infinite Loop:2312  Infinite Loop:2348  Infinite Loop:2580  Infinite Loop:883    CC [M]  drivers/scsi/g_NCR5380_mmio.o
+ticks 2  Infinite Loop:352  Infinite Loop:406    CC [M]  drivers/scsi/NCR53c406a.o
+ticks 7  Infinite Loop:110  Infinite Loop:126  Infinite Loop:147  Infinite Loop:162  Infinite Loop:229  Infinite Loop:351  Infinite Loop:383    CC [M]  drivers/scsi/qlogicfas408.o
+ticks 1  Infinite Loop:3585    CC [M]  drivers/scsi/qla1280.o
+ticks 11  Infinite Loop:551  Infinite Loop:587  Infinite Loop:1623  Infinite Loop:2011  Infinite Loop:2013  Infinite Loop:2031  Infinite Loop:2045  Infinite Loop:2123  Infinite Loop:2312  Infinite Loop:2348  Infinite Loop:2580    CC [M]  drivers/scsi/pas16.o
+ticks 11  Infinite Loop:364  Infinite Loop:410  Infinite Loop:1623  Infinite Loop:2011  Infinite Loop:2013  Infinite Loop:2031  Infinite Loop:2045  Infinite Loop:2123  Infinite Loop:2312  Infinite Loop:2348  Infinite Loop:2580    CC [M]  drivers/scsi/t128.o
+ticks 5  Infinite Loop:1623  Infinite Loop:2123  Infinite Loop:2312  Infinite Loop:2348  Infinite Loop:2580    CC [M]  drivers/scsi/dmx3191d.o
+ticks 10  Infinite Loop:380  Infinite Loop:391  Infinite Loop:431  Infinite Loop:439  Infinite Loop:443  Infinite Loop:1623  Infinite Loop:2123  Infinite Loop:2312  Infinite Loop:2348  Infinite Loop:2580    CC [M]  drivers/scsi/dtc.o
+ticks 1  Infinite Loop:782    CC [M]  drivers/scsi/wd7000.o
+ticks 4  Infinite Loop:527  Infinite Loop:717  Infinite Loop:2053  Infinite Loop:2133    CC [M]  drivers/scsi/ibmmca.o
+ticks 3  Infinite Loop:3599  Infinite Loop:3945  Infinite Loop:4033    CC [M]  drivers/scsi/dc395x.o
+ticks 2  Infinite Loop:866  Infinite Loop:1976    CC [M]  drivers/scsi/tmscsim.o
+ticks 5  Infinite Loop:1230  Infinite Loop:1237  Infinite Loop:1280  Infinite Loop:1356  Infinite Loop:1388    CC [M]  drivers/scsi/megaraid.o
+ticks 80  Infinite Loop:166  Infinite Loop:367  Infinite Loop:383  Infinite Loop:494  Infinite Loop:817  Infinite Loop:1114  Infinite Loop:1186  Infinite Loop:1343  Infinite Loop:1350  Infinite Loop:1364  Infinite Loop:1392  Infinite Loop:1399  Infinite Loop:1436  Infinite Loop:1478  Infinite Loop:1485  Infinite Loop:1496  Infinite Loop:1505  Infinite Loop:1523  Infinite Loop:1581  Infinite Loop:1637  Infinite Loop:1644  Infinite Loop:1655  Infinite Loop:1672  Infinite Loop:1690  Infinite Loop:1733  Infinite Loop:1761  Infinite Loop:1863  Infinite Loop:1870  Infinite Loop:1885  Infinite Loop:1914  Infinite Loop:1921  Infinite Loop:1955  Infinite Loop:2002  Infinite Loop:2010  Infinite Loop:2021  Infinite Loop:2030  Infinite Loop:2048  Infinite Loop:2106  Infinite Loop:2154  Infinite Loop:2161  Infinite Loop:2172  Infinite Loop:2180  Infinite Loop:2198  Infinite Loop:2256  Infinite Loop:2325  Infinite Loop:2332  Infinite Loop:2343  Infinite Loop:2364  Infinite Loop:2382  Infinite Loop:2425  Infinite Loop:2453  Infinite Loop:2715  Infinite Loop:2852  Infinite Loop:2873  Infinite Loop:2968  Infinite Loop:3291  Infinite Loop:3297  Infinite Loop:3310  Infinite Loop:3337  Infinite Loop:3343  Infinite Loop:3376  Infinite Loop:3421  Infinite Loop:3427  Infinite Loop:3437  Infinite Loop:3446  Infinite Loop:3463  Infinite Loop:3521  Infinite Loop:3570  Infinite Loop:3576  Infinite Loop:3586  Infinite Loop:3595  Infinite Loop:3612  Infinite Loop:3670  Infinite Loop:3739  Infinite Loop:3745  Infinite Loop:3755  Infinite Loop:3775  Infinite Loop:3792  Infinite Loop:3835  Infinite Loop:3860    CC [M]  drivers/scsi/atp870u.o
+ticks 11  Infinite Loop:895  Infinite Loop:1004  Infinite Loop:1123  Infinite Loop:1132  Infinite Loop:1475  Infinite Loop:2075  Infinite Loop:3256  Infinite Loop:3290  Infinite Loop:3607  Infinite Loop:3953  Infinite Loop:3968    CC [M]  drivers/scsi/gdth.o
+ticks 11  Infinite Loop:428  Infinite Loop:543  Infinite Loop:561  Infinite Loop:1105  Infinite Loop:1559  Infinite Loop:1573  Infinite Loop:1901  Infinite Loop:2083  Infinite Loop:2439  Infinite Loop:2486  Infinite Loop:2505    CC [M]  drivers/scsi/initio.o
+ticks 1  Infinite Loop:820    CC [M]  drivers/scsi/a100u2w.o
+ticks 3  Infinite Loop:467  Infinite Loop:748  Infinite Loop:2112    CC [M]  drivers/scsi/3w-xxxx.o
+ticks 1  Infinite Loop:1295    CC [M]  drivers/scsi/3w-9xxx.o
+ticks 1  Infinite Loop:1200    CC [M]  drivers/scsi/3w-sas.o
+ticks 1  Infinite Loop:623    CC [M]  drivers/scsi/imm.o
+ticks 1  Infinite Loop:1073    CC [M]  drivers/scsi/nsp32.o
+ticks 2  Infinite Loop:2572  Infinite Loop:2691    CC [M]  drivers/scsi/ipr.o
+ticks 1  Infinite Loop:93    CC [M]  drivers/scsi/hptiop.o
+ticks 1  Infinite Loop:490    CC [M]  drivers/scsi/mvumi.o
+ticks 1  Infinite Loop:159    CC [M]  drivers/spi/spi-altera.o
+ticks 2  Infinite Loop:112  Infinite Loop:119    CC [M]  drivers/spi/spi-oc-tiny.o
+ticks 3  Infinite Loop:870  Infinite Loop:887  Infinite Loop:1110    CC [M]  drivers/tty/ipwireless/hardware.o
+ticks 1  Infinite Loop:910    CC [M]  drivers/tty/serial/8250_pci.o
+ticks 1  Infinite Loop:327    CC [M]  drivers/tty/serial/uartlite.o
+ticks 2  Infinite Loop:96  Infinite Loop:114    CC [M]  drivers/tty/serial/timbuart.o
+ticks 1  Infinite Loop:131    CC [M]  drivers/tty/serial/altera_jtaguart.o
+ticks 2  Infinite Loop:196  Infinite Loop:250    CC [M]  drivers/tty/serial/altera_uart.o
+ticks 2  Infinite Loop:176  Infinite Loop:443    CC [M]  drivers/tty/serial/xilinx_uartps.o
+ticks 3  Infinite Loop:345  Infinite Loop:408  Infinite Loop:738    CC [M]  drivers/tty/serial/jsm/jsm_neo.o
+ticks 4  Infinite Loop:567  Infinite Loop:671  Infinite Loop:1420  Infinite Loop:1468    CC [M]  drivers/tty/isicom.o
+ticks 3  Infinite Loop:576  Infinite Loop:1887  Infinite Loop:1902    CC [M]  drivers/tty/moxa.o
+ticks 1  Infinite Loop:5715    CC [M]  drivers/tty/synclink.o
+ticks 1  Infinite Loop:1899    CC [M]  drivers/usb/dwc3/gadget.o
+ticks 2  Infinite Loop:632  Infinite Loop:1064    CC      drivers/usb/early/ehci-dbgp.o
+ticks 6  Infinite Loop:466  Infinite Loop:572  Infinite Loop:815  Infinite Loop:1702  Infinite Loop:2105  Infinite Loop:2121    CC [M]  drivers/usb/gadget/net2272.o
+ticks 3  Infinite Loop:609  Infinite Loop:969  Infinite Loop:2519    CC [M]  drivers/usb/gadget/net2280.o
+ticks 1  Infinite Loop:427    CC [M]  drivers/usb/gadget/goku_udc.o
+ticks 1  Infinite Loop:756    CC [M]  drivers/usb/gadget/m66592-udc.o
+ticks 2  Infinite Loop:958  Infinite Loop:1419    CC [M]  drivers/usb/gadget/r8a66597-udc.o
+ticks 7  Infinite Loop:308  Infinite Loop:366  Infinite Loop:369  Infinite Loop:469  Infinite Loop:723  Infinite Loop:1504  Infinite Loop:1940    CC [M]  drivers/usb/gadget/ci13xxx_pci.o
+ticks 4  Infinite Loop:492  Infinite Loop:670  Infinite Loop:704  Infinite Loop:802    CC      drivers/usb/host/pci-quirks.o
+ticks 1  Infinite Loop:979    CC [M]  drivers/usb/host/isp116x-hcd.o
+ticks 2  Infinite Loop:717  Infinite Loop:723    CC [M]  drivers/usb/host/ohci-hcd.o
+ticks 1  Infinite Loop:2062    CC [M]  drivers/usb/host/xhci-mem.o
+ticks 1  Infinite Loop:176    CC [M]  drivers/usb/host/r8a66597-hcd.o
+ticks 1  Infinite Loop:639    CC [M]  drivers/usb/otg/langwell_otg.o
+ticks 1  Infinite Loop:68    CC [M]  drivers/uwb/whci.o
+ticks 2  Infinite Loop:351  Infinite Loop:358    CC [M]  drivers/video/aty/atyfb_base.o
+ticks 2  Infinite Loop:351  Infinite Loop:358    CC [M]  drivers/video/aty/mach64_accel.o
+ticks 1  Infinite Loop:351    CC [M]  drivers/video/aty/mach64_cursor.o
+ticks 3  Infinite Loop:401  Infinite Loop:1312  Infinite Loop:1452    CC [M]  drivers/video/aty/radeon_base.o
+ticks 1  Infinite Loop:1124    CC [M]  drivers/video/aty/radeon_pm.o
+ticks 1  Infinite Loop:282    CC [M]  drivers/video/aty/radeon_monitor.o
+ticks 1  Infinite Loop:898    CC [M]  drivers/video/aty/aty128fb.o
+ticks 1  Infinite Loop:25    CC [M]  drivers/video/geode/suspend_gx.o
+ticks 3  Infinite Loop:244  Infinite Loop:595  Infinite Loop:625    CC [M]  drivers/video/geode/lxfb_ops.o
+ticks 1  Infinite Loop:1317    CC [M]  drivers/video/matrox/matroxfb_base.o
+ticks 16  Infinite Loop:178  Infinite Loop:210  Infinite Loop:218  Infinite Loop:227  Infinite Loop:232  Infinite Loop:249  Infinite Loop:257  Infinite Loop:266  Infinite Loop:272  Infinite Loop:301  Infinite Loop:306  Infinite Loop:344  Infinite Loop:350  Infinite Loop:418  Infinite Loop:428  Infinite Loop:475    CC [M]  drivers/video/matrox/matroxfb_accel.o
+ticks 1  Infinite Loop:144    CC [M]  drivers/video/matrox/matroxfb_crtc2.o
+ticks 1  Infinite Loop:26    CC [M]  drivers/video/mb862xx/mb862xx-i2c.o
+ticks 8  Infinite Loop:397  Infinite Loop:398  Infinite Loop:267  Infinite Loop:275  Infinite Loop:283  Infinite Loop:290  Infinite Loop:296  Infinite Loop:302    CC [M]  drivers/video/savage/savagefb_driver.o
+ticks 2  Infinite Loop:4127  Infinite Loop:4165    CC [M]  drivers/video/sis/sis_main.o
+ticks 126  Infinite Loop:90  Infinite Loop:90  Infinite Loop:90  Infinite Loop:97  Infinite Loop:97  Infinite Loop:97  Infinite Loop:98  Infinite Loop:98  Infinite Loop:98  Infinite Loop:99  Infinite Loop:99  Infinite Loop:99  Infinite Loop:103  Infinite Loop:103  Infinite Loop:103  Infinite Loop:131  Infinite Loop:131  Infinite Loop:131  Infinite Loop:132  Infinite Loop:132  Infinite Loop:132  Infinite Loop:142  Infinite Loop:142  Infinite Loop:142  Infinite Loop:143  Infinite Loop:143  Infinite Loop:143  Infinite Loop:144  Infinite Loop:144  Infinite Loop:144  Infinite Loop:145  Infinite Loop:145  Infinite Loop:145  Infinite Loop:151  Infinite Loop:151  Infinite Loop:151  Infinite Loop:152  Infinite Loop:152  Infinite Loop:152  Infinite Loop:153  Infinite Loop:153  Infinite Loop:153  Infinite Loop:167  Infinite Loop:167  Infinite Loop:167  Infinite Loop:168  Infinite Loop:168  Infinite Loop:168  Infinite Loop:169  Infinite Loop:169  Infinite Loop:169  Infinite Loop:171  Infinite Loop:171  Infinite Loop:171  Infinite Loop:181  Infinite Loop:181  Infinite Loop:181  Infinite Loop:181  Infinite Loop:187  Infinite Loop:187  Infinite Loop:187  Infinite Loop:187  Infinite Loop:188  Infinite Loop:188  Infinite Loop:188  Infinite Loop:188  Infinite Loop:189  Infinite Loop:189  Infinite Loop:189  Infinite Loop:189  Infinite Loop:192  Infinite Loop:192  Infinite Loop:192  Infinite Loop:192  Infinite Loop:242  Infinite Loop:242  Infinite Loop:242  Infinite Loop:242  Infinite Loop:243  Infinite Loop:243  Infinite Loop:243  Infinite Loop:243  Infinite Loop:244  Infinite Loop:244  Infinite Loop:244  Infinite Loop:244  Infinite Loop:245  Infinite Loop:245  Infinite Loop:245  Infinite Loop:245  Infinite Loop:246  Infinite Loop:246  Infinite Loop:246  Infinite Loop:246  Infinite Loop:247  Infinite Loop:247  Infinite Loop:247  Infinite Loop:247  Infinite Loop:253  Infinite Loop:253  Infinite Loop:253  Infinite Loop:253  Infinite Loop:254  Infinite Loop:254  Infinite Loop:254  Infinite Loop:254  Infinite Loop:255  Infinite Loop:255  Infinite Loop:255  Infinite Loop:255  Infinite Loop:270  Infinite Loop:270  Infinite Loop:270  Infinite Loop:270  Infinite Loop:271  Infinite Loop:271  Infinite Loop:271  Infinite Loop:271  Infinite Loop:272  Infinite Loop:272  Infinite Loop:272  Infinite Loop:272  Infinite Loop:274  Infinite Loop:274  Infinite Loop:274  Infinite Loop:274    CC [M]  drivers/video/sis/sis_accel.o
+ticks 1  Infinite Loop:2328    CC [M]  drivers/video/sis/init.o
+ticks 2  Infinite Loop:719  Infinite Loop:877    CC [M]  drivers/video/vermilion/vermilion.o
+ticks 1  Infinite Loop:486    CC [M]  drivers/video/neofb.o
+ticks 1  Infinite Loop:276    CC [M]  drivers/video/tdfxfb.o
+ticks 2  Infinite Loop:1723  Infinite Loop:2610    CC [M]  drivers/video/cirrusfb.o
+ticks 1  Infinite Loop:975    CC [M]  drivers/video/s1d13xxxfb.o
+ticks 1  Infinite Loop:1128    CC [M]  drivers/video/sm501fb.o
+ticks 1  Infinite Loop:1608    CC [M]  drivers/video/intelfb/intelfbhw.o
+ticks 1  Infinite Loop:341    CC [M]  drivers/watchdog/hpwdt.o
+ticks 1  Infinite Loop:553    CC [M]  sound/drivers/mtpav.o
+ticks 2  Infinite Loop:218  Infinite Loop:261    CC [M]  sound/drivers/serial-u16550.o
+ticks 1  Infinite Loop:473    CC [M]  sound/isa/sscape.o
+ticks 1  Infinite Loop:176    CC [M]  sound/isa/msnd/msnd_classic.o
+ticks 1  Infinite Loop:125    CC [M]  sound/isa/msnd/msnd_midi.o
+ticks 1  Infinite Loop:176    CC [M]  sound/isa/msnd/msnd_pinnacle.o
+ticks 5  Infinite Loop:137  Infinite Loop:149  Infinite Loop:396  Infinite Loop:487  Infinite Loop:489    CC [M]  sound/isa/sb/emu8000.o
+ticks 2  Infinite Loop:287  Infinite Loop:1065    CC [M]  sound/isa/wavefront/wavefront_synth.o
+ticks 2  Infinite Loop:1063  Infinite Loop:1069    CC [M]  sound/oss/pss.o
+ticks 1  Infinite Loop:128    CC [M]  sound/oss/uart401.o
+ticks 2  Infinite Loop:854  Infinite Loop:1101    CC [M]  sound/oss/msnd_classic.o
+ticks 2  Infinite Loop:854  Infinite Loop:1101    CC [M]  sound/oss/msnd_pinnacle.o
+ticks 3  Infinite Loop:1749  Infinite Loop:1852  Infinite Loop:1858    CC [M]  sound/pci/cs4281.o
+ticks 3  Infinite Loop:2187  Infinite Loop:2199  Infinite Loop:2315    CC [M]  sound/pci/ens1370.o
+ticks 3  Infinite Loop:2187  Infinite Loop:2199  Infinite Loop:2315    CC [M]  sound/pci/ens1371.o
+ticks 1  Infinite Loop:832    CC [M]  sound/pci/es1938.o
+ticks 4  Infinite Loop:871  Infinite Loop:915  Infinite Loop:2803  Infinite Loop:2807    CC [M]  sound/pci/intel8x0.o
+ticks 1  Infinite Loop:557    CC [M]  sound/pci/intel8x0m.o
+ticks 1  Infinite Loop:328    CC [M]  sound/pci/sis7019.o
+ticks 1  Infinite Loop:644    CC [M]  sound/pci/ali5451/ali5451.o
+ticks 3  Infinite Loop:1463  Infinite Loop:1500  Infinite Loop:1525    CC [M]  sound/pci/asihpi/hpi6000.o
+ticks 3  Infinite Loop:1666  Infinite Loop:1702  Infinite Loop:2539    CC [M]  sound/pci/au88x0/au8810.o
+ticks 3  Infinite Loop:1666  Infinite Loop:1702  Infinite Loop:2539    CC [M]  sound/pci/au88x0/au8820.o
+ticks 3  Infinite Loop:1666  Infinite Loop:1702  Infinite Loop:2539    CC [M]  sound/pci/au88x0/au8830.o
+ticks 3  Infinite Loop:1226  Infinite Loop:1232  Infinite Loop:2501    CC [M]  sound/pci/cs46xx/cs46xx_lib.o
+ticks 1  Infinite Loop:155    CC [M]  sound/pci/emu10k1/irq.o
+ticks 1  Infinite Loop:489    CC [M]  sound/pci/emu10k1/io.o
+ticks 1  Infinite Loop:743    CC [M]  sound/pci/hda/hda_intel.o
+ticks 1  Infinite Loop:432    CC [M]  sound/pci/ice1712/ice1712.o
+ticks 2  Infinite Loop:133  Infinite Loop:238    CC [M]  sound/pci/lola/lola.o
+ticks 1  Infinite Loop:139    CC [M]  sound/pci/lola/lola_pcm.o
+ticks 1  Infinite Loop:1065    CC [M]  sound/pci/lx6464es/lx_core.o
+ticks 1  Infinite Loop:877    CC [M]  sound/pci/riptide/riptide.o
+ticks 1  Infinite Loop:1283    CC [M]  sound/pci/rme9652/hdsp.o
+ticks 1  Infinite Loop:1629    CC [M]  sound/pci/rme9652/hdspm.o
+ticks 1  Infinite Loop:71    CC [M]  sound/pcmcia/pdaudiocf/pdaudiocf_core.o
+ticks 1  Infinite Loop:304    CC [M]  sound/pcmcia/pdaudiocf/pdaudiocf_irq.o
