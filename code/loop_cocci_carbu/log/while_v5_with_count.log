@@ -1,0 +1,245 @@
+EXN:Common.Timeout
+Note: processing took   120.0s: linux-3.2.59/drivers/dma/dmatest.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: linux-3.2.59/drivers/gpu/drm/via/via_verifier.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: linux-3.2.59/drivers/gpu/drm/radeon/radeon_state.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: linux-3.2.59/drivers/gpu/drm/savage/savage_state.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: linux-3.2.59/drivers/net/usb/cdc_ether.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: linux-3.2.59/drivers/net/wan/lmc/lmc_main.c
+--
+EXN:Failure("rule starting on line 1: node 67: }2[1,2,7,8] in ev_dispatcher reachable by inconsistent control-flow paths")
+HANDLING: linux-3.2.59/drivers/net/fddi/skfp/skfddi.c
+--
+EXN:Common.Timeout
+Note: processing took   120.1s: linux-3.2.59/drivers/net/ethernet/sun/niu.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: linux-3.2.59/drivers/net/ethernet/sun/cassini.c
+--
+EXN:Common.Timeout
+Note: processing took   120.1s: linux-3.2.59/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
+--
+EXN:Common.Timeout
+Note: processing took   120.1s: linux-3.2.59/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c
+--
+EXN:Common.Timeout
+Note: processing took   120.1s: linux-3.2.59/drivers/net/ethernet/neterion/s2io.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: linux-3.2.59/drivers/net/wireless/iwlwifi/iwl-agn.c
+--
+EXN:Stack overflow
+Note: processing took    11.2s: linux-3.2.59/drivers/net/wireless/brcm80211/brcmsmac/phy/phy_n.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: linux-3.2.59/drivers/net/wireless/brcm80211/brcmsmac/aiutils.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: linux-3.2.59/drivers/net/xen-netback/netback.c
+--
+EXN:Failure("rule starting on line 1: node 43: }3[1,2,16,17,19,20] in parse_redboot_partitions reachable by inconsistent control-flow paths")
+HANDLING: linux-3.2.59/drivers/mtd/ssfdc.c
+--
+EXN:Common.Timeout
+Note: processing took   120.1s: linux-3.2.59/drivers/mtd/onenand/onenand_base.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: linux-3.2.59/drivers/pci/hotplug/ibmphp_res.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: linux-3.2.59/drivers/pci/hotplug/cpqphp_nvram.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: linux-3.2.59/drivers/pci/hotplug/cpqphp_pci.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: linux-3.2.59/drivers/pnp/isapnp/core.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: linux-3.2.59/drivers/pnp/pnpbios/rsparser.c
+--
+EXN:Common.Timeout
+Note: processing took   120.1s: linux-3.2.59/drivers/tty/vt/vt.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: linux-3.2.59/drivers/tty/n_tty.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: linux-3.2.59/drivers/usb/core/inode.c
+--
+EXN:Common.Timeout
+Note: processing took   120.1s: linux-3.2.59/drivers/usb/misc/ftdi-elan.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: linux-3.2.59/drivers/usb/misc/sisusbvga/sisusb.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: linux-3.2.59/drivers/usb/image/mdc800.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: linux-3.2.59/drivers/usb/storage/sddr55.c
+--
+EXN:Common.Timeout
+Note: processing took   120.7s: linux-3.2.59/drivers/usb/storage/isd200.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: linux-3.2.59/drivers/usb/gadget/f_mass_storage.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: linux-3.2.59/drivers/usb/gadget/file_storage.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: linux-3.2.59/drivers/acpi/acpica/exresop.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: linux-3.2.59/drivers/char/ipmi/ipmi_si_intf.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: linux-3.2.59/drivers/isdn/sc/interrupt.c
+--
+EXN:Common.Timeout
+Note: processing took   120.1s: linux-3.2.59/drivers/isdn/sc/init.c
+--
+EXN:Common.Timeout
+Note: processing took   120.1s: linux-3.2.59/drivers/isdn/i4l/isdn_net.c
+--
+EXN:Failure("tuple_of_list1")
+Skipping:linux-3.2.59/drivers/isdn/hisax/mic.c
+--
+EXN:Common.Timeout
+Note: processing took   120.1s: linux-3.2.59/drivers/isdn/hisax/isar.c
+--
+EXN:Common.Timeout
+Note: processing took   120.1s: linux-3.2.59/drivers/isdn/divert/isdn_divert.c
+--
+EXN:Failure("rule starting on line 1: node 107: break; [1,2,17][1,2,17,18,30,31,39,40,41,44,45,47] in hdlc_loop reachable by inconsistent control-flow paths")
+Note: processing took    11.4s: linux-3.2.59/drivers/isdn/gigaset/asyncdata.c
+--
+EXN:Common.Timeout
+Note: processing took   120.2s: linux-3.2.59/drivers/misc/altera-stapl/altera.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: linux-3.2.59/drivers/s390/net/claw.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: linux-3.2.59/drivers/scsi/fcoe/fcoe_ctlr.c
+--
+EXN:Common.Timeout
+Note: processing took   120.2s: linux-3.2.59/drivers/scsi/lpfc/lpfc_init.c
+--
+EXN:Failure("rule starting on line 1: node 58: }5[1,2,24,25] in aha1542_getconfig reachable by inconsistent control-flow paths")
+Note: processing took    18.6s: linux-3.2.59/drivers/scsi/aha1542.c
+--
+EXN:Common.Timeout
+Note: processing took   120.1s: linux-3.2.59/drivers/scsi/aic7xxx_old.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: linux-3.2.59/drivers/scsi/sun3_NCR5380.c
+--
+EXN:Common.Timeout
+Note: processing took   120.1s: linux-3.2.59/drivers/scsi/aacraid/commsup.c
+--
+EXN:Failure("rule starting on line 1: node 189: }2[1,2,9,10] in ncr_script_copy_and_bind reachable by inconsistent control-flow paths")
+Skipping:linux-3.2.59/drivers/scsi/scsi_lib_dma.c
+--
+EXN:Failure("rule starting on line 1: node 450: }2[1,2,12,13] in NCR5380_information_transfer reachable by inconsistent control-flow paths")
+Note: processing took    85.5s: linux-3.2.59/drivers/scsi/atari_NCR5380.c
+--
+EXN:Failure("rule starting on line 1: node 233: }2[1,2,8,9] in sym_fw_bind_script reachable by inconsistent control-flow paths")
+HANDLING: linux-3.2.59/drivers/scsi/sym53c8xx_2/sym_glue.c
+--
+EXN:Common.Timeout
+Note: processing took   120.1s: linux-3.2.59/drivers/scsi/BusLogic.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: linux-3.2.59/drivers/infiniband/hw/qib/qib_verbs.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: linux-3.2.59/drivers/infiniband/hw/qib/qib_user_sdma.c
+--
+EXN:Failure("n is -7\n")
+HANDLING: linux-3.2.59/drivers/infiniband/hw/qib/qib_ud.c
+--
+EXN:Common.Timeout
+Note: processing took   120.1s: linux-3.2.59/drivers/infiniband/hw/ipath/ipath_user_sdma.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: linux-3.2.59/drivers/infiniband/hw/ipath/ipath_verbs.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: linux-3.2.59/drivers/infiniband/ulp/srp/ib_srp.c
+--
+EXN:Common.Timeout
+Note: processing took   120.1s: linux-3.2.59/drivers/media/dvb/frontends/stv090x.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: linux-3.2.59/drivers/media/video/cx18/cx18-fileops.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: linux-3.2.59/drivers/media/video/ivtv/ivtv-fileops.c
+--
+EXN:Common.Timeout
+Note: processing took   120.1s: linux-3.2.59/drivers/media/video/saa7164/saa7164-cmd.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: linux-3.2.59/drivers/media/video/omap3isp/ispvideo.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: linux-3.2.59/drivers/media/common/tuners/tuner-xc2028.c
+--
+EXN:Common.Timeout
+Note: processing took   120.1s: linux-3.2.59/drivers/video/via/viafbdev.c
+--
+EXN:Common.Timeout
+Note: processing took   120.1s: linux-3.2.59/drivers/video/riva/riva_hw.c
+--
+EXN:Common.Timeout
+Note: processing took   120.1s: linux-3.2.59/drivers/staging/bcm/led_control.c
+--
+EXN:Common.Timeout
+Note: processing took   120.1s: linux-3.2.59/drivers/staging/media/easycap/easycap_main.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: linux-3.2.59/drivers/staging/usbip/userspace/libsrc/names.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: linux-3.2.59/drivers/staging/pohmelfs/inode.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: linux-3.2.59/drivers/staging/speakup/kobjects.c
+--
+EXN:Failure("tuple_of_list1")
+Skipping:linux-3.2.59/drivers/staging/comedi/drivers/comedi_parport.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: linux-3.2.59/drivers/staging/comedi/comedi_fops.c
+--
+EXN:Failure("rule starting on line 1: node 146: }2[1,2,10,11] in cload_cinit reachable by inconsistent control-flow paths")
+HANDLING: linux-3.2.59/drivers/staging/tidspbridge/dynload/reloc.c
+--
+EXN:Common.Timeout
+Note: processing took   120.1s: linux-3.2.59/drivers/staging/winbond/phy_calibration.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: linux-3.2.59/drivers/firewire/core-cdev.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: linux-3.2.59/drivers/target/iscsi/iscsi_target.c
+--
+EXN:Common.Timeout
+Note: processing took   120.1s: linux-3.2.59/drivers/target/target_core_pr.c
+--
+EXN:Common.Timeout
+Note: processing took   120.1s: linux-3.2.59/drivers/parport/parport_pc.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: linux-3.2.59/drivers/bluetooth/hci_ll.c

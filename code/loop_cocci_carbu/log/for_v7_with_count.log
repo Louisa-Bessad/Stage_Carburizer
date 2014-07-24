@@ -1,0 +1,187 @@
+EXN:Common.Timeout
+Note: processing took   120.0s: /home/py/coccinelle/linux-3.2.59/drivers/md/raid1.c
+0.
+
+EXN:Common.Timeout
+Note: processing took   120.7s: /home/py/coccinelle/linux-3.2.59/drivers/md/dm-raid.c
+13
+
+EXN:Common.Timeout
+Note: processing took   120.0s: /home/py/coccinelle/linux-3.2.59/drivers/md/raid10.c
+0
+
+EXN:Common.Timeout
+Note: processing took   120.0s: /home/py/coccinelle/linux-3.2.59/drivers/gpu/drm/radeon/radeon_test.c
+5
+
+EXN:Common.Timeout
+Note: processing took   120.0s: /home/py/coccinelle/linux-3.2.59/drivers/net/ethernet/qlogic/netxen/netxen_nic_init.c
+0
+
+EXN:Common.Timeout
+Note: processing took   120.0s: /home/py/coccinelle/linux-3.2.59/drivers/net/ethernet/qlogic/qlcnic/qlcnic_init.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: /home/py/coccinelle/linux-3.2.59/drivers/net/ethernet/qlogic/qlcnic/qlcnic_main.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: /home/py/coccinelle/linux-3.2.59/drivers/net/wireless/brcm80211/brcmfmac/dhd_sdio.c
+--
+EXN:Stack overflow
+Note: processing took    11.6s: /home/py/coccinelle/linux-3.2.59/drivers/net/wireless/brcm80211/brcmsmac/phy/phy_n.c
+--
+EXN:Common.Timeout
+Note: processing took   120.1s: /home/py/coccinelle/linux-3.2.59/drivers/mtd/ubi/vtbl.c
+--
+EXN:Common.Timeout
+Note: processing took   120.2s: /home/py/coccinelle/linux-3.2.59/drivers/mtd/nand/nand_bbt.c
+--
+EXN:Common.Timeout
+Note: processing took   120.1s: /home/py/coccinelle/linux-3.2.59/drivers/mtd/nftlmount.c
+--
+EXN:Common.Timeout
+Note: processing took   120.1s: /home/py/coccinelle/linux-3.2.59/drivers/mtd/inftlmount.c
+--
+EXN:Common.Timeout
+Note: processing took   120.1s: /home/py/coccinelle/linux-3.2.59/drivers/pci/hotplug/ibmphp_pci.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: /home/py/coccinelle/linux-3.2.59/drivers/pci/hotplug/ibmphp_res.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: /home/py/coccinelle/linux-3.2.59/drivers/pci/hotplug/ibmphp_ebda.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: /home/py/coccinelle/linux-3.2.59/drivers/pci/hotplug/cpqphp_pci.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: /home/py/coccinelle/linux-3.2.59/drivers/tty/cyclades.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: /home/py/coccinelle/linux-3.2.59/drivers/usb/core/hub.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: /home/py/coccinelle/linux-3.2.59/drivers/usb/storage/shuttle_usbat.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: /home/py/coccinelle/linux-3.2.59/drivers/usb/storage/ene_ub6250.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: /home/py/coccinelle/linux-3.2.59/drivers/usb/gadget/ci13xxx_udc.c
+--
+EXN:Common.Timeout
+Note: processing took   120.1s: /home/py/coccinelle/linux-3.2.59/drivers/usb/serial/mos7840.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: /home/py/coccinelle/linux-3.2.59/drivers/xen/xen-pciback/xenbus.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: /home/py/coccinelle/linux-3.2.59/drivers/acpi/acpica/nspredef.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: /home/py/coccinelle/linux-3.2.59/drivers/acpi/processor_idle.c
+--
+EXN:Common.Timeout
+Note: processing took   120.1s: /home/py/coccinelle/linux-3.2.59/drivers/char/ipmi/ipmi_si_intf.c
+--
+EXN:Failure("tuple_of_list1")
+HANDLING: /home/py/coccinelle/linux-3.2.59/drivers/isdn/hisax/mic.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: /home/py/coccinelle/linux-3.2.59/drivers/isdn/divert/isdn_divert.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: /home/py/coccinelle/linux-3.2.59/drivers/s390/crypto/ap_bus.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: /home/py/coccinelle/linux-3.2.59/drivers/scsi/lpfc/lpfc_scsi.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: /home/py/coccinelle/linux-3.2.59/drivers/scsi/qla2xxx/qla_nx.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: /home/py/coccinelle/linux-3.2.59/drivers/scsi/qla4xxx/ql4_nx.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: /home/py/coccinelle/linux-3.2.59/drivers/scsi/wd7000.c
+--
+EXN:Failure("n is -1\n")
+HANDLING: /home/py/coccinelle/linux-3.2.59/drivers/scsi/aha152x.c
+--
+EXN:Common.Timeout
+Note: processing took   120.1s: /home/py/coccinelle/linux-3.2.59/drivers/scsi/aic7xxx_old.c
+--
+EXN:Common.Timeout
+Note: processing took   120.1s: /home/py/coccinelle/linux-3.2.59/drivers/scsi/mpt2sas/mpt2sas_scsih.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: /home/py/coccinelle/linux-3.2.59/drivers/scsi/libsas/sas_ata.c
+--
+EXN:Common.Timeout
+Note: processing took   120.1s: /home/py/coccinelle/linux-3.2.59/drivers/scsi/atp870u.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: /home/py/coccinelle/linux-3.2.59/drivers/scsi/g_NCR5380.c
+--
+EXN:Common.Timeout
+Note: processing took   120.1s: /home/py/coccinelle/linux-3.2.59/drivers/block/drbd/drbd_worker.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: /home/py/coccinelle/linux-3.2.59/drivers/block/amiflop.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: /home/py/coccinelle/linux-3.2.59/drivers/hwmon/i5k_amb.c
+--
+EXN:Common.Timeout
+Note: processing took   120.1s: /home/py/coccinelle/linux-3.2.59/drivers/media/dvb/frontends/mb86a16.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: /home/py/coccinelle/linux-3.2.59/drivers/media/dvb/ngene/ngene-core.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: /home/py/coccinelle/linux-3.2.59/drivers/media/dvb/dvb-usb/af9015.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: /home/py/coccinelle/linux-3.2.59/drivers/media/video/cpia2/cpia2_usb.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: /home/py/coccinelle/linux-3.2.59/drivers/media/video/sn9c102/sn9c102_core.c
+--
+EXN:Common.Timeout
+Note: processing took   120.1s: /home/py/coccinelle/linux-3.2.59/drivers/message/fusion/mptsas.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: /home/py/coccinelle/linux-3.2.59/drivers/staging/keucr/smilmain.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: /home/py/coccinelle/linux-3.2.59/drivers/staging/media/easycap/easycap_settings.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: /home/py/coccinelle/linux-3.2.59/drivers/staging/media/easycap/easycap_main.c
+--
+EXN:Common.Timeout
+Note: processing took   120.1s: /home/py/coccinelle/linux-3.2.59/drivers/staging/rtl8192e/rtl_dm.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: /home/py/coccinelle/linux-3.2.59/drivers/staging/rts5139/ms.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: /home/py/coccinelle/linux-3.2.59/drivers/staging/rts5139/xd.c
+--
+EXN:Common.Timeout
+Note: processing took   120.1s: /home/py/coccinelle/linux-3.2.59/drivers/staging/spectra/flash.c
+--
+EXN:Failure("tuple_of_list1")
+HANDLING: /home/py/coccinelle/linux-3.2.59/drivers/staging/comedi/drivers/comedi_parport.c
+--
+EXN:Common.Timeout
+Note: processing took   120.1s: /home/py/coccinelle/linux-3.2.59/drivers/staging/rts_pstor/ms.c
+--
+EXN:Common.Timeout
+Note: processing took   120.1s: /home/py/coccinelle/linux-3.2.59/drivers/staging/rts_pstor/xd.c
+--
+EXN:Common.Timeout
+Note: processing took   120.1s: /home/py/coccinelle/linux-3.2.59/drivers/staging/tidspbridge/dynload/cload.c
+--
+EXN:Common.Timeout
+Note: processing took   120.0s: /home/py/coccinelle/linux-3.2.59/drivers/pcmcia/cistpl.c

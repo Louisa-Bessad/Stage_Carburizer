@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2014.5.18)  22 JUL 2014 18:58
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2014.5.18)  24 JUL 2014 17:38
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -208,6 +208,31 @@ Package: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
 LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
 (Font)                  U/euf/m/n --> U/euf/b/n on input line 106.
 ))
+(/usr/local/texlive/2013/texmf-dist/tex/latex/listings/listings.sty
+\lst@mode=\count106
+\lst@gtempboxa=\box27
+\lst@token=\toks19
+\lst@length=\count107
+\lst@currlwidth=\dimen125
+\lst@column=\count108
+\lst@pos=\count109
+\lst@lostspace=\dimen126
+\lst@width=\dimen127
+\lst@newlines=\count110
+\lst@lineno=\count111
+\lst@maxwidth=\dimen128
+
+(/usr/local/texlive/2013/texmf-dist/tex/latex/listings/lstmisc.sty
+File: lstmisc.sty 2014/03/04 1.5c (Carsten Heinz)
+\c@lstnumber=\count112
+\lst@skipnumbers=\count113
+\lst@framebox=\box28
+)
+(/usr/local/texlive/2013/texmf-dist/tex/latex/listings/listings.cfg
+File: listings.cfg 2014/03/04 1.5c listings configuration
+))
+Package: listings 2014/03/04 1.5c (Carsten Heinz)
+
 (/usr/local/texlive/2013/texmf-dist/tex/latex/titlesec/block.tss
 File: block.tss 2011/12/15
 )
@@ -219,40 +244,40 @@ Package csquotes Info: Redefining alias 'default' -> 'french'.
 (./Carburizer_Reimplement.aux)
 \openout1 = `Carburizer_Reimplement.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 23.
-LaTeX Font Info:    ... okay on input line 23.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 23.
-LaTeX Font Info:    ... okay on input line 23.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 23.
-LaTeX Font Info:    ... okay on input line 23.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 23.
-LaTeX Font Info:    ... okay on input line 23.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 23.
-LaTeX Font Info:    ... okay on input line 23.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 23.
-LaTeX Font Info:    ... okay on input line 23.
-LaTeX Info: Redefining \degres on input line 23.
-LaTeX Info: Redefining \dots on input line 23.
-LaTeX Info: Redefining \up on input line 23.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 24.
+LaTeX Font Info:    ... okay on input line 24.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 24.
+LaTeX Font Info:    ... okay on input line 24.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 24.
+LaTeX Font Info:    ... okay on input line 24.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 24.
+LaTeX Font Info:    ... okay on input line 24.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 24.
+LaTeX Font Info:    ... okay on input line 24.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 24.
+LaTeX Font Info:    ... okay on input line 24.
+LaTeX Info: Redefining \degres on input line 24.
+LaTeX Info: Redefining \dots on input line 24.
+LaTeX Info: Redefining \up on input line 24.
 
 
 Package frenchb.ldf Warning: OT1 encoding should not be used for French.
 (frenchb.ldf)                Add \usepackage[T1]{fontenc} to the preamble
-(frenchb.ldf)                of your document, on input line 23.
+(frenchb.ldf)                of your document, on input line 24.
 
 (/usr/local/texlive/2013/texmf-dist/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count106
-\scratchdimen=\dimen125
-\scratchbox=\box27
-\nofMPsegments=\count107
-\nofMParguments=\count108
-\everyMPshowfont=\toks19
-\MPscratchCnt=\count109
-\MPscratchDim=\dimen126
-\MPnumerator=\count110
-\makeMPintoPDFobject=\count111
-\everyMPtoPDFconversion=\toks20
+\scratchcounter=\count114
+\scratchdimen=\dimen129
+\scratchbox=\box29
+\nofMPsegments=\count115
+\nofMParguments=\count116
+\everyMPshowfont=\toks20
+\MPscratchCnt=\count117
+\MPscratchDim=\dimen130
+\MPnumerator=\count118
+\makeMPintoPDFobject=\count119
+\everyMPtoPDFconversion=\toks21
 ) (/usr/local/texlive/2013/texmf-dist/tex/generic/oberdiek/pdftexcmds.sty
 Package: pdftexcmds 2011/11/29 v0.20 Utility functions of pdfTeX for LuaTeX (HO
 )
@@ -331,19 +356,20 @@ e
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
+\c@lstlisting=\count120
 
 LaTeX Font Warning: Font shape `OT1/cmr/m/n' in size <15> not available
-(Font)              size <14.4> substituted on input line 25.
+(Font)              size <14.4> substituted on input line 26.
 
 
 LaTeX Font Warning: Font shape `OT1/cmr/bx/n' in size <15> not available
-(Font)              size <14.4> substituted on input line 25.
+(Font)              size <14.4> substituted on input line 26.
 
-LaTeX Font Info:    Try loading font information for U+msa on input line 25.
+LaTeX Font Info:    Try loading font information for U+msa on input line 26.
 (/usr/local/texlive/2013/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 25.
+LaTeX Font Info:    Try loading font information for U+msb on input line 26.
 
 (/usr/local/texlive/2013/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
@@ -351,18 +377,38 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.31 ...e loop or another allocation (such as  \ll
+l.32 ...e loop or another assignment (such as  \ll
                                                   = or \gg=).
 ? 
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.32 
+l.33 
      
 ? 
-[1
+(/usr/local/texlive/2013/texmf-dist/tex/latex/listings/lstlang1.sty
+File: lstlang1.sty 2014/03/04 1.5c listings language file
+)
+(/usr/local/texlive/2013/texmf-dist/tex/latex/listings/lstmisc.sty
+File: lstmisc.sty 2014/03/04 1.5c (Carsten Heinz)
+)
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 43.
 
-{/usr/local/texlive/2013/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
+(/usr/local/texlive/2013/texmf-dist/tex/latex/base/omscmr.fd
+File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10.95> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 43.
+LaTeX Font Info:    Try loading font information for OML+cmr on input line 49.
+
+(/usr/local/texlive/2013/texmf-dist/tex/latex/base/omlcmr.fd
+File: omlcmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `OML/cmr/m/n' in size <10.95> not available
+(Font)              Font shape `OML/cmm/m/it' tried instead on input line 49.
+ [1
+
+{/usr/local/texlive/2013/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2]
 (./Carburizer_Reimplement.aux)
 
 LaTeX Font Warning: Size substitutions with differences
@@ -370,22 +416,23 @@ LaTeX Font Warning: Size substitutions with differences
 
  ) 
 Here is how much of TeX's memory you used:
- 4618 strings out of 493308
- 65328 string characters out of 6137822
- 147596 words of memory out of 5000000
- 8004 multiletter control sequences out of 15000+600000
- 11044 words of font info for 42 fonts, out of 8000000 for 9000
+ 6013 strings out of 493308
+ 85789 string characters out of 6137822
+ 200522 words of memory out of 5000000
+ 9374 multiletter control sequences out of 15000+600000
+ 11352 words of font info for 43 fonts, out of 8000000 for 9000
  957 hyphenation exceptions out of 8191
- 38i,6n,30p,811b,439s stack positions out of 5000i,500n,10000p,200000b,80000s
-</usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb
-></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb>
-</usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></
-usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></us
-r/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
-Output written on Carburizer_Reimplement.pdf (1 page, 59851 bytes).
+ 38i,6n,51p,811b,1482s stack positions out of 5000i,500n,10000p,200000b,80000s
+</usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
+></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb>
+</usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><
+/usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></u
+sr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr
+/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
+Output written on Carburizer_Reimplement.pdf (2 pages, 78082 bytes).
 PDF statistics:
- 28 PDF objects out of 1000 (max. 8388607)
- 19 compressed objects within 1 object stream
+ 35 PDF objects out of 1000 (max. 8388607)
+ 24 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 

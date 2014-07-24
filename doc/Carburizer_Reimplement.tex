@@ -13,6 +13,7 @@
 \usepackage{titlesec}
 \usepackage[scale=0.75, vscale=0.8]{geometry}
 \usepackage{amssymb}
+\usepackage{listings}
 
 \titleformat{\section}[block]{\large}{\textbf\thesection.}{1em}{\textbf}
 
@@ -25,31 +26,74 @@
 \maketitle
 
 \section{Abstract}
-Carburizer was created to insure; input checking from the driver, a failure detection before corruption appears and a fix of device failures. In this way the reliability of systems can be improved. But it does not handle all issues and few platforms or drivers had been tested. The goal of this document is to reimplement some funtions of Carburizer with Coccinelle. In this way; we have to look for different types of code.
+Carburizer was created to ensure input checking from the driver,  failure detection before corruption appears and a fix of device failures. In this way the reliability of systems can be improved. But it does not handle all issues and few platforms or drivers had been tested. The goal of this document is to reimplement some functions of Carburizer with Coccinelle. To do this; we have to look for different types of code.
 
 \section{Looking for different types of code}
-First, we will look for loop without timeout. We will consider as a timeout a variable which is incremented or decremented in the condition of the loop or another allocation (such as  \ll= or \gg=). 
+First, we will look for loop without timeout. We will consider as a timeout a variable that is incremented or decremented in the condition of the loop or another assignment (such as  \ll= or \gg=). 
 
 \section{Solutions}
-To find loop without timeout we will apply two patches in the Linux3.2.59 Kernel. There is a patch for each type of loop: for and while. The loop which match will be modified to avoid infinite looping. The inserted code is the same that Carburizer used. For instance this code:
+To find loops without a timeout we will apply two semantic patches to the Linux3.2.59 Kernel. There is a smeantic patch for each type of loop: for and while. The patch will furthermore modify a loop that matches loop which matches to avoid infinite looping. The inserted code is the same as that used by Carburizer. For instance these codes:
 
+\vspace*{5mm}
+%\renewcommand{\verbatimabsize}{3}
+\lstset{numbers=left,firstnumber=1,numberfirstline=true}
+%\lstset{linewidth=9cm,xleftmargin=2cm,aboveskip=5mm,belowskip=1cm,float=!h}
+\lstset{frame=lines,caption={An instance of a possible infinite for loop, the Sun Ethernet driver can hang if the pointer m->next has a bad assignment},captionpos=b}
+\begin{lstlisting}[language=C]
++	unsigned long long delta = (cpu / khz / HZ) * 2;
++	unsigned long long _start = 0;
++	unsigned long long _cur = 0;
++	unsigned long long timeout;
++	timeout = rdstcll(start) + delta;
 
-will become:
+ 	for (m = vp->mcast_list; m; m = m -> next) {
+ 		if (!memcmp(m->addr, addr, ETH_ALEN))
+ 			return m;
 
++			if (_cur < timeout) {
++				rdstcll(_cur);
++			}
++			else {
++				break;
++			}
 
-%We will consider as a timeout a variable what is incremented or decremented in the loop and used as a condition of loop exiting.
+ 	}
+\end{lstlisting}
+
+\vspace*{5mm}
+
+\lstset{frame=lines,caption={An instance of a possible infinite while loop,The Bluetooth driver can hang if the function never returns 0}}
+\lstset{numbers=left,firstnumber=1,numberfirstline=true}
+\begin{lstlisting}[language=C]
++	unsigned long long delta = (cpu / khz / HZ) * 2;
++	unsigned long long _start = 0;
++	unsigned long long _cur = 0;
++	unsigned long long timeout;
++	timeout = rdstcll(start) + delta;
+	while ((urb = bfusb_get_completed(data)))
+		usb_free_urb(urb);
++			if (_cur < timeout) {
++				rdstcll(_cur);
++			}
++			else {
++				break;
++			}
+
+ 	}
+
+\end{lstlisting}
 
 \section{Results}
-We have counted the number of each type of loop on the Linux3.2.59 Kernel. Then we have counted the loop found by our patch. During the execution of patches some files have been skipped by Coccinelle to avoid infinite time of execution. It appeared that whatever the computer used to execute the patches without the timeout option of Coccinelle, the execution could never end. For those files the analysis must be made by a programer. The following array shows the result of these executions:
+We have counted the number of each type of loop on the Linux3.2.59 Kernel. Then we have counted the loops found by our patch. During the execution of patches some files have been skipped by Coccinelle to avoid a very long execution time. It appeared that whatever the computer used to execute the patches without the timeout option of Coccinelle, the execution could never end. For those files the analysis must be made by a programer. The following array shows the result of these executions:
 
 \vspace*{5mm}
 \begin{tabular}{|c|c|c|c|}
   \hline
-    & infinite loop & EXN loop & total loop \\
+    & infinite loop & EXN files & total loop \\
   \hline
-  while &    &  &  \\
+  while &  3463  & 82 & 9342 \\
   \hline
-  for  &  &  &  \\
+  for  & 367 & 61 &  27616 \\
   \hline
 \end{tabular} 
 \vspace*{5mm}

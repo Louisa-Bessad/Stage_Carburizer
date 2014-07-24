@@ -1,0 +1,1 @@
+Usage: ./../tetedemort.sh <loop.patch> > foo.txt

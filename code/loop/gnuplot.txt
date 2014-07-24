@@ -3,4 +3,4 @@ set style data histogram
 set style fill solid border
 set style histogram clustered
 set xtics rotate by -45
-plot 'forgnuplot.dat' using 2:xticlabels(1) title columnheader
+plot 'loop_gnuplot.dat' using 2:xticlabels(1) title columnheader
