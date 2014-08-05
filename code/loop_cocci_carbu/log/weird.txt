@@ -1,0 +1,66 @@
+for
+_______________________________________________________________
+
+/input/joystick/adi.c
+for (i = 0; i < 2; i++, w >>= 2, x >>= 2) {
+
+/input/joystick/tmdc.c
+for (k = 0, v = w, u = x; k < 2; k++, v >>= 2, u >>= 2) {
+
+
+/net/hamradio/hdlcdrv.c
+ i--, mask1 <<= 1, mask2 <<= 1, mask3 <<= 1, mask4 <<= 1, 
+		    mask5 <<= 1, mask6 = (mask6 << 1) | 1
+
+/paltform/x86/wmi
+i++, src += 2, *dest++ = v
+
+
+
+/usb/cor/generic
+	for (i = 0; i < num_configs; (i++, c++)) {
+______________________________________________________________
+
+while
+_____________________________________________________________
+
+/base/platform.c
+  	while (--i >= 0) {
+
+/misc/sgi-gru/grumain.c
+	while (n--) {
+
+/misc/spear13xx_pcie_gadget.c
+	while (vector > 1) {
+
+	while (pos < 21) {
+
+/input/keyboard/gpio_keys.
+	while (--i >= 0) {
+
+/input/keyboard/hil_kbd.c
+while (cnt < idx - 1) {
+
+/input/misc/hp_sdc_rtc.c
+	while (i < 91) {
+
+ b/input/joystick/gf2k.c
+ 	while (t > 0 && i < length) {
+
+/input/joystick/grip_mp.c
+ 	while (tries < 64 && bads < 8) {  
+
+/input/joystick/interact.c
+ 	while (t > 0 && i < length) {
+
+/input/joystick/tmdc.c
+- fail3: while (--i >= 0) {  // supprime le tag
+
+/input/gameport/lightning.c
+ 			while (--i >= 0) {
+
+/input/mouse/gpio_mouse.c
+	while (--i >= 0) {
+
+/w1/slaves/w1_ds2431.c
+	while (todo > 0) {

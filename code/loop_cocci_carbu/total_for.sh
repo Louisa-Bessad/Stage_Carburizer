@@ -1,6 +1,9 @@
 #!/bin/bash
 
-FOR=$(cat $1 | grep "$2" | awk '{printf $(NF-1) "+" $NF }')
-FOR=$(echo $FOR | sed 's/ /+/g' | bc)
+# On grep $1  dans le fichier et on affiche les deux derniers éléments de la ligne
+# FOR=$(grep $1 $2 | awk '{printf $NF }')
+# echo $1 $FOR
 
-echo $2 $FOR
+# AA=$1
+# awk '/^\\$AA/' $2
+awk -v a=this '{print ARGV[1]}' 
