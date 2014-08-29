@@ -1,25 +1,8 @@
-@@
-expression E1, E2;
-constant C;
-@@
+@ paren @ expression E1, E2; constant C, C2; statement S; @@
 
 (
-for(...;...;<+... E1 += C ...+>)
-E2;
-|
-+ unsigned long long delta = (cpu/khz/HZ)*2;
-+ unsigned long long _start = 0;
-+ unsigned long long _cur = 0;
-+ unsigned long long timeout;
-+ timeout = rdstcll(start) + delta;
-for(...;...;...)
-+{
-E1;
-+ if (_cur < timeout){
-+ rdstcll(_cur);
-+}
-+ else {
-+ break;
-+}
-+}
+//for(;;)
+*for(;;){
+<+... break; ...+>
+}
 )

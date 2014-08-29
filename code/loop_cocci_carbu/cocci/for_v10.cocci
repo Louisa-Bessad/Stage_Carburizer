@@ -218,7 +218,9 @@ for(;;)
 break;
 |
 for(;;){
-<+... break; ...+>
+<+...
+break;
+...+>
 }
 |
 + unsigned long long delta = (cpu/khz/HZ)*2;
