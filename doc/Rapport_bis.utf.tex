@@ -21,7 +21,7 @@
 \usepackage{algorithmicx}
 \usepackage{algpseudocode}
 \usepackage{amsmath,amssymb,amsthm} % For including math equations, theorems, symbols, etc
-
+\usepackage{tabularx}
 \usepackage{listings}
 \linespread{1.05}
 \lstset{numbers=left,firstnumber=1,numberfirstline=true, language=C}
@@ -169,24 +169,24 @@
 
 \newpage\section{Introduction}
 
-Systems need to use drivers to be able to access devices. But when a device fails, this can cause driver to crash or hang. It has been demonstrated that most system failures are due to hardware device failures. Most of the time these failures are transient. By tolerating device failures drivers can prevent the system from crashing or hanging. In this way the reliability of the system can be improved. Most approaches for research on drivers failures fall into two categories. The first is the static bug finding ; it analyzes the interface between the driver and the kernel to find incoherences. The second is the runtime fault tolerance. Most of the time these approaches need new operating sytem or new driver models ; it is not the case for static analysis. Usually these approaches find the failure but do not fix it. While they try to reduce faults on the interface between driver and device, they need specific interfaces and languages.
+Systems need to use drivers to be able to access devices. But when a device fails, this can cause driver to crash or hang. It has been demonstrated \cite{Carburizer} that most system failures are due to hardware device failures. Most of the time these failures are transient. By tolerating device failures, drivers can prevent the system from crashing or hanging. In this way the reliability of the system can be improved. Most approaches for research on drivers failures fall into two categories. The first is the static bug finding ; it analyzes the interface between the driver and the kernel to find incoherences. The second is the runtime fault tolerance. Most of the time these approaches need new operating sytem or new driver models ; it is not the case for static analysis. Usually, these approaches find the failure but do not fix it. While they try to reduce faults on the interface between driver and device, they need specific interfaces and languages.
 
 This project fall in the first category. The goal is to find every unchecked inputs from drivers and fix those failures. In this way different types of code need to be searched. First, we look for functions that are known to perform I/O and verify that the return value is checked. Second, we want to find variables used as pointers or indexies of an array and check that they do not reference a forbidden memory area. Third, we search structures dependant on input from the device that could be corrupted by a bad allocation. Fourth, calls to panic function are searched. Finally, we look for loops that wait for a specific hardware device state without timeout.
 
-We will study the loop without timeout and propose a solution to this problem. Then we will present the results bring by our solution, and we will compare these to anothers from a previous analysis using a different tool.
+We will study the loop without timeout and propose a solution to this problem. Then we will present the results brought by our solution, and we will compare these to anothers from a previous analysis using a different tool.
 
 \newpage
 %----------------------------------------------------------------------------------------
 %	SOLUTION
 %----------------------------------------------------------------------------------------
 
-\section{The choosen problem and its solution}
+\section{The chosen problem and its solution}
 
-When the terminating condition of a loop is never reached, we stay in the loop infinitely. This could cause the crash or hanging of the system, it is the behaviour of a loop without timeout. So the existence of a timeout in a loop is really important as its definition. We consider as a timeout a variable that is incremented or decremented in the loop or another assignment (such as $ \ll= $ or $ \gg= $ ). Moreover it has to be used as  exit condition of the loop, or a part of this condition. Furthermore it cannot be used as a pointer or index of an arrray. In this way every loop that does not respect these conditions will be considered as a loop without timeout, also called infinite loop.
+When the terminating condition of a loop is never reached, we stay in the loop indefinitely. This could cause the crash or hanging of the system, it is the behaviour of a loop without timeout. So the existence of a timeout in a loop is really important as its definition. We consider as a timeout a variable that is incremented or decremented in the loop or another assignment (such as $ \ll= $ or $ \gg= $ ). Moreover, it has to be used as  exit condition of the loop, or a part of this condition. Furthermore, it cannot be used as a pointer or index of an arrray. In this way every loop that does not respect these conditions will be considered as a loop without timeout, also called infinite loop.
 
 
 \subsection{Types of infinite loops}
-By studiing the source of a kernel we can find two types of loop without timeout. The first type correponds to loops with an exit condition which is not a timeout variable. In this case the therminating condition can be a function that call drivers, a pointer value that assigns the return of one of these functions, a variable or metavariable defined in another file. But if the function never returns a value that allows to exit of the loop, the system will stay infinitely in the loop Listing 1. The problem is the same if the pointer or the variable from another file used as exit condition of a loop have always a bad allocation.
+By studiing the source of a kernel we can find two types of loop without timeout. The first type correponds to loops with an exit condition which is not a timeout variable. In this case the terminating condition can be a variable or metavariable defined in another file, a function that call drivers, a pointer value that is assigned by the return of one of these functions. But if the function never returns a value that allows to exit of the loop, the system will stay infinitely in the loop Listing 1. The problem is the same if the pointer or the variable from another file used as exit condition of a loop have always a bad allocation.
 
 \lstset{frame=lines,caption={This loop calls the readl function which will ask a data, referenced as the argument of the function, to a driver which is a keyboard controller in this case.},captionpos=t}
 %/input/keyboard/nomadik-ske-keypad.c 2010
@@ -211,8 +211,7 @@ The second kind of loops without timeout uses an infinite exit condition: ``for(
 }
 \end{lstlisting}
 
-\vspace{0.5cm}
-Sometimes to ensure a possible exit of the infinite loop, the body of the loop contains an alternative. Usually the alternative's condition is based on variables' value, but there are also alternatives whitch use a call to a driver function as condition. However this function could never return the right value to exit the loop, in this case the alternative is useless. For the alternative which the condition can besatisfied, there are alternatives with a break, Listing 3, or another way to exit the loop Listing 4. 
+Sometimes to ensure a possible exit of the infinite loop, the body of the loop contains an alternative. Usually, the alternative's condition is based on variables' value, but there are also alternatives which use a call to a driver function as condition. However, this function could never return the right value to exit the loop, in this case the alternative is useless. For the alternative which the condition can be satisfied, there are alternatives with a break, Listing 3, or another way to exit the loop Listing 4. 
 %firmware/efivars.c 2001 -> 2004, 2004
 \lstset{frame=lines,caption={This loop of an Intel driver has two possibilities to exit of this infinite loop.},captionpos=t}
 \begin{lstlisting}
@@ -256,22 +255,129 @@ To avoid these two types of infinite loop we will insert a segment of code in th
 
 \subsection{Proposed solution}
 
-To find and fix these loops we used a bug finding tool called Coccinelle. This uses patches that contain rules, a rule will transform the code by the deletion and the addition of code. In this way, Coccinelle scans the code to find lines matching with the searching condition and applies the transformation. In our case there is two patches; one for the ``while'' infinite loops and another one for the ``for'' infinite loops. The condition rule will be an infinite loop and the transformation will be the addition and allocation of a timeout and the modification of the exit condition of the loop. Furthermore our patches  will contain several rules, because there is many ways to write a same loop with C programming.
+ We use a bug finding tool called Coccinelle \cite{Cocci} to find and fix the infinite loops of the kernel. Coccinelle uses patches which contain rules, a rule will transform the code by the deletion and the addition of code. In this way, Coccinelle scans the code to find lines matching with the searching condition and applies the transformation. In our case there are two patches; one for the ``while'' infinite loops and another one for the ``for'' infinite loops. The condition rule will be an infinite loop and the transformation will be the addition and allocation of a timeout and the modification of the exit condition of the loop. Nevertheless Coccinelle does not allow to match the ``$do\{\}\  while$'' loop, so we choose to not handle this type of loop.
 
-Mettre un exemple de deux boucles identique ++E1 ou E1++ 
+\lstset{frame=lines,caption={Modification of a ``for'' infinite loop},captionpos=t}
+\begin{lstlisting}
+  //Code to add 
+  + unsigned long long delta = (cpu/khz/HZ)*2; 
+  + unsigned long long _start = 0; 
+  + unsigned long long _cur = 0; 
+  + unsigned long long timeout; 
+  + timeout = rdstcll(start) + delta; 
+  //Code to match 
+  // ... means everything
+  for(...;...;...){ 
+    ...
+  //Code to add 
+  + if (_cur < timeout){
+  + rdstcll(_cur);
+  +}
+  + else {
+  + break;
+  +}
+  //Code to match
+  } 
+\end{lstlisting}
 
-Nevertheless Coccinelle does not allow to match the loop: do{...}while(...), so we chose not to handle this type of loop.
+\newpage
+\lstset{frame=lines,caption={Modification of a ``while'' infinite loop},captionpos=t}
+\begin{lstlisting}
+  //Code to add 
+  + unsigned long long delta = (cpu/khz/HZ)*2; 
+  + unsigned long long _start = 0; 
+  + unsigned long long _cur = 0; 
+  + unsigned long long timeout; 
+  + timeout = rdstcll(start) + delta; 
+  //Code to match 
+  while(...){ 
+   ...
+  //Code to add 
+  + if (_cur < timeout){
+  + rdstcll(_cur);
+  +}
+  + else {
+  + break;
+  +}
+  //Code to match
+  } 
+\end{lstlisting}
 
+\lstset{frame=lines, caption={The result of the patch's execution on the while infinite loop from Listing 1}, captionpos=t}
+%/input/keyboard/nomadik-ske-keypad.c 2010
+\begin{lstlisting}
+  unsigned long long delta = (cpu/khz/HZ)*2; 
+  unsigned long long _start = 0; 
+  unsigned long long _cur = 0; 
+  unsigned long long timeout; 
+  timeout = rdstcll(start) + delta; 
+  while ((readl(keypad->reg_base + SKE_CR) & SKE_KPASON) 
+  && --retries){
+    msleep(5);
+    if (_cur < timeout){
+      rdstcll(_cur);
+    }
+    else {
+      break;
+  }
+\end{lstlisting}
+
+\vspace{0.5cm}
+%The added timeout uses three kernel's global variables and a function in its initialization. The firs ``cpu'' is blablabla. The second ``khz'' is bliblibli. And the third ``HZ'' indicates the number of tics per second ie the number of interruption made by the hardware clock. The function ``rdstcll''
+The added timeout uses three predefined global variables of the kernel: ``cpu'', ``khz'' and ``HZ''. It also uses a maccro ``rdstcll'' which adds a timeout value to the parameter value. The ``cur'' variable is incremented at each turn of the loop, the ``timeout'' variable is fixed. In this way, the condition at the line 11 will not be true after some time, so the line 15 will be executed which leads to the exit the loop. 
+This is a real solution to the infinite loop problem.
+%After the execution of the patch the code from Listing 1 for instance become:
+
+Nevertheless our patches cannot conain only one rule (Listings 5 \& 6), because every type of loop ``while'' or ``for'' infinite or not could match this rule. So before this code we have to add others rules, that we will catch the non infinite loops; the loops which contain a timeout. The remainding loops will match the last rule and be modified (Listings 1 to 4 for instance).
+
+\lstset{frame=lines,caption={A rule to catch one type of ``for'' non infinite loop},captionpos=t}
+\begin{lstlisting}
+//Example:
+//for(i=x;i<y;i++) 
+//Instruction;
+
+//Metavariables: 2 expressions E1 and E2 
+@@ expression E1, E2 @@ 
+// <+... x ...> means at least one appearence of x
+for(...;...;<+... E1++ ...+>) 
+E2;
+\end{lstlisting}
+
+\lstset{frame=lines,caption={A rule to catch one type of ``while'' non infinite loop},captionpos=t}
+\begin{lstlisting}
+//Example:
+//while( x && (i <= y) && z){
+//Some instructions
+//}
+
+//Metavariables: 1 expression E1 and 1 constant
+@@ expression E1; constant C @@ 
+while(<+... E1 <= C ...+>){
+...
+}
+\end{lstlisting}
+\vspace{0.5cm}
+
+We have studied the issue of the loop without timeout and exposed one solution to this problem. Now we can test this solution and compare our results to anothers from a previous analysis using a different tool.
+\newpage
 %----------------------------------------------------------------------------------------
 %	RESULTS AND COMMENTS
 %----------------------------------------------------------------------------------------
 
 \section{Results and Comments}
-\subsection{With Coccinelle}
-The Linux3.2.59 Kernel had been used as testing platform. Firstly we wanted to know the pourcentage of loop and infinite loop in the kernel. However during the execution of patches some files have been skipped by Coccinelle to avoid a very long execution time. It appeared that whatever the computer used to execute the patches without the timeout option of Coccinelle, the execution could never end. For those files the analysis must be made by a programer. The following array shows the result of these executions, the ``EXN'' column correspond to the number of skipped files:
+ In this section we present the results produced by our patches, these obtained with Carburizer and a comparison ofthese results. We both used the Linux3.2.59 Kernel as testing platform, infinite loops have not been searched on the entire kernel code, but only on drivers.
 
+\subsection{With Coccinelle}
+First, to have representative results we have to know the pourcentage of loop and infinite loop in the kernel.
+The following graph presents a repartition of the loop according to the type of the driver:
+\newline
+\includegraphics[width=16cm, height=10cm]{resultats_quota_eng.eps}
+In this graph we represent the quotient of the number of loops on the number of files for a driver, because it is more representative. If we represent only the number of loops per driver we c, for instance, the ``scsi'' driver has almost 2500 loops whereas the folder which contains the base driver has arount 10 loops. We can say nothing about that. With this graph we can see that these two types of drivers have the same purcentage of loop.
+  
+Concerning the purcentage of infinite loops, during the execution of the patches some files have been skipped by Coccinelle to avoid a very long execution time. It appeared that whatever the computer used to execute the patches without the timeout option of Coccinelle, the execution could never end. For these files the analysis must be made by a programer. The following array shows the result of these executions, the ``EXN'' column corresponds to the number of skipped files:
 
 \vspace*{5mm}
+\begin{center}
 \begin{tabular}{|c|c|c|c|}
   \hline
     & Total loop & Infinite loop & EXN files \\
@@ -281,58 +387,45 @@ The Linux3.2.59 Kernel had been used as testing platform. Firstly we wanted to k
   for   &  27616 & 468 & 87 \\
   \hline
 \end{tabular} 
+\end{center}
 \vspace*{5mm}
 
-We can see that 48\% of the ``while'' loop does not have a timeout whereas only 2\% of the ``for'' loop are infinite loop. / These infinite loops concern drivers. Nevertheless these drivers are old, in the recent kernel these bugs had been corrected. /
+We can see that 48\% of the ``while'' loops does not have a timeout whereas only 2\% of the ``for'' loops are infinite loop. Among the drivers that contain infinite loops 81\% of them dated from the 2000s and the remainding from 90's. %Nevertheless these drivers are old, in the recent kernel these bugs had been corrected. 
+Nevertheless in the results produced by Coccinelle there are some false positives. In the drivers' code, there are loops that use as exit condition a call to a function that does not call the driver. For instance the functions that read or write on the registers. We cannot consider these as an I/O, but our patches do not consider the difference between a function which makes an I/O and another one.
+There also false negatives in our results, some loops have a timeout and thus a finite condition. But these loops can call a function which make an I/O in their body. This has to be consider as a possible infinite loop, because even if the loop's condition is finite, the function could never return. Yet in our patches we have consider that a loop with a finite condition cannot be infinite and thus we do not modify this loop. This is a problem.
+Even if there are false positives and false negatives in our results, the major part is in agreement with Carburizer's results.
 
 \subsection{With another tool: Carburizer}
 
-Another study had been made by /blablablabla/, it uses an automatic code manipulation-tool :''Carburizer'' created specificly for finding hardware device failures. In this way it takes a driver and scans its code. Then it lists bugs that can occur in it and suggests fixes for these bugs according to their type. In the case of infinite loop, Carburizer finds 2383 locations where drivers detect failures by timeouts on the Linux3.2.59 Kernel.
+Another study of the drivers has been made. It uses an automatic code manipulation-tool called ''Carburizer'' \cite{Carburizer}. It has been created specificly for finding hardware device failures. In this way it takes a driver and scans its code to find input from the drivers. Then it lists bugs that can occur on it and suggests fixes for these bugs according to their type before corruption appeared. It can be a recovery function to restore the driver to a functionning state, a validation of an unchecked value, the handling of interruptioin with a runtime service, or the addition of a timeout in the case of infinite loop. Carburizer has its own defintion of a timeout: 
+\begin{quotation}
+A timeout counter is a variable that is either incremented or decremented in the loop, not used as an array index or in pointer arithmetic, and used in a terminating condition for the loop, such as a while clause or in an if before a break , goto , or return statement. If a loop contains a counter, Carburizer determines that it will not loop infinitely. We also detect the use of the kernel jiffies clock as a counter.
+\end{quotation}
+
+In the case of infinite loop, Carburizer finds 2383 locations where drivers detect failures by timeouts on the Linux3.2.59 Kernel. 
+We can see that there is a difference between the 4977 infinite loops that we found and this result, Carburizer finds 2594 infinite loops less. In this way we will compare our results to understand this diffirence.
 
 \subsection{Comparison}
-We can that Carburizer finds 2594 infinite loops less. Given these results we can think, there is a problem with ours. But it is not the case, this is due to the fact that we have not the same definition of an infinite loop. Looking at Kadav's results we can see that only: blabla list des resultats ou tableau comparif.
-%\begin{center}
-%Algorithme Mécanisme d'arrêt :
-%\end{center}
+Given the difference between our results and these of Carburizer, we can think taht there is a problem with ours. It is not the case, this is due to two factors. Firstly, the results found with Carburizer does not present the number of infinite loops like us. But it represents the number of file that contain these infinite loops. Moreover these files does not contain the source code, they are the ``.o'' files, this number of file is inferior to the number of ``.c'' files. Secondly, the definition of an infinite loop is not the same in the two studies. 
 
-%\begin{algorithmic}
- % \State $quota\_memoire \gets QUOTA\_DISPONIBLE$
-  %\State $envoye \gets faux$
-  %\State $nouvelle\_fenetre \gets NB\_APPELS\_TIMER$
-  %\Function{handler\_timer}{}
-%	\State $consommation \gets recuperer\_les\_valeurs\_du compteur\_materiel\_avec\_PAPI$
-%	\State $quota\_memoire \gets quota\_memoire - consommation$
-%	\If {$quota\_memoire\leq 0 ET envoye = faux$}
-%		\State $envoyer\_SIGSTOP\_aux\_attaquants$
-%		\State $envoye \gets vrai$
-%	\EndIf	
-%	\State $nouvelle\_fenetre \gets nouvelle\_fenetre - 1$	
-%	\If {$nouvelle\_fenetre = 0$}
-%		\State $envoyer\_SIGCONT\_aux\_attaquants$
-%		\State $nouvelle\_fenetre \gets NB\_APPELS\_TIMER$
-%		\State $quota\_memoire \gets QUOTA\_DISPONIBLE$
-%		\State $envoye \gets faux$
-%	\EndIf
-%	\EndFunction
-%\end{algorithmic}
+The two definitions consider that loop with a counter cannot loop infinitely, so Carburizer should have the same false negatives that we have with Coccinelle. However Carbyrizer considers as a bug the loops with a counter that call a function which makes an I/O, this is the first difference. The second is that in the case of infinite loops we modify every loops, whereas Carburizer fixes only infinite loops that call functions which make I/O. Moreover Carburizer does not handle the condition with a comparison of a pointer's value, even when the body of the loop contains a function which calls the driver. This type of infinite loop is matched and modified by our patches. The same difference appears when the condition of the loop contains a comparison with a maccro, even when the maccro is not defined in the file that contains the infinite loop.
 
+Nevertheless Carburizer finds loops that are missed by our patches. This occurs when the condition of the loop contains a comparison bit-a-bit of the return of a driver function and a constant or a macro or a pointer. It also happens when the condition is only a call to a function, in this case Carburizer only fixes the loops where the function makes an I/O. Moreover Carburizer can fix the ``$do\{\}\ while$'' loops that Coccinelle does not handle.
 
-%\begin{center}
-%\includegraphics[width=12cm, height=7.5cm]{benchmark_1_performance.png}
-%\end{center}
+Despite of these differences, there are infinite loops that are found by both solutions. The infinite loop with calling to I/O functions are found by the two solutions. The infinite loops with an alternative which contains a break are also found. Carburizer extends this case of infinite loops to the loops without timeout with an alternative which contains ``goto'' and ``return'' code.
 
-
+Finally we can say that the major difference in the count of infinite loops is due to the fact that in our patches we consider that each calling functions could not return whereas Carburizer only considers the I/O functions like this.
+\newpage
 \section{Conclusion}
+To conclude, according to our definition, this new solution to the handling of infinite loops and hardware device failures shows that there is a lot of problems with the management of the driver on the Linux kernel. Thanks to Coccinelle we can find and fix these bugs, that we did. Some of these problems have been solved in the new version of the kernel. As the major part of these failures are transient, the users does not notice /it/, the impact is critical and more visible in fields where drivers are the base of everything. 
 
+By studying the kernel at a law-level, that I did not knwo, I learnt that the consequences of the way that we write a code can be really serious. In this way I could noticed that there is a serious problem of security in the driver's code, an issue that I will keep on study.
 %----------------------------------------------------------------------------------------
 %	BIBLIOGRAPHY
 %----------------------------------------------------------------------------------------
 
-%\renewcommand{\refname}{\spacedlowsmallcaps{References}} % For modifying the bibliography heading
-
-%\bibliographystyle{unsrt}
-
-%\bibliography{sample.bib} % The file containing the bibliography
+\bibliographystyle{unsrt}
+\bibliography{Rapport.bib} % The file containing the bibliography
 
 %----------------------------------------------------------------------------------------
 
